@@ -1,2 +1,2 @@
-# Telpo_MDM_Pos_Android12
-Android12+
+# Telpo_MDM
+It is Telpo_MDM web/abdroid-ui automation by selenium and uiautomator2
