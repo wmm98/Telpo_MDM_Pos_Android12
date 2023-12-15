@@ -1,0 +1,131 @@
+
+
+MDMTestData:
+
+  # 设置信息
+  settings:
+    test_version:
+    version: 1.0
+    debug: true
+
+  #  一般只需填用户密码信息
+  website_info:
+    # 当前测试的网址
+    test_url: http://test.telpoai.com
+    test_user: mdm_automation
+    test_password: mmwu17765602533
+    test_api: http://test.telpopaas.com
+    # 需要转换服务器api 的网址1
+    release_url: https://mdm2.telpoai.com
+    release_user: ceshibu_wuch
+    release_password: 123456
+    release_api: https://www.telpopaas.com
+
+  #  普通app名字
+  work_app:
+    #  根据需求置换
+    tpui_apk: TPUI_v1.1.9.apk
+      #  新的版本需要修改
+    aidmd_apk: aimdm_osapi_wu.apk
+    # 测试服的api
+    api_txt: mdmApiUrl.txt
+
+  # app相关信息， 没有特殊要求不用填
+  app_info:
+    #  Bus_Recharge_System_1.0.0_20220421.apk
+    low_version_app: Bus_Recharge_System_1.0.0_20220421.apk
+    high_version_app: Bus_Recharge_System_1.0.1_20220615.apk
+    other_app: ComAssistant.apk
+    #    A： sim card 测试， B： wifi 测试
+    other_app_limit_network_A: wifi_analyze.apk
+    other_app_limit_network_B: perfmon.apk
+
+
+  # ota升级包相关信息, 有变化需要填写
+  ota_packages_info:
+    #    TPS900_msm8937_sv10_fv1.1.16_pv1.1.16-1.1.17.zip
+    # TPS900_msm8937_sv10_fv1.1.16_pv1.1.16-1.1.18.zip
+    # TPS900_msm8937_sv10_fv1.1.19_pv1.1.19-1.2.20.zip
+    # TPS900_msm8937_sv10_fv1.1.19_pv1.1.19-1.2.22.zip
+    package_name: T20_bengal_sv12_fv1.4.3_pv1.4.3-9.9.9.zip
+    # 有分android和linux两种系统  Android Linux
+    platform: Android
+
+  #    无线休眠测试用例参数的填写
+  Sleep_test_param:
+    # 休眠时间， 时间单位为 秒，此处表明有3次进入休眠，分别休眠10s, 20s, 30s，可根据需求改
+    # 增加休眠次数可以回车填写时间
+    sleep_time:
+      - 10
+      - 20
+      - 30
+
+  # Content相关信息， 没有特殊要求不用填写
+  Content_info:
+    # txt 文件
+    normal_file:
+      - test_txt_file.txt
+      - test_zip_file.zip
+
+    # 开机动画
+    boot_animation:
+      - test_bootanimation.zip
+
+    # 壁纸
+    wallpaper:
+      - test_background_png.png
+      - test_background_webp.webp
+    # 开机logo
+    boot_logo:
+      - test_boot_logo_jpg.jpg
+      - test_boot_logo_png.png
+
+
+    # 多台设备稳定性推送测试的文件，可根据需求添加或者减少文件名， 回车输入文件名
+    stability_test_file:
+      #      - test_txt_file.txt
+      - test_stability_file_1.txt
+#      - test_stability_file_2.txt
+#      - test_stability_file_3.txt
+
+  #  设置多线程测试时间
+  Multi_devices_download_time_settings:
+    # 多台设备下载 ota 包的时间设置， 可根据设备的多少设置相应的时间, 单位为秒
+    # 多台设备ota包下载时间设置，根据设备数量设置
+    stability_ota_download_time: 1800
+    # 多台设备apk包下载时间设置，根据设备数量设置
+    stability_app_download_time: 1800
+    # 多台设备文件下载时间设置，根据设备数量设置
+    stability_file_download_time: 1800
+
+  # 设备信息，需要修改
+  android_device_info:
+    # 设备名称， 可以根据adb devices 得到当前的设备名称
+#    m1k123
+    device_name: ce9fb6b6
+#   是否需要用串口断开连接电源线， 是的： True, 反☞： False, 默认为False
+    is_serial: False
+    #    设备是否为横屏
+    is_landscape: True
+    # 可用的wifi, 没有特别需求不需要改, 可添加
+    available_wifi:
+
+      wifi_00:
+        name: TP-5G_888
+        password: T86337898
+
+      wifi_01:
+        name: Telpo
+        password: 86337898
+
+      wifi_02:
+        name: Telpo_Guest
+        password: 86337898
+
+
+
+
+
+
+
+

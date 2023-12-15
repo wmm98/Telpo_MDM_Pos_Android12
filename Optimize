@@ -1,0 +1,31 @@
+1、 alert消失存在， while True 结合超时， 超时 BasePage 已完善
+2、其他if 判断条件， while True 结合超时
+3、alert close-btn 的 class name 不唯一， 需要缩小范围进行
+4、有些场景还没修改，需要先获取get alert text 再执行 alert fade
+5、打开新的Page,Tab, 考虑做while True 结合超时的判定， 同步骤1
+
+
+6、 release Package 不用搜索的方法， 无法搜索包名，直接用循环的方法
+
+7、完善添加新信息时候没有  不存在category 或者其他属性时候 添加
+
+8、upgrade OTA Logs 还没检测log
+
+9、搜索后的数据进行验证是否符合条件
+
+8、展开， menu-open : zz左边菜单栏， 所有的展开都是：menu-open， 后期注意处理
+
+9、 安卓UI注意不调用超过3层， 容易出问题， eg报错：device offline, 点击不生效
+
+
+
+页面跳转出错时注意等待时间，或者再次定位元素;优化： 处理异常重跑
+
+之后需要优化的： 测试之前先检查需要提供的文件，避免影响后面的测试；
+eg.各种安装包， 网络， 4G卡之类的，缺少抛出遗产，提示测试人员；
+eg.设备有没有相应的aimdm文件夹，
+eg.检测当前的固件版本是否对应ota升级包的版本
+
+
+粘贴chrome diver 地址
+C:\Program Files\Google\Chrome\Application
