@@ -537,11 +537,11 @@ class TestDevicesPage:
         # self.android_mdm_page.device_existed(self.wifi_ip)
         # self.android_mdm_page.device_boot_complete()
 
-    @allure.feature('MDM_device_test-no')
+    @allure.feature('MDM_device_test')
     @allure.story('MDM-Show')
     @allure.title("Devices- AIMDM 切换正式测试服服务api ")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    # @pytest.mark.flaky(reruns=1, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_transfer_api_server(self, push_test_api_to_device):
         while True:
             try:
@@ -740,7 +740,7 @@ class TestDevicesPage:
                     log.info("**********************服务器恢复正常*************************")
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('MDM_device_test-no')
+    @allure.feature('MDM_device_test')
     @allure.title("Devices- 日志的抓取")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=1, reruns_delay=3)

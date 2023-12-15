@@ -31,7 +31,7 @@ class TestLogin:
     @allure.feature('MDM_test02_login')
     @allure.title("连接上wifi/登录--辅助测试用例")  # 设置case的名字
     @pytest.mark.dependency(name="test_login_ok", scope='package')
-    # @pytest.mark.flaky(reruns=2, reruns_delay=3)
+    @pytest.mark.flaky(reruns=2, reruns_delay=3)
     def test_connect_wifi_and_login_ok(self):
         self.android_mdm_page.screen_keep_on()
         if self.android_mdm_page.get_current_wlan() is None:
@@ -144,7 +144,7 @@ class TestLogin:
                     self.app_page.input_app_info(file_path)
                     self.app_page.refresh_page()
 
-    @allure.feature('MDM_test02_login')
+    @allure.feature('MDM_test02_login--discard now')
     @allure.story("MDM_test02_login")
     @allure.title("login is ok--辅助测试用例")  # 设置case的名字
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
