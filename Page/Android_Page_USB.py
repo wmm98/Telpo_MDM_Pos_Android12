@@ -449,13 +449,13 @@ class AndroidBasePageUSB(interface):
                     assert False, "@@@@无法remount, 请检查！！！"
                 self.time_sleep(3)
         else:
-                act = self.open_root_usb()
-                if not act:
-                    assert False, "@@@@无法root, 请检查！！！"
-                # ret = self.open_remount_usb()
-                # if not ret:
-                #     assert False, "@@@@无法remount, 请检查！！！"
-                self.time_sleep(3)
+            act = self.open_root_usb()
+            if not act:
+                assert False, "@@@@无法root, 请检查！！！"
+            # ret = self.open_remount_usb()
+            # if not ret:
+            #     assert False, "@@@@无法remount, 请检查！！！"
+            self.time_sleep(3)
 
     def get_device_info(self):
         info = self.USB_client.device_info

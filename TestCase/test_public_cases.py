@@ -831,6 +831,7 @@ class TestPublicPage:
                             assert not self.android_mdm_page.app_is_installed(
                                 release_info["package"]), "@@@@平台显示已经卸载app：%s, 检测到设备还没卸载， 请检查！！！" % release_info[
                                 "package_name"]
+                            log.info("检测到设备已经卸载了app： %s" % release_info["package_name"])
                             break
                     # wait upgrade 3 min at most
                     if self.app_page.get_current_time() > self.app_page.return_end_time(report_time, 180):

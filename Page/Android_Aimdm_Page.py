@@ -348,9 +348,6 @@ class AndroidAimdmPage(AndroidBasePageUSB, AndroidBasePageWiFi):
 
     def confirm_system_app_uninstalled(self):
         apk_file = public_pack.yaml_data['app_info']['low_version_app']
-        # self.wifi_adb_root(self.device_ip)
-        # self.rm_file("system/app/%s" % apk_file)
-        # self.reboot_device_root(self.device_ip)
         now_time = self.get_current_time()
         while True:
             # self.wifi_adb_root(self.device_ip)
