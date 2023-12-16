@@ -21,8 +21,8 @@ class AndroidAimdmPage(AndroidBasePageUSB, AndroidBasePageWiFi):
         self.is_landscape = public_pack.yaml_data["android_device_info"]["is_landscape"]
         aimdm_apk = public_pack.yaml_data["work_app"]["aidmd_apk"]
         tpui_apk = public_pack.yaml_data["work_app"]["tpui_apk"]
-        # self.aimdm_package = self.get_apk_package_name(config.project_path + "\\Param\\Work_APP\\%s" % aimdm_apk)
-        self.aimdm_package = "com.tpos.aimdm"
+        self.aimdm_package = self.get_apk_package_name(config.project_path + "\\Param\\Work_APP\\%s" % aimdm_apk)
+        # self.aimdm_package = "com.tpos.aimdm"
         self.tpui_pakcage = self.get_apk_package_name(config.project_path + "\\Param\\Work_APP\\%s" % tpui_apk)
         self.android_settings_package = "com.android.settings"
         self.android_relatelayout_package = "android"
@@ -68,6 +68,7 @@ class AndroidAimdmPage(AndroidBasePageUSB, AndroidBasePageWiFi):
 
         # wifi module relate
         # switch btn
+        self.wifi_switch_btn_org = "%s:id/switch_widget" % self.android_settings_package
         self.wifi_switch_btn = "%s:id/switch_widget" % self.android_relatelayout_package  # ui change compare with android 10, and the same as android 12
         # wifi switch closed status-- ele(widget_frame) not existed and when open, ele is existed
         self.wifi_settings_btn = "%s:id/widget_frame" % self.android_relatelayout_package
@@ -180,10 +181,11 @@ class AndroidAimdmPage(AndroidBasePageUSB, AndroidBasePageWiFi):
         while True:
             log.info("am start -a android.settings.WIFI_SETTINGS")
             self.u2_send_command("am start -a android.settings.WIFI_SETTINGS")
-            switch_btn = self.ele_id_is_existed_USB(self.wifi_switch_btn, timeout=5)
+            switch_btn_org = self.ele_id_is_existed_USB(self.wifi_switch_btn_org, timeout=3)
+            switch_btn = self.ele_id_is_existed_USB(self.wifi_switch_btn, timeout=3)
             # print(switch_btn)
             # switch_btn = 1
-            if switch_btn:
+            if switch_btn or switch_btn_org:
                 break
             if self.get_current_time() > self.return_end_time(now_time):
                 assert False, "@@@@无法打开wifi 页面， 请检查！！！"
@@ -281,7 +283,6 @@ class AndroidAimdmPage(AndroidBasePageUSB, AndroidBasePageWiFi):
         recent_app = self.get_current_app_USB()
         now_time = self.get_current_time()
         time.sleep(3)
-        flag = 0
         while True:
             try:
                 if self.ele_id_is_existed_USB(recent_app + id_no, 5):
