@@ -11,10 +11,10 @@ MDMTestData:
   #  一般只需填用户密码信息
   website_info:
     # 当前测试的网址
-    test_url: http://test.telpoai.com
-    test_user: mdm_automation
-    test_password: mmwu17765602533
-    test_api: http://test.telpopaas.com
+    test_url: https://sa.telpoai.com
+    test_user: zidonghua
+    test_password: zidonghua@123456
+    test_api: http://sa.telpopaas.com
     # 需要转换服务器api 的网址1
     release_url: https://mdm2.telpoai.com
     release_user: ceshibu_wuch
@@ -47,7 +47,8 @@ MDMTestData:
     # TPS900_msm8937_sv10_fv1.1.16_pv1.1.16-1.1.18.zip
     # TPS900_msm8937_sv10_fv1.1.19_pv1.1.19-1.2.20.zip
     # TPS900_msm8937_sv10_fv1.1.19_pv1.1.19-1.2.22.zip
-    package_name: T20_bengal_sv12_fv1.4.3_pv1.4.3-9.9.9.zip
+    # T20_bengal_sv12_fv1.4.3_pv1.4.3-9.9.9.zip
+    package_name: TPS900_msm8937_sv10_fv1.1.19_pv1.1.19-1.2.20.zip
     # 有分android和linux两种系统  Android Linux
     platform: Android
 
@@ -102,9 +103,9 @@ MDMTestData:
   android_device_info:
     # 设备名称， 可以根据adb devices 得到当前的设备名称
 #    m1k123
-    device_name: ce9fb6b6
+    device_name: d
 #   是否需要用串口断开连接电源线， 是的： True, 反☞： False, 默认为False
-    is_serial: False
+    is_serial: True
     #    设备是否为横屏
     is_landscape: False
     # 可用的wifi, 没有特别需求不需要改, 可添加

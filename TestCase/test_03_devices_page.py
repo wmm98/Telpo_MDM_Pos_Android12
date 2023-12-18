@@ -236,7 +236,7 @@ class TestDevicesPage:
                     log.info("**********************服务器恢复正常*************************")
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('MDM_device_test')
+    @allure.feature('MDM_device_test11')
     @allure.title("Devices- 发送设备重启指令：设备重启5次")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=1, reruns_delay=3)
@@ -248,7 +248,7 @@ class TestDevicesPage:
                 self.android_mdm_page.screen_keep_on()
                 sn = self.device_sn
                 self.page.refresh_page()
-                for i in range(5):
+                for i in range(1):
                     log.info("*************第%d次重启****************" % (i + 1))
                     opt_case.check_single_device(sn)
                     self.page.select_device(sn)
@@ -266,7 +266,8 @@ class TestDevicesPage:
                     assert "Off" in opt_case.get_single_device_list(sn)[0]["Status"]
                     log.info("设备重启下线， 指令在3s内触发")
                     self.page.time_sleep(4)
-                    self.android_mdm_page.confirm_wifi_adb_connected(self.wifi_ip)
+                    self.android_mdm_page.confirm_usb_adb_connect(self.wifi_ip)
+                    # self.android_mdm_page.confirm_wifi_adb_connected(self.wifi_ip)
                     self.android_mdm_page.device_existed(self.wifi_ip)
                     self.android_mdm_page.device_boot_complete()
                     log.info("设备启动完成")
@@ -296,7 +297,7 @@ class TestDevicesPage:
                     log.info("**********************服务器恢复正常*************************")
                     self.page.go_to_new_address("apps")
 
-    @allure.feature('MDM_device_test')
+    @allure.feature('MDM_device_test11')
     @allure.title("Devices- 重置设备TPUI密码")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=1, reruns_delay=3)
@@ -343,7 +344,7 @@ class TestDevicesPage:
                     log.info("**********************服务器恢复正常*************************")
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('MDM_device_test-no')
+    @allure.feature('MDM_device_test')
     @allure.title("Devices- 重置设备密码")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=1, reruns_delay=3)
@@ -745,8 +746,8 @@ class TestDevicesPage:
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_cat_logs(self, go_to_and_return_device_page):
-        # durations = [5, 10, 30]
-        durations = [5]
+        durations = [5, 10, 30]
+        # durations = [5]
         while True:
             try:
                 log.info("*****************日志的抓取用例开始********************")

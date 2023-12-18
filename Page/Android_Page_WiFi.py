@@ -432,6 +432,7 @@ class AndroidBasePageWiFi(interface):
         self.client.screen_on()
         # if battery:
         self.send_shell_command("input swipe %d %d %d %d" % (width / 2, height - 100, width / 2, height - 500))
+        self.send_shell_command("input swipe %d %d %d %d" % (width / 2, height - 100, width / 2, height - 500))
 
     def device_unlock(self):
         self.device_sleep()

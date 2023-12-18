@@ -25,13 +25,18 @@ import time
 # print(driver.current_url)
 #
 
+device = u2.Device()
+device.app_info('')['versionName']
+device.app_info()
+device.app_info()
+print(device.serial)
 #
 # # cmd_send = Shell()
 # # # # #
-usb_device = u2.connect()
-print(usb_device.device_info)
-# usb_device.freeze_rotation(True)
-print(usb_device.info)
+# usb_device = u2.connect()
+# print(usb_device.device_info)
+# # usb_device.freeze_rotation(True)
+# print(usb_device.info)
 # print(usb_device.app_current())
 # print(usb_device.wlan_ip)
 # text = usb_device.shell("wm size").output

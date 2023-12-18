@@ -355,7 +355,7 @@ class APPSPage(TelpoMDMPage):
                 self.select_by_text(self.loc_set_auto_open, "YES")
         self.select_by_text(self.loc_silent_install, info["silent"].upper())
         self.select_by_text(self.loc_download_network, info["download_network"])
-        if "mdm2" in self.get_current_window_url():
+        if "test" not in self.get_current_window_url():
             if isinstance(info["sn"], list):
                 self.input_text(self.loc_release_devices_list, "|".join(info["sn"]))
             else:

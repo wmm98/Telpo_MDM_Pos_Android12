@@ -357,7 +357,7 @@ class OTAPage(TelpoMDMPage):
         if is_silent == 1:
             self.exc_js_click(silent_update)
 
-        if "mdm2" in self.get_current_window_url():
+        if "test" not in self.get_current_window_url():
             if isinstance(release_info["sn"], list):
                 self.input_text(self.loc_release_sn_list, "|".join(release_info["sn"]))
             else:

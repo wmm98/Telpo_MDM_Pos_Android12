@@ -171,6 +171,7 @@ class TestNetworkCases:
             try:
                 log.info("***********************************限定4G网络推送app用例开始**************************************")
                 # self.android_mdm_page.confirm_wifi_adb_connected(self.wifi_ip)
+                self.android_mdm_page.reboot_device(self.wifi_ip)
                 self.android_mdm_page.confirm_wifi_status_open()
                 log.info("成功连接wifi")
                 # file_path = conf.project_path + "\\Param\\Package\\%s" % release_info["package_name"]
