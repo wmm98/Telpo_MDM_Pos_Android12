@@ -26,7 +26,7 @@ class TestLogin:
         self.wifi_flag = 0
 
     def teardown_class(self):
-        pass
+        self.android_mdm_page.reboot_device(self.wifi_ip)
 
     @allure.feature('MDM_test02_login')
     @allure.title("连接上wifi/登录--辅助测试用例")  # 设置case的名字
@@ -79,12 +79,12 @@ class TestLogin:
             self.device_page.refresh_page()
             self.android_mdm_page.reboot_device(self.wifi_ip)
             self.device_page.refresh_page()
-        self.android_mdm_page.confirm_app_installed(
-            conf.project_path + "\\Param\\Work_APP\\%s" % test_yaml["work_app"]["aidmd_apk"])
-        self.android_mdm_page.push_file_to_device(self.api_path,
-                                                  self.android_mdm_page.get_internal_storage_directory() + "/")
-        self.android_mdm_page.reboot_device(self.wifi_ip)
-        self.device_page.refresh_page()
+        # self.android_mdm_page.confirm_app_installed(
+        #     conf.project_path + "\\Param\\Work_APP\\%s" % test_yaml["work_app"]["aidmd_apk"])
+        # self.android_mdm_page.push_file_to_device(self.api_path,
+        #                                           self.android_mdm_page.get_internal_storage_directory() + "/")
+        # self.android_mdm_page.reboot_device(self.wifi_ip)
+        # self.device_page.refresh_page()
 
     @allure.feature('MDM_test02_login111')
     @allure.title("OTA-添加ota升级包-- 辅助测试用例")
