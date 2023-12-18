@@ -18,6 +18,7 @@ class TestLogin:
         self.device_page = TestCase.DevicesPage(self.driver, 40)
         self.android_mdm_page = TestCase.AndroidAimdmPage(TestCase.device_data, 5)
         self.android_mdm_page.open_usb_debug_btn()
+        self.android_mdm_page.open_usb_debug_btn()
         self.android_mdm_page.screen_keep_on()
         self.android_mdm_page.rotation_freeze(freeze=True)
         self.wifi_ip = TestCase.device_data["wifi_device_info"]["ip"]

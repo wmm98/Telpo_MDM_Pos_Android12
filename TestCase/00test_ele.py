@@ -22,14 +22,18 @@ import time
 # # 窗口最大化
 # driver.get(url)
 # time.sleep(5)
+
 # print(driver.current_url)
 #
 
 device = u2.Device()
-device.app_info('')['versionName']
-device.app_info()
-device.app_info()
-print(device.serial)
+device.screen_off()
+device.press("power")
+device.swipe(0.1, 0.9, 0.9, 0.1)
+device.swipe(0.1, 0.9, 0.9, 0.1)
+# device.unlock()
+# print(device.current_app())
+# print(device.current_app())
 #
 # # cmd_send = Shell()
 # # # # #
