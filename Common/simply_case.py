@@ -25,7 +25,6 @@ class Optimize_Case:
                 self.page.search_device_by_sn(sn)
                 devices_list = self.page.get_dev_info_list()
                 if self.page.upper_transfer("On") in self.page.upper_transfer(devices_list[0]["Status"]):
-                    print("在线了")
                     break
             except Exception as e:
                 log.info(e)
