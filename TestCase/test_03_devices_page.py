@@ -539,7 +539,7 @@ class TestDevicesPage:
         # self.android_mdm_page.device_existed(self.wifi_ip)
         # self.android_mdm_page.device_boot_complete()
 
-    @allure.feature('MDM_device_test11111')
+    @allure.feature('MDM_device_test')
     @allure.story('MDM-Show')
     @allure.title("Devices- AIMDM 切换正式测试服服务api ")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')

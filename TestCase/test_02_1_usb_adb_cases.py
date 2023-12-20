@@ -465,7 +465,7 @@ class TestNetworkCases:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.page.go_to_new_address("apps")
 
-    @allure.feature('MDM_usb-test')
+    @allure.feature('MDM_usb-test111111')
     @allure.title("OTA-OTA断网重连5次断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -523,6 +523,17 @@ class TestNetworkCases:
                 self.android_mdm_page.screen_keep_on()
                 self.android_mdm_page.confirm_received_alert(download_tips)
                 log.info("终端弹出下载提示框并且点击确认下载")
+                # flag = 0
+                # for i in range(5):
+                #     try:
+                #         self.android_mdm_page.confirm_received_alert(download_tips)
+                #         log.info("终端弹出下载提示框并且点击确认下载")
+                #     except Exception as e:
+                #         flag += 1
+                #     if flag == 0:
+                #         break
+                #     if flag == 5:
+                #         assert False, "@@@@无法接收到下载提示框， 请检查！！！！"
 
                 # check download record in device
                 now_time = self.page.get_current_time()
@@ -549,7 +560,7 @@ class TestNetworkCases:
                     self.android_mdm_page.open_wifi_btn()
                     self.android_mdm_page.confirm_wifi_btn_open()
                     self.android_mdm_page.confirm_wifi_adb_connected(self.wifi_ip)
-                    self.android_mdm_page.ping_network(300)
+                    self.android_mdm_page.ping_network(timeout=300)
                     log.info("打开wifi开关并且确认可以上网")
                     # need to release again, skip below steps
                     # self.ota_page.go_to_new_address("ota/release")

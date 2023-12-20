@@ -417,7 +417,7 @@ class AndroidAimdmPage(AndroidBasePageUSB, AndroidBasePageWiFi):
         self.click_msg_confirm_btn()
         self.confirm_msg_alert_fade(exp_tips)
 
-    def confirm_received_text(self, exp, timeout=180):
+    def confirm_received_text(self, exp, timeout=60):
         now_time = self.get_current_time()
         while True:
             exp_text = self.upper_transfer(self.remove_space(exp))
