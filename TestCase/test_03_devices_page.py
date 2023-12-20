@@ -175,9 +175,10 @@ class TestDevicesPage:
         while True:
             try:
                 log.info("*******************锁机和解锁用例开始********************")
+                sn = self.device_sn
+                opt_case.confirm_device_online(sn)
                 self.android_mdm_page.screen_keep_on()
                 # case is stable
-                sn = self.device_sn
                 exp_lock_msg = "Device %s Locked" % sn
                 exp_unlock_msg = "Device %s UnLocked" % sn
                 lock_tips = "pls contact the administrator to unlock it!"
@@ -236,7 +237,7 @@ class TestDevicesPage:
                     log.info("**********************服务器恢复正常*************************")
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('MDM_device_test')
+    @allure.feature('MDM_device_test11111')
     @allure.title("Devices- 发送设备重启指令：设备重启5次")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=1, reruns_delay=3)
@@ -248,9 +249,9 @@ class TestDevicesPage:
                 self.android_mdm_page.screen_keep_on()
                 sn = self.device_sn
                 self.page.refresh_page()
-                for i in range(1):
+                for i in range(5):
                     log.info("*************第%d次重启****************" % (i + 1))
-                    opt_case.check_single_device(sn)
+                    opt_case.confirm_device_online(sn)
                     self.page.select_device(sn)
                     self.android_mdm_page.disconnect_ip(self.wifi_ip)
                     self.page.click_reboot_btn()
@@ -297,7 +298,7 @@ class TestDevicesPage:
                     log.info("**********************服务器恢复正常*************************")
                     self.page.go_to_new_address("apps")
 
-    @allure.feature('MDM_device_test')
+    @allure.feature('MDM_device_test11111')
     @allure.title("Devices- 重置设备TPUI密码")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=1, reruns_delay=3)
@@ -316,7 +317,7 @@ class TestDevicesPage:
                 log.info("确认已经安装好tpui软件")
                 self.page.refresh_page()
                 for psw in password:
-                    opt_case.check_single_device(sn)
+                    opt_case.confirm_device_online(sn)
                     log.info("检测到设备在线")
                     self.android_mdm_page.confirm_app_is_running(tpui_package_name)
                     log.info("tpui软件在运行中")
@@ -359,7 +360,7 @@ class TestDevicesPage:
                 password = ["123456", "000000", "999999"]
                 self.page.refresh_page()
                 for psw in password:
-                    opt_case.check_single_device(sn)
+                    opt_case.confirm_device_online(sn)
                     log.info("检测到设备： %s 在线" % sn)
                     self.page.select_device(sn)
                     self.page.click_psw_btn()
@@ -443,8 +444,8 @@ class TestDevicesPage:
                 # sn would change after debug with devices
                 self.android_mdm_page.screen_keep_on()
                 sn = self.device_sn
-                self.page.refresh_page()
                 # confirm if device is online and execute next step, if not, end the case execution
+                opt_case.confirm_device_online(sn)
                 data = opt_case.check_single_device(sn)
                 # print(data)
                 if self.page.upper_transfer("Locked") in self.page.remove_space_and_upper(
@@ -559,7 +560,7 @@ class TestDevicesPage:
                 sn = self.device_sn
                 release_main_title = "Total Devices"
                 release_login_ok_title = "Telpo MDM"
-                opt_case.check_single_device(sn)
+                opt_case.confirm_device_online(sn)
                 root_dir = self.android_mdm_page.get_internal_storage_directory()
                 self.page.refresh_page()
                 self.page.page_load_complete()
@@ -569,7 +570,7 @@ class TestDevicesPage:
                 release_page = case_pack.ReleaseDevicePage(release_driver, 40)
                 log.info("成功登录平台B： %s" % release_version_url)
 
-                opt_case.check_single_device(sn)
+                opt_case.confirm_device_online(sn)
                 log.info("当前平台A 显示设备%s在线在线" % sn)
                 self.page.select_device(sn)
                 self.page.click_server_btn()

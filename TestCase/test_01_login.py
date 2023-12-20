@@ -28,10 +28,10 @@ class TestLogin:
         self.wifi_flag = 0
 
     def teardown_class(self):
-        # pass
-        self.android_mdm_page.reboot_device(self.wifi_ip)
+        pass
+        # self.android_mdm_page.reboot_device(self.wifi_ip)
 
-    @allure.feature('MDM_test02_login')
+    @allure.feature('MDM_test02_login111')
     @allure.title("连接上wifi/登录--辅助测试用例")  # 设置case的名字
     @pytest.mark.dependency(name="test_login_ok", scope='package')
     @pytest.mark.flaky(reruns=2, reruns_delay=3)

@@ -27,10 +27,11 @@ class Optimize_Case:
                 if self.page.upper_transfer("On") in self.page.upper_transfer(devices_list[0]["Status"]):
                     break
             except Exception as e:
-                log.info(e)
-            self.page.refresh_page()
+                log.error(e)
             if self.page.get_current_time() > self.page.return_end_time(now_time, timeout):
                 log.error("@@@@@设备不在线，请检查！！！！")
+                assert False, "@@@@@设备不在线，请检查！！！！"
+            self.page.refresh_page()
 
     def check_single_device(self, sn):
         try:

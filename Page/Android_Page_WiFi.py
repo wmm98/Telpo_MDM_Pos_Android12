@@ -513,7 +513,7 @@ class AndroidBasePageWiFi(interface):
         except TypeError:
             raise Exception("@@@@传入的指令无效！！！")
         except RuntimeError:
-            self.confirm_wifi_adb_connected(self.device_ip, 120)
+            self.confirm_usb_adb_connect(self.device_ip, 120)
             return self.client.shell(cmd, timeout=120).output
             # raise Exception("@@@@设备无响应， 查看设备的连接情况！！！")
 
