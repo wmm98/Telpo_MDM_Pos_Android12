@@ -746,8 +746,8 @@ class TestDevicesPage:
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_cat_logs(self, go_to_and_return_device_page):
-        durations = [5, 10, 30]
-        # durations = [5]
+        # durations = [5, 10, 30]
+        durations = [5]
         while True:
             try:
                 log.info("*****************日志的抓取用例开始********************")

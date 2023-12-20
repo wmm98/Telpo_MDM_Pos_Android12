@@ -21,8 +21,10 @@ class AndroidAimdmPage(AndroidBasePageUSB, AndroidBasePageWiFi):
         self.is_landscape = public_pack.yaml_data["android_device_info"]["is_landscape"]
         aimdm_apk = public_pack.yaml_data["work_app"]["aidmd_apk"]
         tpui_apk = public_pack.yaml_data["work_app"]["tpui_apk"]
-        self.aimdm_package = self.get_apk_package_name(config.project_path + "\\Param\\Work_APP\\%s" % aimdm_apk)
-        # self.aimdm_package = "com.tpos.aimdm"
+        if public_pack.yaml_data["android_device_info"]["install_aimdm"]:
+            self.aimdm_package = self.get_apk_package_name(config.project_path + "\\Param\\Work_APP\\%s" % aimdm_apk)
+        else:
+            self.aimdm_package = "com.tpos.aimdm"
         self.tpui_pakcage = self.get_apk_package_name(config.project_path + "\\Param\\Work_APP\\%s" % tpui_apk)
         self.android_settings_package = "com.android.settings"
         self.android_relatelayout_package = "android"

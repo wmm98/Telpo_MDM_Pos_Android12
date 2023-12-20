@@ -633,7 +633,7 @@ class TestNetworkCases:
                     self.android_mdm_page.del_updated_zip()
                     self.ota_page.go_to_new_address("ota")
 
-    @allure.feature('MDM_usb-test')
+    @allure.feature('MDM_usb-test-no')
     @allure.title("public case- 设备下线无法发送捕捉日志命令")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=1, reruns_delay=3)

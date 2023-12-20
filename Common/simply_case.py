@@ -17,6 +17,22 @@ class Optimize_Case:
         self.page = DevicesPage(self.driver, 40)
         self.cat_log_page = CatchLogPage(self.driver, 40)
 
+    def confirm_device_online(self, sn, timeout=180):
+        self.page.go_to_new_address("devices")
+        now_time = self.page.get_current_time()
+        while True:
+            try:
+                self.page.search_device_by_sn(sn)
+                devices_list = self.page.get_dev_info_list()
+                if self.page.upper_transfer("On") in self.page.upper_transfer(devices_list[0]["Status"]):
+                    print("在线了")
+                    break
+            except Exception as e:
+                log.info(e)
+            self.page.refresh_page()
+            if self.page.get_current_time() > self.page.return_end_time(now_time, timeout):
+                log.error("@@@@@设备不在线，请检查！！！！")
+
     def check_single_device(self, sn):
         try:
             self.page.go_to_new_address("devices")
@@ -86,7 +102,8 @@ class Optimize_Case:
         now_time = self.page.get_current_time()
         while True:
             if len(self.cat_log_page.get_latest_catch_log_list(send_time, sn)) != 0:
-                action = self.page.remove_space_and_upper(self.cat_log_page.get_latest_catch_log_list(send_time, sn)[0]["Action"])
+                action = self.page.remove_space_and_upper(
+                    self.cat_log_page.get_latest_catch_log_list(send_time, sn)[0]["Action"])
                 if report_flag in action or success_flag in action:
                     break
                 elif fail_flag in action:

@@ -5,6 +5,7 @@ import pytest
 log = TestCase.MyLog()
 test_yaml = TestCase.yaml_data
 conf = TestCase.Config()
+opt_case = TestCase.Optimize_Case()
 
 
 class TestLogin:
@@ -27,6 +28,7 @@ class TestLogin:
         self.wifi_flag = 0
 
     def teardown_class(self):
+        # pass
         self.android_mdm_page.reboot_device(self.wifi_ip)
 
     @allure.feature('MDM_test02_login')
@@ -80,14 +82,15 @@ class TestLogin:
             self.device_page.refresh_page()
             self.android_mdm_page.reboot_device(self.wifi_ip)
             self.device_page.refresh_page()
-        # self.android_mdm_page.confirm_app_installed(
-        #     conf.project_path + "\\Param\\Work_APP\\%s" % test_yaml["work_app"]["aidmd_apk"])
-        # self.android_mdm_page.push_file_to_device(self.api_path,
-        #                                           self.android_mdm_page.get_internal_storage_directory() + "/")
-        # self.android_mdm_page.reboot_device(self.wifi_ip)
-        # self.device_page.refresh_page()
+        if test_yaml["android_device_info"]["install_aimdm"]:
+            self.android_mdm_page.confirm_app_installed(
+                conf.project_path + "\\Param\\Work_APP\\%s" % test_yaml["work_app"]["aidmd_apk"])
+        self.android_mdm_page.push_file_to_device(self.api_path,
+                                                  self.android_mdm_page.get_internal_storage_directory() + "/")
+        self.android_mdm_page.reboot_device(self.wifi_ip)
+        opt_case.confirm_device_online(device_sn)
 
-    @allure.feature('MDM_test02_login111')
+    @allure.feature('MDM_test02_login')
     @allure.title("OTA-添加ota升级包-- 辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=1, reruns_delay=3)
@@ -117,7 +120,7 @@ class TestLogin:
             self.ota_page.search_device_by_pack_name(package_info["package_name"])
             assert len(self.ota_page.get_ota_package_list()) == 1, "@@@添加失败！！！"
 
-    @allure.feature('MDM_test02_login1111')
+    @allure.feature('MDM_test02_login')
     @allure.title("Apps-添加APK包--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=1, reruns_delay=3)
@@ -144,5 +147,3 @@ class TestLogin:
                     self.app_page.click_add_btn()
                     self.app_page.input_app_info(file_path)
                     self.app_page.refresh_page()
-
-
