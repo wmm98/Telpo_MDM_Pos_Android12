@@ -129,7 +129,7 @@ class TestPublicPage:
                 i = 0
                 for paper in wallpapers:
                     i += 1
-                    opt_case.check_single_device(self.device_sn)
+                    opt_case.confirm_device_online(self.device_sn)
                     self.content_page.go_to_new_address("content")
                     file_path = conf.project_path + "\\Param\\Content\\%s" % paper
                     file_size = self.content_page.get_file_size_in_windows(file_path)
@@ -243,8 +243,7 @@ class TestPublicPage:
     @allure.title("OTA-OTA重启5次断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
-    def test_upgrade_OTA_package_reboot_5times(self, del_all_ota_release_log, go_to_ota_page,
-                                               delete_ota_package_relate):
+    def test_upgrade_OTA_package_reboot_5times(self, del_all_ota_release_log, delete_ota_package_relate):
         download_tips = "Foundanewfirmware,whethertoupgrade?"
         upgrade_tips = "whethertoupgradenow?"
         release_info = {"package_name": test_yml['ota_packages_info']['package_name'], "sn": self.device_sn,
@@ -254,6 +253,8 @@ class TestPublicPage:
                 log.info("*******************OTA重启5次断点续传用例开始***************************")
                 # get release ota package version
                 times = 2
+                opt_case.confirm_device_online(self.device_sn)
+                self.ota_page.go_to_new_address("ota")
                 release_info["version"] = self.ota_page.get_ota_package_version(release_info["package_name"])
                 current_firmware_version = self.android_mdm_page.check_firmware_version()
                 # compare current version and exp version
@@ -406,13 +407,12 @@ class TestPublicPage:
                 self.android_mdm_page.reboot_device(self.wifi_ip)
                 # check if device is online
                 self.app_page.go_to_new_address("devices")
-                opt_case.check_single_device(release_info["sn"])
+                opt_case.confirm_device_online(self.device_sn)
 
                 app_size = self.app_page.get_file_size_in_windows(file_path)
                 log.info("获取到的app 的size(bytes): %s" % app_size)
                 # check file hash value in directory Param/package
-                act_apk_package_hash_value = self.android_mdm_page.calculate_sha256_in_windows(
-                    release_info["package_name"])
+                act_apk_package_hash_value = self.android_mdm_page.calculate_sha256_in_windows(release_info["package_name"])
                 log.info("act_ota_package_hash_value: %s" % act_apk_package_hash_value)
                 # go to app page
                 self.app_page.go_to_new_address("apps")
@@ -543,7 +543,7 @@ class TestPublicPage:
                 for animation in animations:
                     if animation in self.android_mdm_page.u2_send_command(grep_cmd):
                         self.android_mdm_page.rm_file("%s/%s" % (release_to_path, animation))
-                    opt_case.check_single_device(self.device_sn)
+                    opt_case.confirm_device_online(self.device_sn)
                     self.content_page.go_to_new_address("content")
                     file_path = conf.project_path + "\\Param\\Content\\%s" % animation
                     file_size = self.content_page.get_file_size_in_windows(file_path)
@@ -647,8 +647,8 @@ class TestPublicPage:
                 self.app_page.refresh_page()
 
                 # check if device is online
-                self.app_page.go_to_new_address("devices")
-                opt_case.check_single_device(release_info["sn"])
+                # self.app_page.go_to_new_address("devices")
+                opt_case.confirm_device_online(self.device_sn)
                 log.info("检测到设备：%s 在线" % release_info["sn"])
                 # go to app page and release multi apps one by one
                 send_time = case_pack.time.strftime('%Y-%m-%d %H:%M',
@@ -795,8 +795,8 @@ class TestPublicPage:
                 # install app for uninstall
                 self.android_mdm_page.confirm_app_installed(file_path)
                 # check if device is online
-                self.app_page.go_to_new_address("devices")
-                opt_case.check_single_device(release_info["sn"])
+                # self.app_page.go_to_new_address("devices")
+                opt_case.confirm_device_online(self.device_sn)
                 log.info("检测到设备在线")
                 # go to app release page
                 self.app_page.go_to_new_address("apps")
@@ -861,7 +861,7 @@ class TestPublicPage:
     @allure.title("public case- 静默ota升级")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=2, reruns_delay=1)
-    def test_silent_ota_upgrade(self, del_all_ota_release_log, go_to_ota_page, delete_ota_package_relate):
+    def test_silent_ota_upgrade(self, del_all_ota_release_log, delete_ota_package_relate):
         while True:
             try:
                 log.info("*******************静默ota升级用例开始***************************")
@@ -869,6 +869,8 @@ class TestPublicPage:
                                 "silent": 0, "category": "NO Limit", "network": "NO Limit"}
                 download_tips = "Foundanewfirmware,whethertoupgrade?"
                 upgrade_tips = "whethertoupgradenow?"
+                opt_case.confirm_device_online(self.device_sn)
+                self.ota_page.go_to_new_address("ota")
                 self.android_mdm_page.del_updated_zip()
                 release_info["version"] = self.ota_page.get_ota_package_version(release_info["package_name"])
                 current_firmware_version = self.android_mdm_page.check_firmware_version()
@@ -1005,8 +1007,13 @@ class TestPublicPage:
         while True:
             try:
                 log.info("*******************静默升级系统app用例开始/推送安装成功后自动运行app***************************")
+
                 release_info = {"package_name": test_yml['app_info']['high_version_app'], "sn": self.device_sn,
                                 "silent": "Yes", "download_network": "NO Limit", "auto_open": "YES"}
+                # check if device is online
+                # self.app_page.go_to_new_address("devices")
+                opt_case.confirm_device_online(self.device_sn)
+                log.info("检测到设备 %s 在线" % release_info["sn"])
                 file_path = self.android_mdm_page.get_apk_path(release_info["package_name"])
                 # # install low version system application
                 # # set app as system app
@@ -1041,10 +1048,7 @@ class TestPublicPage:
                 release_info["package"] = package
                 version = self.app_page.get_apk_package_version(file_path)
                 release_info["version"] = version
-                # check if device is online
-                self.app_page.go_to_new_address("devices")
-                opt_case.check_single_device(release_info["sn"])
-                log.info("检测到设备 %s 在线" % release_info["sn"])
+
                 # app_size_mdm = self.page.get_app_size()  for web
                 # check app size(bytes) in windows
                 app_size = self.app_page.get_file_size_in_windows(file_path)
@@ -1176,8 +1180,8 @@ class TestPublicPage:
                 self.android_mdm_page.screen_keep_on()
                 logos = test_yml["Content_info"]["boot_logo"]
                 animation = test_yml["Content_info"]["boot_animation"][0]
-
-                opt_case.check_single_device(self.device_sn)
+                opt_case.confirm_device_online(self.device_sn)
+                # opt_case.check_single_device(self.device_sn)
                 self.content_page.go_to_new_address("content")
                 file_path = conf.project_path + "\\Param\\Content\\%s" % animation
                 file_size = self.content_page.get_file_size_in_windows(file_path)
@@ -1324,6 +1328,7 @@ class TestPublicPage:
                 print(sleep_params)
                 for i in range(len(sleep_params)):
                     log.info("******************%d**********************" % (i + 1))
+                    opt_case.confirm_device_online(self.device_sn)
                     self.android_mdm_page.close_mobile_data()
                     self.android_mdm_page.del_all_downloaded_apk()
                     self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
@@ -1332,7 +1337,6 @@ class TestPublicPage:
                     self.android_mdm_page.back_to_home()
                     # self.android_mdm_page.confirm_unplug_usb_wire()
                     # case_pack.AlertData().getAlert("请拔开USB线再点击确定")
-                    opt_case.check_single_device(self.device_sn)
                     usb_serial.confirm_relay_opened()
                     log.info("打开继电器")
                     release_info = {"package_name": test_yml['app_info']['other_app'], "sn": self.device_sn,

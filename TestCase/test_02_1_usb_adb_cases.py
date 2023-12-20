@@ -49,6 +49,7 @@ class TestNetworkCases:
             try:
                 log.info("********断网重连获取aimdm消耗的流量用例开始**********")
                 length = 1
+                opt_case.confirm_device_online(self.device_sn)
                 self.android_mdm_page.back_to_home_USB()
                 self.android_mdm_page.confirm_wifi_btn_close()
                 self.android_mdm_page.disconnect_ip(self.device_sn)
@@ -67,7 +68,7 @@ class TestNetworkCases:
                         assert False, "@@@@@无法开启移动网络， 请检查！！！！"
                     self.device_page.time_sleep(2)
                 log.info("确认打开流量卡， 并且可以上网")
-                opt_case.check_single_device(self.device_sn)
+                opt_case.confirm_device_online(self.device_sn)
                 base_directory = "Mobile_Data_Used"
                 first_data_used = 0
                 last_data_used = 0
@@ -121,6 +122,7 @@ class TestNetworkCases:
                     # not stable
                     # opt_case.check_single_device(self.device_sn)
                     # status = opt_case.get_single_device_list(self.device_sn)[0]
+                    opt_case.confirm_device_online(self.device_sn)
                     self.android_mdm_page.clear_recent_app_USB()
                     # self.android_mdm_page.back_to_home_USB()
                     data_used_reconnect = self.android_mdm_page.get_aimdm_mobile_data()
@@ -181,8 +183,8 @@ class TestNetworkCases:
                 version = self.page.get_apk_package_version(file_path)
                 release_info["version"] = version
                 # check if device is online
-                self.page.go_to_new_address("devices")
-                opt_case.check_single_device(release_info["sn"])
+                # self.page.go_to_new_address("devices")
+                opt_case.confirm_device_online(self.device_sn)
 
                 # check app size(bytes) in windows
                 app_size = self.page.get_file_size_in_windows(file_path)
@@ -342,9 +344,9 @@ class TestNetworkCases:
                 version = self.page.get_apk_package_version(file_path)
                 release_info["version"] = version
                 # check if device is online
-                self.page.go_to_new_address("devices")
-                opt_case.check_single_device(release_info["sn"])
-
+                # self.page.go_to_new_address("devices")
+                # opt_case.check_single_device(release_info["sn"])
+                opt_case.confirm_device_online(release_info["sn"])
                 # check app size(bytes) in windows
                 app_size = self.page.get_file_size_in_windows(file_path)
                 log.info("电脑端获取到app的size : %s" % str(app_size))
@@ -466,7 +468,6 @@ class TestNetworkCases:
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_upgrade_OTA_package_reconnect_network_5times(self, connect_wifi_adb_USB, del_all_ota_release_log,
-                                                          go_to_ota_page,
                                                           delete_ota_package_relate):
         while True:
             try:
@@ -478,6 +479,8 @@ class TestNetworkCases:
                 release_info = {"package_name": test_yml['ota_packages_info']['package_name'], "sn": self.device_sn,
                                 "category": "NO Limit", "network": "NO Limit"}
                 times = 5
+                opt_case.confirm_device_online(self.device_sn)
+                self.page.go_to_new_address("ota")
                 self.android_mdm_page.screen_keep_on()
                 self.android_mdm_page.back_to_home()
                 # close mobile data first
@@ -640,8 +643,9 @@ class TestNetworkCases:
     def test_fail_to_catch_log_when_offline(self, go_to_device_page, connect_wifi_adb_USB):
         while True:
             try:
-                print("*******************设备下线无法发送捕捉日志命令***************************")
-                log.info("*******************设备下线无法发送捕捉日志命令***************************")
+                print("***********设备下线无法发送捕捉日志命令*******************")
+                log.info("**************设备下线无法发送捕捉日志命令***************")
+                opt_case.confirm_device_online(self.device_sn)
                 self.android_mdm_page.disconnect_ip(self.wifi_ip)
                 self.android_mdm_page.confirm_wifi_btn_close()
                 self.android_mdm_page.close_mobile_data()
@@ -702,8 +706,8 @@ class TestNetworkCases:
                 version = self.page.get_apk_package_version(file_path)
                 release_info["version"] = version
                 # check if device is online
-                self.page.go_to_new_address("devices")
-                opt_case.check_single_device(release_info["sn"])
+                # self.page.go_to_new_address("devices")
+                opt_case.confirm_device_online(self.device_sn)
 
                 # check if the app is existed, if existed, uninstall, else push
                 # if self.android_mdm_page.app_is_installed(release_info["package"]):
@@ -865,8 +869,8 @@ class TestNetworkCases:
                 version = self.page.get_apk_package_version(file_path)
                 release_info["version"] = version
                 # check if device is online
-                self.page.go_to_new_address("devices")
-                opt_case.check_single_device(release_info["sn"])
+                # self.page.go_to_new_address("devices")
+                opt_case.confirm_device_online(self.device_sn)
                 # app_size_mdm = self.page.get_app_size()  for web
                 # check app size(bytes) in windows
                 app_size = self.page.get_file_size_in_windows(file_path)
