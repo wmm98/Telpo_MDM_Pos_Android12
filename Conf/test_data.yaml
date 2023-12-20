@@ -14,12 +14,12 @@ MDMTestData:
     test_url: https://sa.telpoai.com
     test_user: zidonghua
     test_password: zidonghua@123456
-    test_api: http://sa.telpopaas.com
+    test_api: http://sa.telpopaas.com/
     # 需要转换服务器api 的网址1
     release_url: https://mdm2.telpoai.com
     release_user: ceshibu_wuch
     release_password: 123456
-    release_api: https://www.telpopaas.com
+    release_api: https://www.telpopaas.com/
 
   #  普通app名字
   work_app:

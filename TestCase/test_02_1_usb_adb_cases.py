@@ -58,7 +58,7 @@ class TestNetworkCases:
                 now_time = self.android_mdm_page.get_current_time()
                 while True:
                     try:
-                        if self.android_mdm_page.ping_network(timeout=300):
+                        if self.android_mdm_page.ping_network(times=5, timeout=300):
                             break
                     except AssertionError:
                         pass
@@ -327,6 +327,11 @@ class TestNetworkCases:
                 log.info("*********************限定wifi/eth0网络推送app用例开始***************************")
                 release_info = {"package_name": test_yml['app_info']['other_app_limit_network_B'], "sn": self.device_sn,
                                 "silent": "Yes", "download_network": "Wifi/Ethernet"}
+                self.android_mdm_page.reboot_device(self.wifi_ip)
+                # check if device is online
+                # self.page.go_to_new_address("devices")
+                # opt_case.check_single_device(release_info["sn"])
+                opt_case.confirm_device_online(release_info["sn"])
                 log.info("准备断开wifi")
                 # disconnect wifi, open data
                 self.android_mdm_page.disconnect_ip(self.wifi_ip)
@@ -343,10 +348,7 @@ class TestNetworkCases:
                 release_info["package"] = package
                 version = self.page.get_apk_package_version(file_path)
                 release_info["version"] = version
-                # check if device is online
-                # self.page.go_to_new_address("devices")
-                # opt_case.check_single_device(release_info["sn"])
-                opt_case.confirm_device_online(release_info["sn"])
+
                 # check app size(bytes) in windows
                 app_size = self.page.get_file_size_in_windows(file_path)
                 log.info("电脑端获取到app的size : %s" % str(app_size))
@@ -478,8 +480,10 @@ class TestNetworkCases:
                 exp_existed_text = "ota release already existed"
                 release_info = {"package_name": test_yml['ota_packages_info']['package_name'], "sn": self.device_sn,
                                 "category": "NO Limit", "network": "NO Limit"}
+                self.android_mdm_page.reboot_device(self.wifi_ip)
+                # check if device is online
+                opt_case.confirm_device_online(release_info["sn"])
                 times = 5
-                opt_case.confirm_device_online(self.device_sn)
                 self.page.go_to_new_address("ota")
                 self.android_mdm_page.screen_keep_on()
                 self.android_mdm_page.back_to_home()
@@ -707,6 +711,7 @@ class TestNetworkCases:
                 release_info["version"] = version
                 # check if device is online
                 # self.page.go_to_new_address("devices")
+                self.android_mdm_page.reboot_device(self.wifi_ip)
                 opt_case.confirm_device_online(self.device_sn)
 
                 # check if the app is existed, if existed, uninstall, else push

@@ -252,6 +252,7 @@ class TestPublicPage:
             try:
                 log.info("*******************OTA重启5次断点续传用例开始***************************")
                 # get release ota package version
+                self.android_mdm_page.reboot_device(self.wifi_ip)
                 times = 2
                 opt_case.confirm_device_online(self.device_sn)
                 self.ota_page.go_to_new_address("ota")
@@ -535,6 +536,7 @@ class TestPublicPage:
         while True:
             try:
                 log.info("*******************推送文件用例开始***************************")
+                self.android_mdm_page.reboot_device(self.wifi_ip)
                 self.android_mdm_page.screen_keep_on()
                 animations = test_yml["Content_info"]["normal_file"]
                 release_to_path = "%s/aimdm" % self.android_mdm_page.get_internal_storage_directory()
@@ -790,6 +792,7 @@ class TestPublicPage:
             try:
                 log.info("*******************静默卸载正在运行中的app 用例开始***************************")
                 file_path = conf.project_path + "\\Param\\Package\\%s" % release_info["package_name"]
+                self.android_mdm_page.reboot_device(self.wifi_ip)
                 package = self.app_page.get_apk_package_name(file_path)
                 release_info["package"] = package
                 # install app for uninstall
@@ -869,6 +872,7 @@ class TestPublicPage:
                                 "silent": 0, "category": "NO Limit", "network": "NO Limit"}
                 download_tips = "Foundanewfirmware,whethertoupgrade?"
                 upgrade_tips = "whethertoupgradenow?"
+                self.android_mdm_page.reboot_device(self.wifi_ip)
                 opt_case.confirm_device_online(self.device_sn)
                 self.ota_page.go_to_new_address("ota")
                 self.android_mdm_page.del_updated_zip()
@@ -1012,6 +1016,7 @@ class TestPublicPage:
                                 "silent": "Yes", "download_network": "NO Limit", "auto_open": "YES"}
                 # check if device is online
                 # self.app_page.go_to_new_address("devices")
+                self.android_mdm_page.reboot_device(self.wifi_ip)
                 opt_case.confirm_device_online(self.device_sn)
                 log.info("检测到设备 %s 在线" % release_info["sn"])
                 file_path = self.android_mdm_page.get_apk_path(release_info["package_name"])
@@ -1177,6 +1182,7 @@ class TestPublicPage:
         while True:
             try:
                 log.info("*******************推送开机logo/动画开始***************************")
+                self.android_mdm_page.reboot_device(self.wifi_ip)
                 self.android_mdm_page.screen_keep_on()
                 logos = test_yml["Content_info"]["boot_logo"]
                 animation = test_yml["Content_info"]["boot_animation"][0]
