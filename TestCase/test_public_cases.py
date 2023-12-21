@@ -35,28 +35,28 @@ class TestPublicPage:
         self.wifi_ip = case_pack.device_data["wifi_device_info"]["ip"]
         self.android_mdm_page.del_all_content_file()
         self.device_sn = self.android_mdm_page.get_device_sn()
-        self.app_page.delete_app_install_and_uninstall_logs()
+        # self.app_page.delete_app_install_and_uninstall_logs()
         self.android_mdm_page.del_all_downloaded_apk()
         self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
         self.android_mdm_page.del_updated_zip()
-        self.android_mdm_page.reboot_device(self.wifi_ip)
+        # self.android_mdm_page.reboot_device(self.wifi_ip)
         self.content_page.refresh_page()
         self.silent_ota_upgrade_flag = 0
 
     def teardown_class(self):
-        # pass
-        self.app_page.delete_app_install_and_uninstall_logs()
-        self.android_mdm_page.del_updated_zip()
-        self.android_mdm_page.del_all_downloaded_apk()
-        self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
-        self.android_mdm_page.del_all_content_file()
-        self.app_page.refresh_page()
-        self.android_mdm_page.reboot_device(self.wifi_ip)
+        pass
+        # self.app_page.delete_app_install_and_uninstall_logs()
+        # self.android_mdm_page.del_updated_zip()
+        # self.android_mdm_page.del_all_downloaded_apk()
+        # self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
+        # self.android_mdm_page.del_all_content_file()
+        # self.app_page.refresh_page()
+        # self.android_mdm_page.reboot_device(self.wifi_ip)
 
     @allure.feature('MDM_public')
     @allure.title("public case-添加 content 种类--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=1, reruns_delay=3)
+    @pytest.mark.flaky(reruns=2, reruns_delay=3)
     def test_add_content_category(self, go_to_content_page):
         while True:
             try:
@@ -75,10 +75,10 @@ class TestPublicPage:
                     log.info("**********************服务器恢复正常*************************")
                     self.content_page.go_to_new_address("content")
 
-    @allure.feature('MDM_public')
+    @allure.feature('MDM_public11111')
     @allure.title("public case-添加 content 文件--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=1, reruns_delay=3)
+    @pytest.mark.flaky(reruns=2, reruns_delay=3)
     def test_add_content_file(self, go_to_content_page):
         while True:
             try:
@@ -90,14 +90,18 @@ class TestPublicPage:
                     for file_name in test_file:
                         if file_name not in content_name_list:
                             if "file" in file_name:
-                                print(file_path + file_name)
                                 self.content_page.add_content_file("normal_file", file_path + file_name)
+                                self.content_page.time_sleep(3)
                             elif "bootanimation" in file_name:
                                 self.content_page.add_content_file("boot_animation", file_path + file_name)
+                                self.content_page.time_sleep(3)
                             elif "background" in file_name:
                                 self.content_page.add_content_file("wallpaper", file_path + file_name)
+                                self.content_page.refresh_page()
                             elif "logo" in file_name:
+                                self.content_page.time_sleep(3)
                                 self.content_page.add_content_file("logo", file_path + file_name)
+                                self.content_page.refresh_page()
                 log.info("public case-添加 content 文件--辅助测试用例开始结束")
                 break
             except Exception as e:
@@ -1003,7 +1007,7 @@ class TestPublicPage:
                     self.android_mdm_page.del_all_downloaded_zip()
                     self.android_mdm_page.del_updated_zip()
 
-    @allure.feature('MDM_public11111')
+    @allure.feature('MDM_public')
     @allure.title("public case- 静默升级系统app/推送安装成功后自动运行app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=2, reruns_delay=3)

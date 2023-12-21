@@ -77,14 +77,15 @@ class ContentPage(TelpoMDMPage):
 
     def get_content_categories_list(self):
         if self.ele_is_existed(self.loc_cate_list):
-            if self.ele_is_existed(self.loc_cate_list):
-                eles = self.get_elements(self.loc_single_cate)
-                cates_list = [self.remove_space(ele.text) for ele in eles]
-                return cates_list
-            else:
+            if self.remove_space("NO Data") in self.remove_space(self.get_element(self.loc_cate_list).text):
                 return []
-        else:
-            return []
+
+        if self.ele_is_existed(self.loc_cate_list):
+            eles = self.get_elements(self.loc_single_cate)
+            cates_list = [self.remove_space(ele.text) for ele in eles]
+            return cates_list
+        # else:
+        #     return []
 
     def add_content_file(self, file_type, file_path):
         # file_type
@@ -104,6 +105,7 @@ class ContentPage(TelpoMDMPage):
         self.click(self.loc_upload_save)
         self.confirm_tips_alert_show(self.loc_upload_save)
         self.refresh_page()
+        # self.time_sleep(30)
 
     def search_upgrade_log_by_sn(self, sn):
         try:
