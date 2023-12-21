@@ -203,8 +203,7 @@ class AndroidBasePageWiFi(interface):
         # print(wlan_ip + 'device')
         while True:
             serial.confirm_relay_opened()
-            print('%sdevice' % wlan_ip)
-            print(":", self.remove_space(self.devices_list()))
+            log.info(self.remove_space(self.devices_list()))
             if self.remove_space('%sdevice' % wlan_ip) in self.remove_space(self.devices_list()):
                 break
             if self.get_current_time() > self.return_end_time(now_time, timeout):
@@ -510,14 +509,22 @@ class AndroidBasePageWiFi(interface):
             self.confirm_usb_adb_connect(self.device_ip, 120)
             return self.client.shell(cmd, timeout=120).output
             # raise Exception("@@@@设备无响应， 查看设备的连接情况！！！")
+        except public_pack.AdbError:
+            self.confirm_usb_adb_connect(self.device_ip, 120)
+            return self.client.shell(cmd, timeout=120).output
 
     def send_shell_command(self, cmd):
         try:
             command = "adb -s %s shell %s" % (self.device_ip, cmd)
             return sub_shell.invoke(command, runtime=30)
         except Exception:
-            print("@@@@发送指令超时， 请检查！！！")
-            assert False, "@@@@发送指令超时， 请检查！！！"
+            try:
+                command = "adb -s %s shell %s" % (self.device_ip, cmd)
+                return sub_shell.invoke(command, runtime=30)
+            except Exception as e:
+                log.error(str(e))
+                print("@@@@发送指令超时， 请检查！！！")
+                assert False, "@@@@发送指令超时， 请检查！！！"
 
     def send_adb_command(self, cmd, timeout=30):
         try:

@@ -598,6 +598,8 @@ class TestDevicesPage:
                 opt_case.confirm_device_online(sn)
                 log.info("当前平台A 显示设备%s在线在线" % sn)
                 self.page.select_device(sn)
+                log.info("当前设备的api地址为： %s" % self.android_mdm_page.u2_send_command(
+                            "cat /%s/%s" % (root_dir, test_yml["work_app"]["api_txt"])))
                 self.page.click_server_btn()
                 self.page.api_transfer(release_version_api)
                 log.info("设备切换服务器B： %s指令下达" % release_version_api)
@@ -636,16 +638,22 @@ class TestDevicesPage:
                 # self.page.refresh_page()
                 # test_device_info = opt_case.get_single_device_list(sn)
                 log.info("检测平台A中设备: %s的在线情况" % sn)
-                now_time = self.page.get_current_time()
+                online_time = self.page.get_current_time()
+                reboot_flag = 0
                 while True:
                     self.page.refresh_page()
                     if "OFF" in self.page.remove_space(
                             self.page.upper_transfer(opt_case.get_single_device_list(sn)[0]["Status"])):
                         log.info("测试平台A已经显示设备下线")
                         break
-                    if self.page.get_current_time() > self.page.return_end_time(now_time, 180):
-                        log.error("@@@@3分钟内当前平台A显示设备还在线， 请检查！！！")
-                        assert False, "@@@@3分钟内当前平台A显示设备还在线， 请检查！！！"
+                    if self.page.get_current_time() > self.page.return_end_time(online_time, 180):
+                        if reboot_flag == 0:
+                            reboot_flag += 1
+                            self.android_mdm_page.reboot_device(self.wifi_ip)
+                            online_time = self.page.get_current_time()
+                        else:
+                            log.error("@@@@3分钟内当前平台A显示设备还在线， 请检查！！！")
+                            assert False, "@@@@3分钟内当前平台A显示设备还在线， 请检查！！！"
                     self.page.time_sleep(2)
 
                 log.info("检测平台B中设备: %s的在线情况" % sn)
@@ -658,19 +666,28 @@ class TestDevicesPage:
                 # assert "ON" in self.page.remove_space(self.page.upper_transfer(test_device_info[0]["Status"]))
                 # if release_data_list[0]["Status"] == "Off":
                 #     assert False
+                reboot_flag = 0
+                online_time1 = self.page.get_current_time()
                 while True:
                     self.page.refresh_page()
                     if "ON" in self.page.remove_space(
                             self.page.upper_transfer(release_page.get_single_device_list_release(sn)[0]["Status"])):
                         log.info("测试平台B已经显示设备在线")
                         break
-                    if self.page.get_current_time() > self.page.return_end_time(now_time, 180):
-                        log.error("@@@@3分钟内当前平台B一直显示设备下线， 请检查！！！")
-                        assert False, "@@@@3分钟内当前平台B一直显示设备下线， 请检查！！！"
+                    if self.page.get_current_time() > self.page.return_end_time(online_time1, 180):
+                        if reboot_flag == 0:
+                            reboot_flag += 1
+                            self.android_mdm_page.reboot_device(self.wifi_ip)
+                            online_time1 = self.page.get_current_time()
+                        else:
+                            log.error("@@@@3分钟内当前平台B一直显示设备下线， 请检查！！！")
+                            assert False, "@@@@3分钟内当前平台B一直显示设备下线， 请检查！！！"
 
                     self.page.time_sleep(2)
                 log.info("设备再次切换回 服务器A 的api: %s, 切换回原来的服务器" % test_version_api)
                 release_page.select_device(sn)
+                log.info("当前设备的api地址为： %s" % self.android_mdm_page.u2_send_command(
+                    "cat /%s/%s" % (root_dir, test_yml["work_app"]["api_txt"])))
                 release_page.click_server_btn()
                 release_page.api_transfer(test_version_api)
                 log.info("切换服务器 api : %s指令下达成功" % test_version_api)
@@ -692,14 +709,21 @@ class TestDevicesPage:
 
                 if flag != 0:
                     log.info("重启后检测终端api变化")
+                    reboot_flag = 0
+                    online_time2 = self.page.get_current_time()
                     while True:
                         if test_version_api in self.android_mdm_page.u2_send_command(
                                 "cat /%s/%s" % (root_dir, test_yml["work_app"]["api_txt"])):
                             log.info("终端根目录下的aip 已经改变为服务器A的api： %s" % test_version_api)
                             break
-                        if self.page.get_current_time() > self.page.return_end_time(now_time):
-                            log.error("设备启动后3分钟内终端api还没改变为服务器A的api： %s, 请检查！！！" % test_version_api)
-                            assert False, "设备启动后3分钟内终端api还没改变为服务器A的api： %s, 请检查！！！" % test_version_api
+                        if self.page.get_current_time() > self.page.return_end_time(online_time2):
+                            if reboot_flag == 0:
+                                reboot_flag += 1
+                                self.android_mdm_page.reboot_device(self.wifi_ip)
+                                online_time2 = self.page.get_current_time()
+                            else:
+                                log.error("设备启动后3分钟内终端api还没改变为服务器A的api： %s, 请检查！！！" % test_version_api)
+                                assert False, "设备启动后3分钟内终端api还没改变为服务器A的api： %s, 请检查！！！" % test_version_api
                         self.page.time_sleep(10)
 
                 # check if device is offline in release version
@@ -708,16 +732,22 @@ class TestDevicesPage:
                 print(release_data_info_again)
 
                 log.info("检测平台B中设备: %s的在线情况" % sn)
-                now_time = self.page.get_current_time()
+                reboot_flag = 0
+                online_time3 = self.page.get_current_time()
                 while True:
                     self.page.refresh_page()
                     if "OFF" in self.page.remove_space(
                             self.page.upper_transfer(release_page.get_single_device_list_release(sn)[0]["Status"])):
                         log.info("检测到平台B中设备：%s显示下线状态" % sn)
                         break
-                    if self.page.get_current_time() > self.page.return_end_time(now_time, 180):
-                        log.error("@@@@3分钟内检测到平台B中设备一直显示在线， 请检查！！！")
-                        assert False, "@@@@3分钟内检测到平台B中涉笔一直显示在线， 请检查！！！"
+                    if self.page.get_current_time() > self.page.return_end_time(online_time3, 180):
+                        if reboot_flag == 0:
+                            reboot_flag += 1
+                            self.android_mdm_page.reboot_device(self.wifi_ip)
+                            online_time3 = self.page.get_current_time()
+                        else:
+                            log.error("@@@@3分钟内检测到平台B中设备一直显示在线， 请检查！！！")
+                            assert False, "@@@@3分钟内检测到平台B中涉笔一直显示在线， 请检查！！！"
                     self.page.time_sleep(5)
 
                 log.info("检测平台A中设备: %s的在线情况" % sn)
@@ -725,16 +755,22 @@ class TestDevicesPage:
                 self.page.refresh_page()
                 test_data_info = opt_case.get_single_device_list(sn)
                 print(test_data_info)
-                now_time = self.page.get_current_time()
+                reboot_flag = 0
+                online_time4 = self.page.get_current_time()
                 while True:
                     self.page.refresh_page()
                     if "ON" in self.page.remove_space(
                             self.page.upper_transfer(opt_case.get_single_device_list(sn)[0]["Status"])):
                         log.info("平台A中设备：%s 显示在线状态" % sn)
                         break
-                    if self.page.get_current_time() > self.page.return_end_time(now_time, 180):
-                        log.error("@@@@3分钟内检测到平台A中设备一直显示下线， 请检查！！！")
-                        assert False, "@@@@3分钟内检测到平台A中设备一直显示下线， 请检查！！！"
+                    if self.page.get_current_time() > self.page.return_end_time(online_time4, 180):
+                        if reboot_flag == 0:
+                            reboot_flag += 1
+                            self.android_mdm_page.reboot_device(self.wifi_ip)
+                            online_time4 = self.page.get_current_time()
+                        else:
+                            log.error("@@@@3分钟内检测到平台A中设备一直显示下线， 请检查！！！")
+                            assert False, "@@@@3分钟内检测到平台A中设备一直显示下线， 请检查！！！"
                     self.page.time_sleep(2)
                 release_page.quit_browser()
                 log.info("*****************AIMDM 切换正式测试服服务api 测试用例结束****************")

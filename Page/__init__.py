@@ -24,6 +24,7 @@ import socket
 from ping3 import ping
 import threading
 from Common.Serial import Serial
+from adbutils import AdbError
 
 yaml_data = Config().get_yaml_data()['MDMTestData']
 # warnings.simplefilter('ignore', category=DeprecationWarning)

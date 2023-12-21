@@ -88,7 +88,7 @@ class Serial:
                 ser.write(bytes.fromhex("A0 01 00 A1"))
             time.sleep(1)
 
-    def confirm_relay_opened(self, timeout=180):
+    def confirm_relay_opened(self, timeout=60):
         if self.is_serial:
             now_time = time.time()
             while True:

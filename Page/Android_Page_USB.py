@@ -454,6 +454,15 @@ class AndroidBasePageUSB(interface):
                 if not ret1:
                     assert False, "@@@@无法remount, 请检查！！！"
                 self.time_sleep(3)
+            else:
+                act = self.open_root_usb()
+                if not act:
+                    assert False, "@@@@无法root, 请检查！！！"
+                ret = self.open_remount_usb()
+                self.time_sleep(3)
+                if not ret:
+                    assert False, "@@@@无法remount, 请检查！！！"
+                self.time_sleep(3)
         else:
             act = self.open_root_usb()
             if not act:

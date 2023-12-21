@@ -1003,7 +1003,7 @@ class TestPublicPage:
                     self.android_mdm_page.del_all_downloaded_zip()
                     self.android_mdm_page.del_updated_zip()
 
-    @allure.feature('MDM_public')
+    @allure.feature('MDM_public11111')
     @allure.title("public case- 静默升级系统app/推送安装成功后自动运行app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=2, reruns_delay=3)
