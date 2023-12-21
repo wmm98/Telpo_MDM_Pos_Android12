@@ -159,9 +159,7 @@ class AndroidBasePageWiFi(interface):
 
     def reboot_device_multi(self, wlan0_ip):
         self.send_adb_command("reboot")
-        self.time_sleep(5)
-        self.kill_server()
-        self.start_server()
+        self.time_sleep(30)
         self.confirm_wifi_adb_connected_multi(wlan0_ip)
         self.device_existed(wlan0_ip)
         # self.confirm_usb_adb_connect(wlan0_ip)
@@ -170,9 +168,7 @@ class AndroidBasePageWiFi(interface):
 
     def reboot_device_root_multi(self, wlan0_ip):
         self.send_adb_command("reboot")
-        self.time_sleep(5)
-        self.kill_server()
-        self.start_server()
+        self.time_sleep(30)
         self.confirm_wifi_adb_connected_multi(wlan0_ip)
         self.device_existed(wlan0_ip)
         self.device_boot_complete()
@@ -181,9 +177,7 @@ class AndroidBasePageWiFi(interface):
 
     def reboot_device(self, wlan0_ip):
         self.send_adb_command("reboot")
-        self.time_sleep(5)
-        self.kill_server()
-        self.start_server()
+        self.time_sleep(30)
         # self.confirm_wifi_adb_connected(wlan0_ip)
         # self.device_existed(wlan0_ip)
         self.confirm_usb_adb_connect(wlan0_ip)
@@ -193,9 +187,7 @@ class AndroidBasePageWiFi(interface):
 
     def reboot_device_root(self, wlan0_ip):
         self.send_adb_command("reboot")
-        self.time_sleep(5)
-        self.kill_server()
-        self.start_server()
+        self.time_sleep(30)
         # self.confirm_wifi_adb_connected(wlan0_ip)
         # self.device_existed(wlan0_ip)
         self.confirm_usb_adb_connect(wlan0_ip)
@@ -205,6 +197,8 @@ class AndroidBasePageWiFi(interface):
         self.screen_keep_on()
 
     def confirm_usb_adb_connect(self, wlan_ip, timeout=180):
+        self.kill_server()
+        self.start_server()
         now_time = self.get_current_time()
         # print(wlan_ip + 'device')
         while True:
@@ -222,7 +216,7 @@ class AndroidBasePageWiFi(interface):
 
     def start_server(self, timeout=120):
         res = sub_shell.invoke('adb start-server', runtime=timeout)
-        print(res)
+        log.info(res)
 
     def wifi_adb_root(self, wlan_ip):
         try:

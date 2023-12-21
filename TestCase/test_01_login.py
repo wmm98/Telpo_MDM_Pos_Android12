@@ -31,7 +31,7 @@ class TestLogin:
         # pass
         self.android_mdm_page.reboot_device(self.wifi_ip)
 
-    @allure.feature('MDM_test02_login111')
+    @allure.feature('MDM_test02_login')
     @allure.title("连接上wifi/登录--辅助测试用例")  # 设置case的名字
     @pytest.mark.dependency(name="test_login_ok", scope='package')
     @pytest.mark.flaky(reruns=2, reruns_delay=3)
@@ -90,7 +90,7 @@ class TestLogin:
         self.android_mdm_page.reboot_device(self.wifi_ip)
         opt_case.confirm_device_online(device_sn)
 
-    @allure.feature('MDM_test02_login')
+    @allure.feature('MDM_test02_login1111')
     @allure.title("OTA-添加ota升级包-- 辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=1, reruns_delay=3)
@@ -120,7 +120,7 @@ class TestLogin:
             self.ota_page.search_device_by_pack_name(package_info["package_name"])
             assert len(self.ota_page.get_ota_package_list()) == 1, "@@@添加失败！！！"
 
-    @allure.feature('MDM_test02_login')
+    @allure.feature('MDM_test02_login1111')
     @allure.title("Apps-添加APK包--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=1, reruns_delay=3)

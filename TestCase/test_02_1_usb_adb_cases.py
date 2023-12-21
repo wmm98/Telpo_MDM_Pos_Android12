@@ -39,7 +39,7 @@ class TestNetworkCases:
         self.android_mdm_page.del_updated_zip()
         self.android_mdm_page.reboot_device(self.wifi_ip)
 
-    @allure.feature('MDM_usb-test')
+    @allure.feature('MDM_usb-test11111')
     @allure.story('MDM-Show')
     @allure.title("Apps- 断网重连获取aimdm消耗的流量")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -55,18 +55,11 @@ class TestNetworkCases:
                 self.android_mdm_page.disconnect_ip(self.device_sn)
                 log.info("确认关闭wifi")
                 self.android_mdm_page.open_mobile_data()
-                now_time = self.android_mdm_page.get_current_time()
-                while True:
-                    try:
-                        if self.android_mdm_page.ping_network(times=5, timeout=300):
-                            break
-                    except AssertionError:
-                        pass
-                    # self.android_mdm_page.open_mobile_data()
-                    if now_time > self.device_page.return_end_time(now_time, 400):
-                        log.error("@@@@@无法开启移动网络， 请检查！！！！")
-                        assert False, "@@@@@无法开启移动网络， 请检查！！！！"
-                    self.device_page.time_sleep(2)
+                try:
+                    self.android_mdm_page.ping_network(times=5, timeout=60)
+                except AssertionError:
+                    log.error("@@@@@无法开启移动网络， 请检查！！！！")
+                    assert False, "@@@@@无法开启移动网络， 请检查！！！！"
                 log.info("确认打开流量卡， 并且可以上网")
                 opt_case.confirm_device_online(self.device_sn)
                 base_directory = "Mobile_Data_Used"
@@ -91,18 +84,11 @@ class TestNetworkCases:
                     # self.android_mdm_page.back_to_home_USB()
                     self.android_mdm_page.time_sleep(2)
                     self.android_mdm_page.close_mobile_data()
-
-                    now_time = self.android_mdm_page.get_current_time()
-                    while True:
-                        try:
-                            if self.android_mdm_page.no_network():
-                                break
-                        except AssertionError:
-                            pass
-                        self.android_mdm_page.close_mobile_data()
-                        if now_time > self.device_page.return_end_time(now_time, 90):
-                            assert False, "@@@@@无法关闭移动网络， 请检查！！！！"
-                        self.device_page.time_sleep(1)
+                    try:
+                        self.android_mdm_page.no_network()
+                    except AssertionError:
+                        log.error("@@@@@无法关闭移动网络， 请检查！！！！")
+                        assert False, "@@@@@无法关闭移动网络， 请检查！！！！"
                     # not stable
                     # status = opt_case.get_single_device_list(self.device_sn)[0]
                     self.android_mdm_page.time_sleep(60)
@@ -465,7 +451,7 @@ class TestNetworkCases:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.page.go_to_new_address("apps")
 
-    @allure.feature('MDM_usb-test111111')
+    @allure.feature('MDM_usb-test')
     @allure.title("OTA-OTA断网重连5次断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)

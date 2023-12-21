@@ -196,7 +196,7 @@ class AndroidBasePageUSB(interface):
                 assert False, "@@@@超过%d s无法上网,请检查网络" % timeout
             public_pack.t_time.sleep(2)
 
-    def no_network(self, times=5, timeout=30):
+    def no_network(self, times=5, timeout=60):
         # 每隔0.6秒ping一次，一共ping5次
         # ping - c 5 - i 0.6 qq.com
         cmd = "ping -c %s %s" % (times, "www.baidu.com")

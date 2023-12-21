@@ -88,16 +88,17 @@ class Serial:
                 ser.write(bytes.fromhex("A0 01 00 A1"))
             time.sleep(1)
 
-    def confirm_relay_opened(self, timeout=120):
+    def confirm_relay_opened(self, timeout=180):
         if self.is_serial:
             now_time = time.time()
             while True:
                 self.confirm_relay_closed()
-                time.sleep(1)
+                time.sleep(2)
                 self.send_ser_connect_cmd(conn=True)
                 time.sleep(2)
                 if self.send_status_cmd():
                     log.info("成功打开继电器")
+                    time.sleep(5)
                     break
                 time.sleep(1)
                 if time.time() > now_time + timeout:
@@ -105,7 +106,7 @@ class Serial:
                     assert False, "@@@@无法打开继电器，请检查！！！！"
                 time.sleep(1)
 
-    def confirm_relay_closed(self, timeout=120):
+    def confirm_relay_closed(self, timeout=180):
         if self.is_serial:
             now_time = time.time()
             while True:
