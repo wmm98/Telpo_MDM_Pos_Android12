@@ -87,7 +87,7 @@ class ContentPage(TelpoMDMPage):
         # else:
         #     return []
 
-    def add_content_file(self, file_type, file_path):
+    def add_content_file(self, file_type, file_path, timeout=300):
         # file_type
         # normal_file, boot_animation wallpaper, logo
         self.click(self.loc_new_file)
@@ -103,7 +103,7 @@ class ContentPage(TelpoMDMPage):
             uses_for[3].click()
         self.input_text(self.loc_upload_content_btn, file_path, clear=False)
         self.click(self.loc_upload_save)
-        self.confirm_tips_alert_show(self.loc_upload_save)
+        self.confirm_tips_alert_show(self.loc_upload_save, timeout=timeout)
         self.refresh_page()
         # self.time_sleep(30)
 
@@ -281,7 +281,8 @@ class ContentPage(TelpoMDMPage):
         self.select_by_text(self.loc_files_type, file_type)
 
     def get_content_list(self):
-        if "NO Data" in self.get_element(self.loc_content_list).text:
+        # print(self.get_element(self.loc_content_list).text)
+        if self.remove_space("NO Data") in self.remove_space(self.get_element(self.loc_content_list).text):
             return []
         else:
             boxes = self.get_elements_in_range(self.loc_content_list, self.loc_single_content)

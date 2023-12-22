@@ -11,10 +11,14 @@ MDMTestData:
   #  一般只需填用户密码信息
   website_info:
     # 当前测试的网址
-    test_url: https://sa.telpoai.com
-    test_user: zidonghua
-    test_password: zidonghua@123456
-    test_api: http://sa.telpopaas.com/
+#    test_url: https://sa.telpoai.com
+#    test_user: zidonghua
+#    test_password: zidonghua@123456
+#    test_api: http://sa.telpopaas.com/
+    test_url: http://test.telpoai.com
+    test_user: mdm_automation
+    test_password: mmwu17765602533
+    test_api: http://test.telpopaas.com/
     # 需要转换服务器api 的网址1
     release_url: https://mdm2.telpoai.com
     release_user: ceshibu_wuch

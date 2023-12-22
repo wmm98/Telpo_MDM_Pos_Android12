@@ -35,25 +35,25 @@ class TestPublicPage:
         self.wifi_ip = case_pack.device_data["wifi_device_info"]["ip"]
         self.android_mdm_page.del_all_content_file()
         self.device_sn = self.android_mdm_page.get_device_sn()
-        # self.app_page.delete_app_install_and_uninstall_logs()
+        self.app_page.delete_app_install_and_uninstall_logs()
         self.android_mdm_page.del_all_downloaded_apk()
         self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
         self.android_mdm_page.del_updated_zip()
-        # self.android_mdm_page.reboot_device(self.wifi_ip)
+        self.android_mdm_page.reboot_device(self.wifi_ip)
         self.content_page.refresh_page()
         self.silent_ota_upgrade_flag = 0
 
     def teardown_class(self):
-        pass
-        # self.app_page.delete_app_install_and_uninstall_logs()
-        # self.android_mdm_page.del_updated_zip()
-        # self.android_mdm_page.del_all_downloaded_apk()
-        # self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
-        # self.android_mdm_page.del_all_content_file()
-        # self.app_page.refresh_page()
-        # self.android_mdm_page.reboot_device(self.wifi_ip)
+        # pass
+        self.app_page.delete_app_install_and_uninstall_logs()
+        self.android_mdm_page.del_updated_zip()
+        self.android_mdm_page.del_all_downloaded_apk()
+        self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
+        self.android_mdm_page.del_all_content_file()
+        self.app_page.refresh_page()
+        self.android_mdm_page.reboot_device(self.wifi_ip)
 
-    @allure.feature('MDM_public')
+    @allure.feature('MDM_public11111')
     @allure.title("public case-添加 content 种类--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=2, reruns_delay=3)
@@ -61,9 +61,15 @@ class TestPublicPage:
         while True:
             try:
                 log.info("===================添加 content 种类--辅助测试用例开始==================")
-                self.content_page.refresh_page()
-                if len(self.content_page.get_content_categories_list()) == 0:
+                now_time = self.content_page.get_current_time()
+                while True:
+                    self.content_page.refresh_page()
+                    if len(self.content_page.get_content_categories_list()) != 0:
+                        break
                     self.content_page.new_content_category("test-debug")
+                    if self.content_page.get_current_time() > self.content_page.return_end_time(now_time, 300):
+                        assert False, "@@@@无法创建新的分类， 请检查！！！"
+                    self.content_page.time_sleep(3)
                 log.info("===================添加 content 种类--辅助测试用例结束==================")
                 break
             except Exception as e:
@@ -78,30 +84,83 @@ class TestPublicPage:
     @allure.feature('MDM_public11111')
     @allure.title("public case-添加 content 文件--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=2, reruns_delay=3)
+    # @pytest.mark.flaky(reruns=2, reruns_delay=3)
     def test_add_content_file(self, go_to_content_page):
         while True:
             try:
                 log.info("public case-添加 content 文件--辅助测试用例开始")
                 self.content_page.refresh_page()
                 file_path = conf.project_path + "\\Param\\Content\\"
-                content_name_list = self.content_page.get_content_list()
+                # content_name_list = self.content_page.get_content_list()
                 for test_file in test_yml["Content_info"].values():
                     for file_name in test_file:
-                        if file_name not in content_name_list:
-                            if "file" in file_name:
+                        # if file_name not in content_name_list:
+                        if "file" in file_name:
+                            # pass
+                            now_time = self.content_page.get_current_time()
+                            while True:
+                                self.content_page.search_content('Normal Files', file_name)
+                                self.content_page.time_sleep(5)
+                                if len(self.content_page.get_content_list()) == 1:
+                                    self.content_page.refresh_page()
+                                    # print("11111111111111111111111111111")
+                                    break
+                                self.content_page.refresh_page()
+                                self.content_page.time_sleep(3)
                                 self.content_page.add_content_file("normal_file", file_path + file_name)
                                 self.content_page.time_sleep(3)
-                            elif "bootanimation" in file_name:
-                                self.content_page.add_content_file("boot_animation", file_path + file_name)
-                                self.content_page.time_sleep(3)
-                            elif "background" in file_name:
-                                self.content_page.add_content_file("wallpaper", file_path + file_name)
+                                if self.content_page.get_current_time() > self.content_page.return_end_time(now_time,
+                                                                                                            600):
+                                    assert False, "@@@无法上传文件：%s" % file_name
+
+                        elif "bootanimation" in file_name:
+                            now_time = self.content_page.get_current_time()
+                            while True:
+                                self.content_page.search_content('Boot Animations', file_name)
+                                self.content_page.time_sleep(5)
+                                if len(self.content_page.get_content_list()) == 1:
+                                    self.content_page.refresh_page()
+                                    break
                                 self.content_page.refresh_page()
-                            elif "logo" in file_name:
+                                self.content_page.time_sleep(3)
+                                self.content_page.add_content_file("boot_animation", file_path + file_name, timeout=700)
+                                self.content_page.time_sleep(2)
+                                if self.content_page.get_current_time() > self.content_page.return_end_time(now_time,
+                                                                                                            600):
+                                    assert False, "@@@无法上传文件：%s" % file_name
+
+                        elif "background" in file_name:
+                            now_time = self.content_page.get_current_time()
+                            while True:
+                                self.content_page.search_content('Wallpaper', file_name)
+                                self.content_page.time_sleep(5)
+                                if len(self.content_page.get_content_list()) == 1:
+                                    self.content_page.refresh_page()
+                                    break
+                                self.content_page.refresh_page()
+                                self.content_page.time_sleep(3)
+                                self.content_page.add_content_file("wallpaper", file_path + file_name)
+                                self.content_page.time_sleep(3)
+                                if self.content_page.get_current_time() > self.content_page.return_end_time(now_time,
+                                                                                                            600):
+                                    assert False, "@@@无法上传文件：%s" % file_name
+
+                        elif "logo" in file_name:
+                            now_time = self.content_page.get_current_time()
+                            while True:
+                                self.content_page.search_content('LOGO', file_name)
+                                self.content_page.time_sleep(5)
+                                if len(self.content_page.get_content_list()) == 1:
+                                    self.content_page.refresh_page()
+                                    break
+                                self.content_page.refresh_page()
                                 self.content_page.time_sleep(3)
                                 self.content_page.add_content_file("logo", file_path + file_name)
-                                self.content_page.refresh_page()
+                                self.content_page.time_sleep(3)
+                                if self.content_page.get_current_time() > self.content_page.return_end_time(now_time,
+                                                                                                            600):
+                                    assert False, "@@@无法上传文件：%s" % file_name
+
                 log.info("public case-添加 content 文件--辅助测试用例开始结束")
                 break
             except Exception as e:
@@ -171,8 +230,9 @@ class TestPublicPage:
                             if len(upgrade_list) != 0:
                                 action = upgrade_list[0]["Action"]
                                 log.info("平台upgrade log状态： %s" % action)
-                                if self.content_page.get_action_status(action) == 2 or self.content_page.get_action_status(
-                                        action) == 7:
+                                if self.content_page.get_action_status(
+                                        action) == 2 or self.content_page.get_action_status(
+                                    action) == 7:
                                     # check the app size in device, check if app download fully
                                     size = self.android_mdm_page.get_file_size_in_device(paper)
                                     log.info("终端下载后的的size大小： %s" % str(size))
@@ -182,12 +242,14 @@ class TestPublicPage:
                                     log.info("文件前后的hash256值一致")
                                     break
                             # wait 20 min
-                            if self.content_page.get_current_time() > self.content_page.return_end_time(download_time, 1200):
+                            if self.content_page.get_current_time() > self.content_page.return_end_time(download_time,
+                                                                                                        1200):
                                 if self.content_page.service_is_normal():
                                     log.error("@@@@20分钟还没有下载完相应的文件， 请检查！！！")
                                     assert False, "@@@@20分钟还没有下载完相应的文件， 请检查！！！"
                                 else:
-                                    self.content_page.recovery_after_service_unavailable("content/log", case_pack.user_info)
+                                    self.content_page.recovery_after_service_unavailable("content/log",
+                                                                                         case_pack.user_info)
                                     download_time = self.content_page.get_current_time()
                             self.content_page.time_sleep(5)
                             self.content_page.refresh_page()
@@ -203,12 +265,14 @@ class TestPublicPage:
                                     log.info("平台显示已经设置完成壁纸")
                                     break
                             # wait upgrade 3 min at most
-                            if self.content_page.get_current_time() > self.content_page.return_end_time(report_time, 180):
+                            if self.content_page.get_current_time() > self.content_page.return_end_time(report_time,
+                                                                                                        180):
                                 if self.content_page.service_is_normal():
                                     log.error("@@@@3分钟还没有设置完相应的壁纸， 请检查！！！")
                                     assert False, "@@@@3分钟还没有设置完相应的壁纸， 请检查！！！"
                                 else:
-                                    self.content_page.recovery_after_service_unavailable("content/log", case_pack.user_info)
+                                    self.content_page.recovery_after_service_unavailable("content/log",
+                                                                                         case_pack.user_info)
                                     report_time = self.content_page.get_current_time()
                             self.content_page.time_sleep(5)
                             self.content_page.refresh_page()
@@ -263,7 +327,8 @@ class TestPublicPage:
                 release_info["version"] = self.ota_page.get_ota_package_version(release_info["package_name"])
                 current_firmware_version = self.android_mdm_page.check_firmware_version()
                 # compare current version and exp version
-                assert self.ota_page.transfer_version_into_int(current_firmware_version) < self.ota_page.transfer_version_into_int(
+                assert self.ota_page.transfer_version_into_int(
+                    current_firmware_version) < self.ota_page.transfer_version_into_int(
                     release_info["version"]), \
                     "@@@@释放的ota升级包比当前固件版本版本低， 请检查！！！"
                 # reboot and sync data with platform
@@ -277,11 +342,13 @@ class TestPublicPage:
                 act_ota_package_size = self.ota_page.get_zip_size(ota_package_path)
                 log.info("act_ota_package_size: %s" % act_ota_package_size)
                 # check file hash value in directory Param/package
-                act_ota_package_hash_value = self.android_mdm_page.calculate_sha256_in_windows(release_info["package_name"])
+                act_ota_package_hash_value = self.android_mdm_page.calculate_sha256_in_windows(
+                    release_info["package_name"])
                 log.info("act_ota_package_hash_value: %s" % act_ota_package_hash_value)
                 self.ota_page.search_device_by_pack_name(release_info["package_name"])
                 # ele = self.Page.get_package_ele(release_info["package_name"])
-                send_time = case_pack.time.strftime('%Y-%m-%d %H:%M', case_pack.time.localtime(self.ota_page.get_current_time()))
+                send_time = case_pack.time.strftime('%Y-%m-%d %H:%M',
+                                                    case_pack.time.localtime(self.ota_page.get_current_time()))
                 self.ota_page.time_sleep(10)
                 # if device is existed, click
                 self.ota_page.click_release_btn()
@@ -417,7 +484,8 @@ class TestPublicPage:
                 app_size = self.app_page.get_file_size_in_windows(file_path)
                 log.info("获取到的app 的size(bytes): %s" % app_size)
                 # check file hash value in directory Param/package
-                act_apk_package_hash_value = self.android_mdm_page.calculate_sha256_in_windows(release_info["package_name"])
+                act_apk_package_hash_value = self.android_mdm_page.calculate_sha256_in_windows(
+                    release_info["package_name"])
                 log.info("act_ota_package_hash_value: %s" % act_apk_package_hash_value)
                 # go to app page
                 self.app_page.go_to_new_address("apps")
@@ -554,7 +622,8 @@ class TestPublicPage:
                     file_path = conf.project_path + "\\Param\\Content\\%s" % animation
                     file_size = self.content_page.get_file_size_in_windows(file_path)
                     log.info("获取到的文件 的size(bytes): %s" % str(file_size))
-                    file_hash_value = self.android_mdm_page.calculate_sha256_in_windows("%s " % animation, directory="Content")
+                    file_hash_value = self.android_mdm_page.calculate_sha256_in_windows("%s " % animation,
+                                                                                        directory="Content")
                     log.info("文件的hash_value: %s" % str(file_hash_value))
                     send_time = case_pack.time.strftime('%Y-%m-%d %H:%M',
                                                         case_pack.time.localtime(self.content_page.get_current_time()))
@@ -598,7 +667,8 @@ class TestPublicPage:
                                 log.info("平台显示文件设置完毕")
                                 break
                         # wait upgrade 3 min at most
-                        if self.content_page.get_current_time() > self.content_page.return_end_time(report_now_time, 180):
+                        if self.content_page.get_current_time() > self.content_page.return_end_time(report_now_time,
+                                                                                                    180):
                             print(upgrade_list)
                             if self.content_page.service_is_normal():
                                 log.error("@@@@3分钟平台还没有设置完相应的文件， 请检查！！！")
@@ -643,9 +713,11 @@ class TestPublicPage:
                 self.app_page.delete_all_app_release_log()
                 # self.android_mdm_page.uninstall_multi_apps()
 
-                apks_packages = [self.android_mdm_page.get_apk_package_name(self.android_mdm_page.get_apk_path(apk)) for apk in
+                apks_packages = [self.android_mdm_page.get_apk_package_name(self.android_mdm_page.get_apk_path(apk)) for
+                                 apk in
                                  apks]
-                apks_versions = [self.android_mdm_page.get_apk_package_version(self.android_mdm_page.get_apk_path(apk)) for apk
+                apks_versions = [self.android_mdm_page.get_apk_package_version(self.android_mdm_page.get_apk_path(apk))
+                                 for apk
                                  in apks]
 
                 self.android_mdm_page.reboot_device(self.wifi_ip)
@@ -701,7 +773,8 @@ class TestPublicPage:
                             # check the app hash value in Param/Package and aimdm/download list
                             shell_app_apk_name = apks_packages[d_completed] + "_%s.apk" % apks_versions[d_completed]
                             shell_hash_value = self.android_mdm_page.calculate_sha256_in_device(shell_app_apk_name)
-                            original_hash_value = self.android_mdm_page.calculate_sha256_in_windows("%s" % apks[d_completed])
+                            original_hash_value = self.android_mdm_page.calculate_sha256_in_windows(
+                                "%s" % apks[d_completed])
                             if original_hash_value == shell_hash_value:
                                 download_completed_apks.append(apks_packages[d_completed])
                     if len(download_completed_apks) == len(apks_packages):
@@ -789,7 +862,8 @@ class TestPublicPage:
     @allure.title("public case-静默卸载正在运行中的app： 静默卸载/卸载正在运行的app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=1, reruns_delay=3)
-    def test_silent_uninstall_app(self, del_all_app_release_log, del_all_app_uninstall_release_log, uninstall_multi_apps, go_to_app_page):
+    def test_silent_uninstall_app(self, del_all_app_release_log, del_all_app_uninstall_release_log,
+                                  uninstall_multi_apps, go_to_app_page):
         release_info = {"package_name": test_yml['app_info']['high_version_app'], "sn": self.device_sn,
                         "silent": "Yes"}
         while True:
@@ -903,7 +977,8 @@ class TestPublicPage:
                 log.info("设备当前固件版本：%s" % device_current_firmware_version)
                 log.info("目标固件版本为 %s :" % release_info["version"])
                 ota_package_size = conf.project_path + "\\Param\\Package\\%s" % release_info["package_name"]
-                act_ota_package_hash_value = self.android_mdm_page.calculate_sha256_in_windows(release_info["package_name"])
+                act_ota_package_hash_value = self.android_mdm_page.calculate_sha256_in_windows(
+                    release_info["package_name"])
                 log.info("原始文件的hash值 ota_package_hash_value： %s" % str(act_ota_package_hash_value))
                 act_ota_package_size = self.ota_page.get_zip_size(ota_package_size)
                 log.info("原始文件的大小（bytes）： %s" % str(act_ota_package_size))
@@ -988,7 +1063,8 @@ class TestPublicPage:
                 # assert self.ota_page.transfer_version_into_int(release_info["version"]) == \
                 #        self.ota_page.transfer_version_into_int(
                 #            after_upgrade_version), "@@@@升级后的固件版本为%s, ota升级失败， 请检查！！！" % after_upgrade_version
-                assert self.ota_page.remove_space(str(after_upgrade_version)) == self.ota_page.remove_space(release_info["version"]), "@@@@升级后的固件版本为%s, ota升级失败， 请检查！！！" % after_upgrade_version
+                assert self.ota_page.remove_space(str(after_upgrade_version)) == self.ota_page.remove_space(
+                    release_info["version"]), "@@@@升级后的固件版本为%s, ota升级失败， 请检查！！！" % after_upgrade_version
                 log.info("*******************静默ota升级用例结束***************************")
                 break
             except Exception as e:
@@ -1196,7 +1272,8 @@ class TestPublicPage:
                 file_path = conf.project_path + "\\Param\\Content\\%s" % animation
                 file_size = self.content_page.get_file_size_in_windows(file_path)
                 log.info("获取到的文件 的size(bytes): %s" % str(file_size))
-                file_hash_value = self.android_mdm_page.calculate_sha256_in_windows("%s" % animation, directory="Content")
+                file_hash_value = self.android_mdm_page.calculate_sha256_in_windows("%s" % animation,
+                                                                                    directory="Content")
                 log.info("file_hash_value: %s" % str(file_hash_value))
                 send_time = case_pack.time.strftime('%Y-%m-%d %H:%M',
                                                     case_pack.time.localtime(self.content_page.get_current_time()))
@@ -1281,7 +1358,8 @@ class TestPublicPage:
                         if file_size_logo == self.android_mdm_page.get_file_size_in_device(logo):
                             log.info("开机logo的大小为： %s" % str(file_size_logo))
                             log.info("开机logo的hash值为： %s" % str(self.android_mdm_page.calculate_sha256_in_device(logo)))
-                            assert file_hash_value_logo == self.android_mdm_page.calculate_sha256_in_device(logo), "@@@@文件大小一样， hash256值不一致请检查！！"
+                            assert file_hash_value_logo == self.android_mdm_page.calculate_sha256_in_device(
+                                logo), "@@@@文件大小一样， hash256值不一致请检查！！"
                             break
                         if self.content_page.get_current_time() > self.content_page.return_end_time(now_time, 200):
                             log.error("@@@@超过15分钟还没有下载完毕，请检查！！！")
@@ -1330,7 +1408,8 @@ class TestPublicPage:
     @allure.title("public case-无线休眠推送app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=1, reruns_delay=3)
-    def test_report_device_sleep_status(self, del_app_install_uninstall_release_log, go_to_device_page, uninstall_multi_apps):
+    def test_report_device_sleep_status(self, del_app_install_uninstall_release_log, go_to_device_page,
+                                        uninstall_multi_apps):
         while True:
             try:
                 log.info("*******************无线休眠推送app用例开始***************************")
@@ -1364,12 +1443,14 @@ class TestPublicPage:
                     app_size = self.app_page.get_file_size_in_windows(file_path)
                     log.info("获取到的app 的size(bytes): %s" % str(app_size))
                     # check file hash value in directory Param/package
-                    act_apk_package_hash_value = self.android_mdm_page.calculate_sha256_in_windows(release_info["package_name"])
+                    act_apk_package_hash_value = self.android_mdm_page.calculate_sha256_in_windows(
+                        release_info["package_name"])
                     log.info("act_ota_package_hash_value: %s" % str(act_apk_package_hash_value))
                     device_info = opt_case.check_single_device(self.device_sn)[0]
                     msg = "online"
                     # clear other alert
-                    if self.device_page.upper_transfer("on") in self.device_page.remove_space_and_upper(device_info["Status"]):
+                    if self.device_page.upper_transfer("on") in self.device_page.remove_space_and_upper(
+                            device_info["Status"]):
                         if self.device_page.upper_transfer("Locked") in self.device_page.remove_space_and_upper(
                                 device_info["Lock Status"]):
                             self.device_page.select_device(self.device_sn)
@@ -1426,7 +1507,8 @@ class TestPublicPage:
 
                     now_time = self.app_page.get_current_time()
                     while True:
-                        if "ON" in self.device_page.upper_transfer(opt_case.get_single_device_list(self.device_sn)[0]["Status"]):
+                        if "ON" in self.device_page.upper_transfer(
+                                opt_case.get_single_device_list(self.device_sn)[0]["Status"]):
                             break
                         if self.device_page.get_current_time() > self.device_page.return_end_time(now_time):
                             log.error("@@@@唤醒设备后，3分钟内显示没显示在线")
@@ -1478,13 +1560,15 @@ class TestPublicPage:
                         if len(upgrade_list) != 0:
                             action = upgrade_list[0]["Action"]
                             log.info("平台显示的状态： %s" % action)
-                            if self.app_page.get_action_status(action) == 2 or self.app_page.get_action_status(action) == 4 \
+                            if self.app_page.get_action_status(action) == 2 or self.app_page.get_action_status(
+                                    action) == 4 \
                                     or self.app_page.get_action_status(action) == 3:
                                 # check the app size in device, check if app download fully
                                 shell_app_apk_name = release_info["package"] + "_%s.apk" % release_info["version"]
                                 size = self.android_mdm_page.get_file_size_in_device(shell_app_apk_name)
                                 log.info("终端下载后的的size大小： %s" % str(size))
-                                package_hash_value = self.android_mdm_page.calculate_sha256_in_device(shell_app_apk_name)
+                                package_hash_value = self.android_mdm_page.calculate_sha256_in_device(
+                                    shell_app_apk_name)
                                 log.info("原来升级包的 package_hash_value：%s" % act_apk_package_hash_value)
                                 log.info("下载完成后的 package_hash_value：%s" % package_hash_value)
                                 assert app_size == size, "@@@@平台显示下载完成， 终端的包下载不完整，请检查！！！"
@@ -1575,4 +1659,3 @@ class TestPublicPage:
                     self.app_page.recovery_after_service_unavailable("devices", case_pack.user_info)
                     log.info("**********************服务器恢复正常*************************")
                     self.device_page.go_to_new_address("devices")
-
