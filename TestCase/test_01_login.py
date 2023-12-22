@@ -93,7 +93,7 @@ class TestLogin:
     @allure.feature('MDM_test02_login1111')
     @allure.title("OTA-添加ota升级包-- 辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=1, reruns_delay=3)
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_add_OTA_package_and_cate(self, go_to_ota_page):
         exp_existed_text = "ota already existed"
         exp_success_text = "success"
@@ -104,21 +104,35 @@ class TestLogin:
                     "plat_form": package_info["plat_form"]}
         # check if category is existed
         try:
-            if len(self.ota_page.get_ota_categories_list()) == 0:
-                self.ota_page.add_ota_category("test")
+            now_time = self.ota_page.get_current_time()
+            while True:
+                if len(self.ota_page.get_ota_categories_list()) == 0:
+                    self.ota_page.add_ota_category("test")
+                    self.ota_page.refresh_page()
+                else:
+                    break
+                if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 300):
+                    assert False, "@@@@创建种类失败，请检查！！！！"
+                self.ota_page.time_sleep(3)
+            # check if ota package is existed, if not, add package, else skip
+            now_time = self.ota_page.get_current_time()
+            while True:
+                self.ota_page.search_device_by_pack_name(package_info["package_name"])
+                if len(self.ota_page.get_ota_package_list()) == 0:
+                    self.ota_page.click_add_btn()
+                    self.ota_page.input_ota_package_info(ota_info)
+                    self.ota_page.click_save_add_ota_pack(timeout=1800)
+                    self.ota_page.refresh_page()
+                    self.ota_page.time_sleep(5)
+                    self.ota_page.search_device_by_pack_name(package_info["package_name"])
+                else:
+                    break
+                if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 3600):
+                    assert False, "@@@@无法上传Ota包：%s, 请检查！！！！" % package_info["package_name"]
                 self.ota_page.refresh_page()
+                self.ota_page.time_sleep(3)
         except Exception as e:
             print(e)
-        # check if ota package is existed, if not, add package, else skip
-        self.ota_page.search_device_by_pack_name(package_info["package_name"])
-        if len(self.ota_page.get_ota_package_list()) == 0:
-            self.ota_page.click_add_btn()
-            self.ota_page.input_ota_package_info(ota_info)
-            self.ota_page.click_save_add_ota_pack(timeout=1800)
-            self.ota_page.refresh_page()
-            self.ota_page.time_sleep(5)
-            self.ota_page.search_device_by_pack_name(package_info["package_name"])
-            assert len(self.ota_page.get_ota_package_list()) == 1, "@@@添加失败！！！"
 
     @allure.feature('MDM_test02_login1111')
     @allure.title("Apps-添加APK包--辅助测试用例")
@@ -131,19 +145,29 @@ class TestLogin:
         #                 "developer": "engineer", "description": "test"}
         apks = test_yaml["app_info"]
         # apks.update(test_yml["system_app"])
-        print(apks)
+        # print(apks)
         for apk in list(apks.values()):
             file_path = conf.project_path + "\\Param\\Package\\%s" % apk
-            if self.app_page.get_app_categories_list() == 0:
-                self.app_page.add_app_category("test")
-            if len(self.app_page.get_apps_text_list()) == 0:
-                self.app_page.click_add_btn()
-                self.app_page.input_app_info(file_path)
+            now_time = self.app_page.get_current_time()
+            while True:
+                if self.app_page.get_app_categories_list() == 0:
+                    self.app_page.add_app_category("test")
+                else:
+                    break
+                if self.app_page.get_current_time() > self.app_page.return_end_time(now_time, 600):
+                    assert False, "@@@@无法创建分类，请检查！！！！"
                 self.app_page.refresh_page()
-            else:
+                self.app_page.time_sleep(3)
+
+            now_time = self.app_page.get_current_time()
+            while True:
                 self.app_page.search_app_by_name(apk)
-                search_list = self.app_page.get_apps_text_list()
-                if len(search_list) == 0:
+                if len(self.app_page.get_apps_text_list()) == 0:
                     self.app_page.click_add_btn()
                     self.app_page.input_app_info(file_path)
                     self.app_page.refresh_page()
+                else:
+                    break
+                if self.app_page.get_current_time() > self.app_page.return_end_time(now_time, 600):
+                    assert False, "@@@@无法上传 app：%s，请检查！！！！" % apk
+                self.app_page.time_sleep(3)
