@@ -53,7 +53,7 @@ class TestPublicPage:
         self.app_page.refresh_page()
         self.android_mdm_page.reboot_device(self.wifi_ip)
 
-    @allure.feature('MDM_public11111')
+    @allure.feature('MDM_public')
     @allure.title("public case-添加 content 种类--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=2, reruns_delay=3)
@@ -81,7 +81,7 @@ class TestPublicPage:
                     log.info("**********************服务器恢复正常*************************")
                     self.content_page.go_to_new_address("content")
 
-    @allure.feature('MDM_public11111')
+    @allure.feature('MDM_public')
     @allure.title("public case-添加 content 文件--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     # @pytest.mark.flaky(reruns=2, reruns_delay=3)
