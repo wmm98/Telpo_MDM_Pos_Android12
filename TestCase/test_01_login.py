@@ -28,8 +28,8 @@ class TestLogin:
         self.wifi_flag = 0
 
     def teardown_class(self):
-        pass
-        # self.android_mdm_page.reboot_device(self.wifi_ip)
+        # pass
+        self.android_mdm_page.reboot_device(self.wifi_ip)
 
     @allure.feature('MDM_test02_login')
     @allure.title("连接上wifi/登录--辅助测试用例")  # 设置case的名字
@@ -99,6 +99,7 @@ class TestLogin:
 
                     now_time = self.device_page.get_current_time()
                     while True:
+                        self.device_page.search_device_by_sn(device_sn)
                         if len(self.device_page.get_dev_info_list()) == 1:
                             break
                         self.device_page.click_new_btn()
@@ -128,7 +129,7 @@ class TestLogin:
                     log.info("**********************服务器恢复正常*************************")
                     self.ota_page.go_to_new_address("devices")
 
-    @allure.feature('MDM_test02_login1111')
+    @allure.feature('MDM_test02_login')
     @allure.title("OTA-添加ota升级包-- 辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -180,7 +181,7 @@ class TestLogin:
                     log.info("**********************服务器恢复正常*************************")
                     self.ota_page.go_to_new_address("ota")
 
-    @allure.feature('MDM_test02_login1111')
+    @allure.feature('MDM_test02_login')
     @allure.title("Apps-添加APK包--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
