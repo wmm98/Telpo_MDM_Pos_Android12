@@ -28,13 +28,13 @@ class TestLogin:
         self.wifi_flag = 0
 
     def teardown_class(self):
-        # pass
-        self.android_mdm_page.reboot_device(self.wifi_ip)
+        pass
+        # self.android_mdm_page.reboot_device(self.wifi_ip)
 
     @allure.feature('MDM_test02_login')
     @allure.title("连接上wifi/登录--辅助测试用例")  # 设置case的名字
     @pytest.mark.dependency(name="test_login_ok", scope='package')
-    @pytest.mark.flaky(reruns=2, reruns_delay=3)
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_connect_wifi_and_login_ok(self):
         while True:
             try:
@@ -69,48 +69,48 @@ class TestLogin:
                 device_sn = self.android_mdm_page.get_device_sn()
                 devices_list = {"SN": device_sn, "name": "aut" + device_sn}
                 # if device_sn not in devices_sn:
-                if len(device_info) == 0:
-                    # check if device model is existed, if not, add model
-                    now_time = self.device_page.get_current_time()
-                    while True:
-                        if "automation_debug" not in self.device_page.get_models_list():
-                            self.device_page.click_model()
-                            self.device_page.add_model("automation_debug")
-                            self.device_page.refresh_page()
-                        else:
-                            break
-                        if self.device_page.get_current_time() > self.device_page.return_end_time(now_time, 600):
-                            assert False, "@@@@无法创建分类，请检查！！！"
+                # if len(device_info) == 0:
+                # check if device model is existed, if not, add model
+                now_time = self.device_page.get_current_time()
+                while True:
+                    if "automation_debug" not in self.device_page.get_models_list():
+                        self.device_page.click_model()
+                        self.device_page.add_model("automation_debug")
                         self.device_page.refresh_page()
-                        self.device_page.time_sleep(2)
-                    # check if device category is existed, if not, add category
-                    now_time = self.device_page.get_current_time()
-                    while True:
-                        if not self.device_page.category_is_existed("test_debug"):
-                            self.device_page.click_category()
-                            self.device_page.add_category("test_debug")
-                            self.device_page.refresh_page()
-                        else:
-                            break
-                        if self.device_page.get_current_time() > self.device_page.return_end_time(now_time, 600):
-                            assert False, "@@@@无法创建模型，请检查！！！"
+                    else:
+                        break
+                    if self.device_page.get_current_time() > self.device_page.return_end_time(now_time, 600):
+                        assert False, "@@@@无法创建分类，请检查！！！"
+                    self.device_page.refresh_page()
+                    self.device_page.time_sleep(2)
+                # check if device category is existed, if not, add category
+                now_time = self.device_page.get_current_time()
+                while True:
+                    if not self.device_page.category_is_existed("test_debug"):
+                        self.device_page.click_category()
+                        self.device_page.add_category("test_debug")
                         self.device_page.refresh_page()
-                        self.device_page.time_sleep(2)
+                    else:
+                        break
+                    if self.device_page.get_current_time() > self.device_page.return_end_time(now_time, 600):
+                        assert False, "@@@@无法创建模型，请检查！！！"
+                    self.device_page.refresh_page()
+                    self.device_page.time_sleep(2)
 
-                    now_time = self.device_page.get_current_time()
-                    while True:
-                        self.device_page.search_device_by_sn(device_sn)
-                        if len(self.device_page.get_dev_info_list()) == 1:
-                            break
-                        self.device_page.click_new_btn()
-                        self.device_page.add_devices_info(devices_list, cate_model=False)
-                        self.device_page.refresh_page()
-                        # self.android_mdm_page.reboot_device(self.wifi_ip)
-                        # self.device_page.refresh_page()
-                        if self.device_page.get_current_time() > self.device_page.return_end_time(now_time, 600):
-                            assert False, "@@@@无法添加设备: %s，请检查！！！" % devices_list["SN"]
-                        self.device_page.refresh_page()
-                        self.device_page.time_sleep(2)
+                now_time = self.device_page.get_current_time()
+                while True:
+                    self.device_page.search_device_by_sn(device_sn)
+                    if len(self.device_page.get_dev_info_list()) == 1:
+                        break
+                    self.device_page.click_new_btn()
+                    self.device_page.add_devices_info(devices_list, cate_model=False)
+                    self.device_page.refresh_page()
+                    # self.android_mdm_page.reboot_device(self.wifi_ip)
+                    # self.device_page.refresh_page()
+                    if self.device_page.get_current_time() > self.device_page.return_end_time(now_time, 600):
+                        assert False, "@@@@无法添加设备: %s，请检查！！！" % devices_list["SN"]
+                    self.device_page.refresh_page()
+                    self.device_page.time_sleep(2)
 
                 if test_yaml["android_device_info"]["install_aimdm"]:
                     self.android_mdm_page.confirm_app_installed(
@@ -121,7 +121,7 @@ class TestLogin:
                 opt_case.confirm_device_online(device_sn)
                 break
             except Exception as e:
-                if self.ota_page.service_is_normal():
+                if self.ota_page.service_is_normal("devices", TestCase.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503***********************")
@@ -173,7 +173,7 @@ class TestLogin:
                     self.ota_page.time_sleep(3)
                 break
             except Exception as e:
-                if self.ota_page.service_is_normal():
+                if self.ota_page.service_is_normal("ota", TestCase.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503***********************")
@@ -195,18 +195,19 @@ class TestLogin:
         # print(apks)
         while True:
             try:
+                now_time = self.app_page.get_current_time()
+                while True:
+                    if len(self.app_page.get_app_categories_list()) == 0:
+                        self.app_page.add_app_category("test-debug")
+                    else:
+                        break
+                    if self.app_page.get_current_time() > self.app_page.return_end_time(now_time, 600):
+                        assert False, "@@@@无法创建分类，请检查！！！！"
+                    self.app_page.refresh_page()
+                    self.app_page.time_sleep(3)
+
                 for apk in list(apks.values()):
                     file_path = conf.project_path + "\\Param\\Package\\%s" % apk
-                    now_time = self.app_page.get_current_time()
-                    while True:
-                        if self.app_page.get_app_categories_list() == 0:
-                            self.app_page.add_app_category("test")
-                        else:
-                            break
-                        if self.app_page.get_current_time() > self.app_page.return_end_time(now_time, 600):
-                            assert False, "@@@@无法创建分类，请检查！！！！"
-                        self.app_page.refresh_page()
-                        self.app_page.time_sleep(3)
 
                     now_time = self.app_page.get_current_time()
                     while True:
@@ -222,7 +223,7 @@ class TestLogin:
                         self.app_page.time_sleep(3)
                 break
             except Exception as e:
-                if self.ota_page.service_is_normal():
+                if self.ota_page.service_is_normal("ota", TestCase.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503***********************")

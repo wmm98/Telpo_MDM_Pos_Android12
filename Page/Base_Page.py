@@ -107,10 +107,7 @@ class BasePage(interface):
             self.time_sleep(1)
 
     def alert_is_existed(self):
-        if public_pack.EC.alert_is_present():
-            return True
-        else:
-            return False
+        return public_pack.EC.alert_is_present()
 
     def alert_is_not_existed(self):
         if public_pack.EC.alert_is_present():
@@ -238,6 +235,7 @@ class BasePage(interface):
     def click(self, loc):
         self.web_driver_wait_until(public_pack.EC.presence_of_element_located(loc))
         ele = self.driver.find_element(*loc)
+        # print("ele", ele)
         # self.driver.execute_script("arguments[0].style.backgroundColor = 'yellow'", ele)
         # self.move_to_element(ele)
         ele.click()

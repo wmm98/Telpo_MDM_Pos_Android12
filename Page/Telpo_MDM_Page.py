@@ -124,11 +124,11 @@ class TelpoMDMPage(MDMPage):
         print("当前tab title: %s" % cur_tab_title)
         return cur_tab_title
 
-    def service_is_normal(self):
+    def service_is_normal(self, address, user_info):
         if len(self.extract_integers(self.get_service_status())) == 0:
+            if "login" in self.remove_space(self.get_current_window_url()):
+                self.login_ok(user_info["username"], user_info["password"])
+                self.go_to_new_address(address)
             return True
         elif self.extract_integers(self.get_service_status()) in self.service_unavailable_list():
             return False
-
-
-

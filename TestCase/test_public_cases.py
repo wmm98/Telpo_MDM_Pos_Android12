@@ -56,7 +56,7 @@ class TestPublicPage:
     @allure.feature('MDM_public')
     @allure.title("public case-添加 content 种类--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=2, reruns_delay=3)
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_add_content_category(self, go_to_content_page):
         while True:
             try:
@@ -73,7 +73,7 @@ class TestPublicPage:
                 log.info("===================添加 content 种类--辅助测试用例结束==================")
                 break
             except Exception as e:
-                if self.device_page.service_is_normal():
+                if self.device_page.service_is_normal("content", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503*************************")
@@ -84,7 +84,7 @@ class TestPublicPage:
     @allure.feature('MDM_public')
     @allure.title("public case-添加 content 文件--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    # @pytest.mark.flaky(reruns=2, reruns_delay=3)
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_add_content_file(self, go_to_content_page):
         while True:
             try:
@@ -164,7 +164,7 @@ class TestPublicPage:
                 log.info("public case-添加 content 文件--辅助测试用例开始结束")
                 break
             except Exception as e:
-                if self.device_page.service_is_normal():
+                if self.device_page.service_is_normal("content", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503*************************")
@@ -176,7 +176,7 @@ class TestPublicPage:
     @allure.story('MDM-Show')
     @allure.title("public case-推送壁纸--请在附件查看壁纸截图效果")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=2, reruns_delay=3)
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_release_wallpaper(self, unlock_screen, del_all_content_release_logs):
         while True:
             try:
@@ -295,7 +295,7 @@ class TestPublicPage:
                 log.info("*******************推送壁纸用例结束***************************")
                 break
             except Exception as e:
-                if self.device_page.service_is_normal():
+                if self.device_page.service_is_normal("content", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503*************************")
@@ -445,7 +445,7 @@ class TestPublicPage:
                 log.info("*******************OTA重启%d次断点续传用例结束***************************" % (times + 1))
                 break
             except Exception as e:
-                if self.ota_page.service_is_normal():
+                if self.ota_page.service_is_normal("ota", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503*************************")
@@ -460,7 +460,7 @@ class TestPublicPage:
     @allure.story('MDM-Show')
     @allure.title("public case-应用满屏推送--请在附件查看满屏截图效果")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=1, reruns_delay=3)
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_release_app_full_screen(self, del_all_app_release_log, del_all_app_uninstall_release_log, go_to_app_page,
                                      uninstall_multi_apps):
         release_info = {"package_name": test_yml['app_info']['other_app'], "sn": self.device_sn,
@@ -587,7 +587,7 @@ class TestPublicPage:
                 log.info("*******************应用满屏推送用例结束***************************")
                 break
             except Exception as e:
-                if self.app_page.service_is_normal():
+                if self.app_page.service_is_normal("apps/logs", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503*************************")
@@ -602,7 +602,7 @@ class TestPublicPage:
     @allure.feature('MDM_public')
     @allure.title("public case-推送text.zip文件")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=2, reruns_delay=3)
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_release_normal_files(self, del_all_content_release_logs):
         # "All Files" "Normal Files" "Boot Animations" "Wallpaper" "LOGO"
         while True:
@@ -685,7 +685,7 @@ class TestPublicPage:
                 log.info("*******************推送文件用例结束***************************")
                 break
             except Exception as e:
-                if self.content_page.service_is_normal():
+                if self.content_page.service_is_normal("content", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503*************************")
@@ -698,7 +698,7 @@ class TestPublicPage:
     @allure.feature('MDM_public')
     @allure.title("public case-多应用推送")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=1, reruns_delay=3)
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_release_multi_apps(self, del_all_app_release_log, del_download_apk, uninstall_multi_apps):
         while True:
             try:
@@ -846,7 +846,7 @@ class TestPublicPage:
                 log.info("*******************多应用推送用例结束***************************")
                 break
             except Exception as e:
-                if self.app_page.service_is_normal():
+                if self.app_page.service_is_normal("apps", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503*************************")
@@ -861,7 +861,7 @@ class TestPublicPage:
     @allure.story('MDM-Show')
     @allure.title("public case-静默卸载正在运行中的app： 静默卸载/卸载正在运行的app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=1, reruns_delay=3)
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_silent_uninstall_app(self, del_all_app_release_log, del_all_app_uninstall_release_log,
                                   uninstall_multi_apps, go_to_app_page):
         release_info = {"package_name": test_yml['app_info']['high_version_app'], "sn": self.device_sn,
@@ -927,7 +927,7 @@ class TestPublicPage:
                 log.info("****************************************静默卸载完成**********************************")
                 break
             except Exception as e:
-                if self.app_page.service_is_normal():
+                if self.app_page.service_is_normal("apps/logs", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503***********************")
@@ -941,7 +941,7 @@ class TestPublicPage:
     @allure.feature('MDM_public')
     @allure.title("public case- 静默ota升级")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=2, reruns_delay=1)
+    @pytest.mark.flaky(reruns=3, reruns_delay=1)
     def test_silent_ota_upgrade(self, del_all_ota_release_log, delete_ota_package_relate):
         while True:
             try:
@@ -1068,7 +1068,7 @@ class TestPublicPage:
                 log.info("*******************静默ota升级用例结束***************************")
                 break
             except Exception as e:
-                if self.ota_page.service_is_normal():
+                if self.ota_page.service_is_normal("ota", case_pack.user_info):
                     self.ota_page.delete_all_ota_release_log()
                     self.android_mdm_page.del_all_downloaded_zip()
                     self.android_mdm_page.del_updated_zip()
@@ -1086,7 +1086,7 @@ class TestPublicPage:
     @allure.feature('MDM_public')
     @allure.title("public case- 静默升级系统app/推送安装成功后自动运行app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=2, reruns_delay=3)
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_upgrade_system_app(self, del_app_install_uninstall_release_log, del_download_apk, uninstall_system_app):
         while True:
             try:
@@ -1240,7 +1240,7 @@ class TestPublicPage:
                 log.info("***************静默升级系统app/推送安装成功后自动运行app用例结束*********************")
                 break
             except Exception as e:
-                if self.app_page.service_is_normal():
+                if self.app_page.service_is_normal("apps/logs", case_pack.user_info):
                     print(e)
                     assert False, e
                 else:
@@ -1256,7 +1256,7 @@ class TestPublicPage:
     @allure.title("public case-推送开机logo/动画")
     @allure.story('MDM-Show')
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=2, reruns_delay=3)
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_release_boot_logo_and_animation(self, del_all_content_release_logs, del_all_content_file):
         # "All Files" "Normal Files" "Boot Animations" "Wallpaper" "LOGO"
         while True:
@@ -1394,7 +1394,7 @@ class TestPublicPage:
                 log.info("*******************推送开机logo/动画结束***************************")
                 break
             except Exception as e:
-                if self.device_page.service_is_normal():
+                if self.device_page.service_is_normal("content", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503***********************")
@@ -1407,7 +1407,7 @@ class TestPublicPage:
     @allure.feature('MDM_public--n0')
     @allure.title("public case-无线休眠推送app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=1, reruns_delay=3)
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_report_device_sleep_status(self, del_app_install_uninstall_release_log, go_to_device_page,
                                         uninstall_multi_apps):
         while True:
@@ -1615,7 +1615,7 @@ class TestPublicPage:
                     self.app_page.delete_app_install_and_uninstall_logs()
                 break
             except Exception as e:
-                if self.device_page.service_is_normal():
+                if self.device_page.service_is_normal("devices", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503***********************")

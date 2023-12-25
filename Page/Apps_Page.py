@@ -121,9 +121,12 @@ class APPSPage(TelpoMDMPage):
     def get_app_categories_list(self):
         if self.ele_is_existed(self.loc_cate_list):
             if self.ele_is_existed(self.loc_cate_list):
-                eles = self.get_elements(self.loc_single_cate)
-                cates_list = [self.remove_space(ele.text) for ele in eles]
-                return cates_list
+                try:
+                    eles = self.get_elements(self.loc_single_cate)
+                    cates_list = [self.remove_space(ele.text) for ele in eles]
+                    return cates_list
+                except public_pack.TimeoutException:
+                    return []
             else:
                 return []
         else:

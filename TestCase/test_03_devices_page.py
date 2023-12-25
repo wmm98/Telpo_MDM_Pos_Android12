@@ -229,7 +229,7 @@ class TestDevicesPage:
                 log.info("********************锁机和解锁用例结束**************************")
                 break
             except Exception as e:
-                if self.page.service_is_normal():
+                if self.page.service_is_normal("apps", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503*************************")
@@ -290,7 +290,7 @@ class TestDevicesPage:
                 log.info("*************发送设备重启指令：设备重启5次结束****************")
                 break
             except Exception as e:
-                if self.page.service_is_normal():
+                if self.page.service_is_normal("apps", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503*************************")
@@ -337,7 +337,7 @@ class TestDevicesPage:
                 break
             except Exception as e:
                 self.android_mdm_page.confirm_app_is_uninstalled(tpui_package_name)
-                if self.page.service_is_normal():
+                if self.page.service_is_normal("devices", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503*************************")
@@ -393,7 +393,7 @@ class TestDevicesPage:
                 log.info("*****************重重置设备密码用例结束***************")
                 break
             except Exception as e:
-                if self.page.service_is_normal():
+                if self.page.service_is_normal("devices", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503*************************")
@@ -512,7 +512,7 @@ class TestDevicesPage:
                 log.info("*******************AIMDM发消息压力测试用例结束************************")
                 break
             except Exception as e:
-                if self.page.service_is_normal():
+                if self.page.service_is_normal("devices", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503*************************")
@@ -776,7 +776,7 @@ class TestDevicesPage:
                 log.info("*****************AIMDM 切换正式测试服服务api 测试用例结束****************")
                 break
             except Exception as e:
-                if self.page.service_is_normal():
+                if self.page.service_is_normal("devices", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503*************************")
@@ -813,7 +813,7 @@ class TestDevicesPage:
                     log.info("***************日志的抓取用例结束******************")
                 break
             except Exception as e:
-                if self.page.service_is_normal():
+                if self.page.service_is_normal("devices", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503*************************")

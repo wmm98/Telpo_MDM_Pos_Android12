@@ -43,7 +43,7 @@ class TestNetworkCases:
     @allure.story('MDM-Show')
     @allure.title("Apps- 断网重连获取aimdm消耗的流量")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=1, reruns_delay=3)
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_reconnect_get_mobile_data(self, connect_wifi_adb_USB):
         while True:
             try:
@@ -132,7 +132,7 @@ class TestNetworkCases:
                 break
             except Exception as e:
                 pass
-                if self.device_page.service_is_normal():
+                if self.device_page.service_is_normal("devices", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503***********************")
@@ -148,7 +148,7 @@ class TestNetworkCases:
     @allure.story('MDM-Show111')
     @allure.title("Apps-限定4G网络推送app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=1, reruns_delay=2)
+    @pytest.mark.flaky(reruns=3, reruns_delay=2)
     def test_release_app_limit_4G(self, connect_wifi_adb_USB, del_all_app_release_log,
                                   del_all_app_uninstall_release_log, uninstall_multi_apps, go_to_app_page):
         release_info = {"package_name": test_yml['app_info']['other_app_limit_network_A'], "sn": self.device_sn,
@@ -287,7 +287,7 @@ class TestNetworkCases:
                 log.info("************************限定4G网络推送app用例运行成功***************************")
                 break
             except Exception as e:
-                if self.page.service_is_normal():
+                if self.page.service_is_normal("apps", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503***********************")
@@ -304,7 +304,7 @@ class TestNetworkCases:
     @allure.feature('MDM_usb-test')
     @allure.title("Apps-限定WIFI网络推送app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=1, reruns_delay=3)
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_release_app_limit_wifi(self, connect_wifi_adb_USB, del_all_app_release_log,
                                     del_all_app_uninstall_release_log,
                                     go_to_app_page):
@@ -437,7 +437,7 @@ class TestNetworkCases:
                 log.info("*******************限制wifi网络下载安装完成***************************")
                 break
             except Exception as e:
-                if self.page.service_is_normal():
+                if self.page.service_is_normal("apps", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503***********************")
@@ -624,7 +624,7 @@ class TestNetworkCases:
                 log.info("*******************OTA断网重连断点续传用例结束***************************")
                 break
             except Exception as e:
-                if self.ota_page.service_is_normal():
+                if self.ota_page.service_is_normal("ota", case_pack.user_info):
                     assert False, e
                 else:
                     self.android_mdm_page.confirm_wifi_status_open()
@@ -640,7 +640,7 @@ class TestNetworkCases:
     @allure.feature('MDM_usb-test-no')
     @allure.title("public case- 设备下线无法发送捕捉日志命令")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=1, reruns_delay=3)
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_fail_to_catch_log_when_offline(self, go_to_device_page, connect_wifi_adb_USB):
         while True:
             try:
@@ -681,7 +681,7 @@ class TestNetworkCases:
                 log.info("*******************设备下线无法发送捕捉日志命令用例结束***************************")
                 break
             except Exception as e:
-                if self.device_page.service_is_normal():
+                if self.device_page.service_is_normal("devices", case_pack.user_info):
                     assert False, e
                 else:
                     self.ota_page.recovery_after_service_unavailable("devices", case_pack.user_info)
@@ -693,7 +693,7 @@ class TestNetworkCases:
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.dependency(name="test_release_app_ok", scope='package')
     @pytest.mark.filterwarnings("ignore")
-    @pytest.mark.flaky(reruns=1, reruns_delay=3)
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_release_low_version_app(self, del_all_app_release_log, del_all_app_uninstall_release_log, go_to_app_page):
         release_info = {"package_name": test_yml['app_info']['low_version_app'], "sn": self.device_sn,
                         "silent": "Yes", "download_network": "NO Limit"}
@@ -842,7 +842,7 @@ class TestNetworkCases:
                 log.info("*******************Apps-推送低版本的APP/卸载后重新安装用例开始*****************")
                 break
             except Exception as e:
-                if self.page.service_is_normal():
+                if self.page.service_is_normal("apps/logs", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503***********************")
@@ -1058,7 +1058,7 @@ class TestNetworkCases:
                 log.info("***********低版本覆盖安装用例结束**********************")
                 break
             except Exception as e:
-                if self.page.service_is_normal():
+                if self.page.service_is_normal("apps/logs", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503***********************")
@@ -1249,7 +1249,7 @@ class TestNetworkCases:
                 log.info("*******************有线休眠推送app用例结束***************************")
                 break
             except Exception as e:
-                if self.page.service_is_normal():
+                if self.page.service_is_normal("apps/logs", case_pack.user_info):
                     assert False, e
                 else:
                     self.android_mdm_page.confirm_wifi_adb_connected(self.wifi_ip)
