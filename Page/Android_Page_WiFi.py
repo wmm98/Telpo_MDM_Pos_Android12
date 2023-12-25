@@ -422,6 +422,7 @@ class AndroidBasePageWiFi(interface):
         self.client.press("power")
         self.client.swipe(0.1, 0.9, 0.9, 0.1)
         self.client.swipe(0.1, 0.9, 0.9, 0.1)
+        self.back_to_home()
 
     def swipe_unlock_screen(self, battery=True):
         width, height = self.client.window_size()

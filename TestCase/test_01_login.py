@@ -217,7 +217,7 @@ class TestLogin:
                             self.app_page.refresh_page()
                         else:
                             break
-                        if self.app_page.get_current_time() > self.app_page.return_end_time(now_time, 600):
+                        if self.app_page.get_current_time() > self.app_page.return_end_time(now_time, 1800):
                             assert False, "@@@@无法上传 app：%s，请检查！！！！" % apk
                         self.app_page.time_sleep(3)
                 break

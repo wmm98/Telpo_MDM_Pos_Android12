@@ -221,6 +221,7 @@ class AndroidBasePageUSB(interface):
         self.USB_client.press("power")
         self.USB_client.swipe(0.1, 0.9, 0.9, 0.1)
         self.USB_client.swipe(0.1, 0.9, 0.9, 0.1)
+        self.back_to_home_USB()
 
     def swipe_unlock_screen_USB(self, battery=True):
         width, height = self.USB_client.window_size()
