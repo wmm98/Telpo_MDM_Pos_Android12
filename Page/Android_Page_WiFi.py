@@ -73,6 +73,8 @@ class AndroidBasePageWiFi(interface):
 
     def open_usb_debug_btn(self):
         self.u2_send_command("setprop persist.telpo.debug.mode 1")
+        self.time_sleep(1)
+        self.u2_send_command("setprop persist.telpo.debug.mode 1")
 
     def push_file_to_device(self, orig, des):
         cmd = "push %s %s" % (orig, des)

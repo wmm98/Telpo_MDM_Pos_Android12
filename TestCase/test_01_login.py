@@ -19,7 +19,6 @@ class TestLogin:
         self.device_page = TestCase.DevicesPage(self.driver, 40)
         self.android_mdm_page = TestCase.AndroidAimdmPage(TestCase.device_data, 5)
         self.android_mdm_page.open_usb_debug_btn()
-        self.android_mdm_page.open_usb_debug_btn()
         self.android_mdm_page.screen_keep_on()
         self.android_mdm_page.rotation_freeze(freeze=True)
         self.wifi_ip = TestCase.device_data["wifi_device_info"]["ip"]
@@ -39,6 +38,7 @@ class TestLogin:
         while True:
             try:
                 self.android_mdm_page.screen_keep_on()
+                self.android_mdm_page.close_mobile_data()
                 if self.android_mdm_page.get_current_wlan() is None:
                     self.android_mdm_page.clear_recent_app_USB()
                     self.android_mdm_page.open_wifi_btn()
@@ -129,7 +129,7 @@ class TestLogin:
                     log.info("**********************服务器恢复正常*************************")
                     self.ota_page.go_to_new_address("devices")
 
-    @allure.feature('MDM_test02_login')
+    @allure.feature('MDM_test02_login11')
     @allure.title("OTA-添加ota升级包-- 辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
