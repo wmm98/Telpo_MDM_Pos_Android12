@@ -93,6 +93,7 @@ class AndroidBasePageWiFi(interface):
 
     def back_to_home(self):
         self.client.press("home")
+        self.client.press("back")
 
     def save_screenshot_to(self, file_path):
         base_path = conf.project_path + "\\ScreenShot\\%s" % file_path

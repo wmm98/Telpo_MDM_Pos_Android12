@@ -7,7 +7,7 @@ import time
 # import threading
 # from concurrent.futures import ThreadPoolExecutor
 #
-# from selenium import webdriver
+from selenium import webdriver
 #
 # # chrome_options = pack.Options()
 # # chrome_options.add_argument("--allow-insecure-localhost")  # 允许访问不安全的本地主机（可选）
@@ -22,15 +22,17 @@ import time
 # # 窗口最大化
 # driver.get(url)
 # time.sleep(5)
+# ele = driver.find_element(By.ID, "IU")
+# ele.value_of_css_property()
 
 # print(driver.current_url)
 #
 
-device = u2.Device()
-device.screen_off()
-device.press("power")
-device.swipe(0.1, 0.9, 0.9, 0.1)
-device.swipe(0.1, 0.9, 0.9, 0.1)
+# device = u2.Device()
+# device.screen_off()
+# device.press("power")
+# device.swipe(0.1, 0.9, 0.9, 0.1)
+# device.swipe(0.1, 0.9, 0.9, 0.1)
 # device.unlock()
 # print(device.current_app())
 # print(device.current_app())

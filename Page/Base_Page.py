@@ -1,6 +1,7 @@
 import Page as public_pack
 from Page.Interface_Page import interface
 
+log = public_pack.MyLog()
 test_yml = public_pack.yaml_data
 
 
@@ -11,36 +12,6 @@ class BasePage(interface):
         self.times = times
 
     loc_tips = (public_pack.By.ID, "swal2-title")
-
-    def get_html_text(self):
-        # 获取页面的 HTML 代码
-        html = self.driver.page_source
-
-        # 使用 BeautifulSoup 解析 HTML 代码
-        soup = public_pack.BeautifulSoup(html, 'html.parser')
-
-        # 查找页面中的文本
-        text = soup.get_text()
-        return text
-
-    def go_to_new_address(self, url, release=False):
-        if release:
-            address = "%s/%s" % (test_yml["website_info"]["release_url"], url)
-        else:
-            address = "%s/%s" % (test_yml["website_info"]["test_url"], url)
-        self.driver.get(address)
-        now_time = self.get_current_time()
-        if self.driver.current_url != address:
-            while True:
-                if self.driver.current_url == address:
-                    break
-                else:
-                    self.driver.get(address)
-                if self.get_current_time() > self.return_end_time(now_time):
-                    assert False, "@@@打开 %s 失败， 请检查！！！" % address
-                self.time_sleep(1)
-        self.refresh_page()
-        self.page_load_complete()
 
     def get_current_window_url(self):
         return self.driver.current_url
@@ -129,8 +100,27 @@ class BasePage(interface):
         except public_pack.TimeoutException:
             return False
 
+    def hide_telpo_support_alert(self):
+        loc_alert = (public_pack.By.CLASS_NAME, 'globalClass_f38a')
+        now_time = self.get_current_time()
+        while True:
+            ele = self.get_element(loc_alert)
+            if ele.value_of_css_property('display') == 'none':
+                break
+            self.execute_js_cmd(public_pack.js_telpo_support)
+            if self.get_current_time() > self.return_end_time(now_time):
+                assert False, "@@@js 无法关闭弹窗，请检查！！！！"
+            self.time_sleep(2)
+
+    def execute_js_cmd(self, js_cmd, ele=None):
+        if ele is None:
+            return self.driver.execute_script(js_cmd)
+        else:
+            return self.driver.execute_script(js_cmd, ele)
+
     def page_is_loaded(self):
-        if self.driver.execute_script('return document.readyState;') == 'complete':
+        # if self.driver.execute_script(public_pack.js_load_status) == 'complete':
+        if self.execute_js_cmd(public_pack.js_load_status) == 'complete':
             return True
         else:
             return False
@@ -140,12 +130,33 @@ class BasePage(interface):
         while True:
             if self.page_is_loaded():
                 break
-            print("网页还没有加载完成")
+            log.info("网页还没有加载完成")
             if self.get_current_time() > self.return_end_time(now_time, 60):
                 self.refresh_page()
                 break
             self.refresh_page()
             self.time_sleep(2)
+
+    def go_to_new_address(self, url, release=False):
+        if release:
+            address = "%s/%s" % (test_yml["website_info"]["release_url"], url)
+        else:
+            address = "%s/%s" % (test_yml["website_info"]["test_url"], url)
+        self.driver.get(address)
+        now_time = self.get_current_time()
+        if self.driver.current_url != address:
+            while True:
+                if self.driver.current_url == address:
+                    break
+                else:
+                    self.driver.get(address)
+                if self.get_current_time() > self.return_end_time(now_time):
+                    assert False, "@@@打开 %s 失败， 请检查！！！" % address
+                self.time_sleep(1)
+        self.refresh_page()
+        self.page_load_complete()
+        # hide Telpo support alert
+        self.hide_telpo_support_alert()
 
     def move_and_click(self, ele):
         public_pack.ActionChains(self.driver).move_to_element(ele).click().perform()
@@ -156,6 +167,7 @@ class BasePage(interface):
     def refresh_page(self):
         self.driver.refresh()
         public_pack.t_time.sleep(1)
+        self.hide_telpo_support_alert()
 
     def get_selector(self, loc):
         ele = self.get_element(loc)

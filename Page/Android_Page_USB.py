@@ -16,6 +16,7 @@ class AndroidBasePageUSB(interface):
         return self.USB_client.device_info["version"]
 
     def get_current_wlan(self):
+        self.close_mobile_data()
         return self.USB_client.wlan_ip
 
     def open_app_detail_info_page_USB(self, package):

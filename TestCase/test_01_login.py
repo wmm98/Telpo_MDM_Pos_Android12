@@ -27,8 +27,8 @@ class TestLogin:
         self.wifi_flag = 0
 
     def teardown_class(self):
-        pass
-        # self.android_mdm_page.reboot_device(self.wifi_ip)
+        # pass
+        self.android_mdm_page.reboot_device(self.wifi_ip)
 
     @allure.feature('MDM_test02_login')
     @allure.title("连接上wifi/登录--辅助测试用例")  # 设置case的名字
@@ -38,7 +38,6 @@ class TestLogin:
         while True:
             try:
                 self.android_mdm_page.screen_keep_on()
-                self.android_mdm_page.close_mobile_data()
                 if self.android_mdm_page.get_current_wlan() is None:
                     self.android_mdm_page.clear_recent_app_USB()
                     self.android_mdm_page.open_wifi_btn()
@@ -51,8 +50,11 @@ class TestLogin:
                         wifi_list = []
                         for wifi in wifi_available:
                             wifi_list.append(wifi_available[wifi])
+                        try:
+                            self.android_mdm_page.connect_available_wifi(wifi_list)
+                        except Exception as e:
+                            raise Exception(e)
 
-                        self.android_mdm_page.connect_available_wifi(wifi_list)
                         self.android_mdm_page.clear_recent_app_USB()
                 self.android_mdm_page.ping_network(timeout=180)
 
@@ -119,6 +121,7 @@ class TestLogin:
                                                           self.android_mdm_page.get_internal_storage_directory() + "/")
                 self.android_mdm_page.reboot_device(self.wifi_ip)
                 opt_case.confirm_device_online(device_sn)
+                log.info("************登录测试结束***************")
                 break
             except Exception as e:
                 if self.ota_page.service_is_normal("devices", TestCase.user_info):
@@ -129,7 +132,7 @@ class TestLogin:
                     log.info("**********************服务器恢复正常*************************")
                     self.ota_page.go_to_new_address("devices")
 
-    @allure.feature('MDM_test02_login11')
+    @allure.feature('MDM_test02_login')
     @allure.title("OTA-添加ota升级包-- 辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)

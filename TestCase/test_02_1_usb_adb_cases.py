@@ -39,7 +39,7 @@ class TestNetworkCases:
         self.android_mdm_page.del_updated_zip()
         self.android_mdm_page.reboot_device(self.wifi_ip)
 
-    @allure.feature('MDM_usb-test')
+    @allure.feature('MDM_usb-test11')
     @allure.story('MDM-Show')
     @allure.title("Apps- 断网重连获取aimdm消耗的流量")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -157,7 +157,7 @@ class TestNetworkCases:
         #                 "silent": "Yes", "network": "Wifi/Ethernet"
         while True:
             try:
-                log.info("***********************************限定4G网络推送app用例开始**************************************")
+                log.info("*********限定4G网络推送app用例开始**************")
                 # self.android_mdm_page.confirm_wifi_adb_connected(self.wifi_ip)
                 self.android_mdm_page.reboot_device(self.wifi_ip)
                 self.android_mdm_page.confirm_wifi_status_open()
