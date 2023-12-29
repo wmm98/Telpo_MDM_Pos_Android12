@@ -92,7 +92,10 @@ class AndroidAimdmPage(AndroidBasePageUSB, AndroidBasePageWiFi):
         x1 = int(size[0]) / 2 + 200
         y1 = int(size[1]) / 2 + 300
         x2 = x1
-        y2 = int(size[1]) / 2 - 400
+        if self.is_landscape:
+            y2 = int(size[1]) - 400
+        else:
+            y2 = int(size[1]) / 2 - 400
         return [x1, y1, x2, y2]
 
     def connect_available_wifi(self, wifi_list):
@@ -107,6 +110,7 @@ class AndroidAimdmPage(AndroidBasePageUSB, AndroidBasePageWiFi):
     def connect_settings_wifi(self, wifi_list):
         # get swipe point, and set the swipe range
         points = self.get_swipe_point()
+        print(points)
         x1 = points[0]
         y1 = points[1]
         x2 = points[2]
@@ -132,10 +136,14 @@ class AndroidAimdmPage(AndroidBasePageUSB, AndroidBasePageWiFi):
             if len(device_wifi_list) == 0:
                 # 滑动屏幕
                 if i <= 5:
+                    print("=====================滑动前=======================")
                     self.swipe_screen(x1, y1, x2, y2)
+                    print("=====================滑动后=======================")
                     continue
                 else:
+                    print("=====================反滑动前=====================")
                     self.swipe_screen(x1, y2, x2, y1)
+                    print("=====================反滑动后=====================")
                     continue
 
             if self.ele_text_is_existed(device_wifi_list[0]["name"], time_to_wait=3):

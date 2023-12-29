@@ -274,7 +274,7 @@ class TestNetworkCases:
                                 break
                     # wait upgrade 3 min at most
                     if self.page.get_current_time() > self.page.return_end_time(report_now_time, 300):
-                        if self.page.service_is_normal():
+                        if self.page.service_is_normal("apps/logs", case_pack.user_info):
                             log.error("@@@@5分钟还没有终端或者平台还没显示安装完相应的app， 请检查！！！")
                             assert False, "@@@@5分钟还没有终端或者平台还没显示安装完相应的app， 请检查！！！"
                         else:
@@ -423,7 +423,7 @@ class TestNetworkCases:
                             break
                     # wait upgrade 3 min at most
                     if self.page.get_current_time() > self.page.return_end_time(report_now_time, 300):
-                        if self.page.service_is_normal():
+                        if self.page.service_is_normal("apps/logs", case_pack.user_info):
                             log.error("@@@@5分钟还没有终端或者平台还没显示安装完相应的app， 请检查！！！")
                             assert False, "@@@@5分钟还没有终端或者平台还没显示安装完相应的app， 请检查！！！"
                         else:
@@ -602,7 +602,7 @@ class TestNetworkCases:
                                 or self.page.get_action_status(action) == 3:
                             break
                     if self.ota_page.get_current_time() > self.ota_page.return_end_time(report_now_time, 180):
-                        if self.ota_page.service_is_normal():
+                        if self.ota_page.service_is_normal("ota/log", case_pack.user_info):
                             err_msg = "@@@@终端下载完升级包后， 平台3分钟还没有下载完相应的ota package， 请检查！！！"
                             log.error(err_msg)
                             assert False, err_msg
@@ -828,7 +828,7 @@ class TestNetworkCases:
                             break
                     # wait upgrade 3 min at most
                     if self.page.get_current_time() > self.page.return_end_time(report_now_time, 180):
-                        if self.page.service_is_normal():
+                        if self.page.service_is_normal("apps/logs", case_pack.user_info):
                             log.error("@@@@3分钟还没有终端或者平台还没显示安装完相应的app， 请检查！！！")
                             assert False, "@@@@3分钟还没有终端或者平台还没显示安装完相应的app， 请检查！！！"
                         else:
@@ -944,7 +944,7 @@ class TestNetworkCases:
                             break
                     # wait upgrade 3 min at most
                     if self.page.get_current_time() > self.page.return_end_time(now_time, 300):
-                        if self.page.service_is_normal():
+                        if self.page.service_is_normal("apps/logs", case_pack.user_info):
                             log.error("@@@@5分钟平台还没显示安装完相应的app， 请检查！！！")
                             assert False, "@@@@5分钟平台还没显示安装完相应的app， 请检查！！！"
                         else:
@@ -995,7 +995,7 @@ class TestNetworkCases:
                             break
                     # wait upgrade 3 min at most
                     if self.page.get_current_time() > self.page.return_end_time(report_now_time, 180):
-                        if self.page.service_is_normal():
+                        if self.page.service_is_normal("apps/logs", case_pack.user_info):
                             assert False, "@@@@3分钟还没有终端或者平台还没显示安装完相应的app， 请检查！！！"
                         else:
                             log.info("**********************检测到服务器503***********************")
@@ -1213,7 +1213,7 @@ class TestNetworkCases:
                                 break
                         # wait 20 mins
                         if self.page.get_current_time() > self.page.return_end_time(download_time, 1800):
-                            if self.page.service_is_normal():
+                            if self.page.service_is_normal("apps/logs", case_pack.user_info):
                                 assert False, "@@@@30分钟还没有下载完相应的app， 请检查！！！"
                             else:
                                 self.page.recovery_after_service_unavailable("apps/logs", case_pack.user_info)
@@ -1235,7 +1235,7 @@ class TestNetworkCases:
                                     assert False, "@@@@平台显示已经完成安装了app, 终端发现没有安装此app， 请检查！！！！"
                         # wait upgrade 3 min at most
                         if self.page.get_current_time() > self.page.return_end_time(report_time, 180):
-                            if self.page.service_is_normal():
+                            if self.page.service_is_normal("apps/logs", case_pack.user_info):
                                 assert False, "@@@@3分钟还没有安装完相应的app， 请检查！！！"
                             else:
                                 self.page.recovery_after_service_unavailable("apps/logs", case_pack.user_info)

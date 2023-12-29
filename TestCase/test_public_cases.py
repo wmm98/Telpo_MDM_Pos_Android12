@@ -244,12 +244,11 @@ class TestPublicPage:
                             # wait 20 min
                             if self.content_page.get_current_time() > self.content_page.return_end_time(download_time,
                                                                                                         1200):
-                                if self.content_page.service_is_normal():
+                                if self.content_page.service_is_normal("content/log", case_pack.user_info):
                                     log.error("@@@@20分钟还没有下载完相应的文件， 请检查！！！")
                                     assert False, "@@@@20分钟还没有下载完相应的文件， 请检查！！！"
                                 else:
-                                    self.content_page.recovery_after_service_unavailable("content/log",
-                                                                                         case_pack.user_info)
+                                    self.content_page.recovery_after_service_unavailable("content/log", case_pack.user_info)
                                     download_time = self.content_page.get_current_time()
                             self.content_page.time_sleep(5)
                             self.content_page.refresh_page()
@@ -267,7 +266,7 @@ class TestPublicPage:
                             # wait upgrade 3 min at most
                             if self.content_page.get_current_time() > self.content_page.return_end_time(report_time,
                                                                                                         180):
-                                if self.content_page.service_is_normal():
+                                if self.content_page.service_is_normal("content/log", case_pack.user_info):
                                     log.error("@@@@3分钟还没有设置完相应的壁纸， 请检查！！！")
                                     assert False, "@@@@3分钟还没有设置完相应的壁纸， 请检查！！！"
                                 else:
@@ -425,7 +424,7 @@ class TestPublicPage:
                             log.info("***************下载完ota升级包*************************")
                             break
                     if self.ota_page.get_current_time() > self.ota_page.return_end_time(report_now_time, 120):
-                        if self.ota_page.service_is_normal():
+                        if self.ota_page.service_is_normal("ota/log", case_pack.user_info):
                             err_msg = "@@@@终端下载完升级包后， 平台3分钟还没有下载完相应的ota package， 请检查！！！"
                             log.error(err_msg)
                             assert False, err_msg
@@ -551,7 +550,7 @@ class TestPublicPage:
                             break
                     # wait upgrade 3 min at most
                     if self.app_page.get_current_time() > self.app_page.return_end_time(report_now_time, 3):
-                        if self.app_page.service_is_normal():
+                        if self.app_page.service_is_normal("apps/logs", case_pack.user_info):
                             log.error("@@@@3分钟还没有终端或者平台还没显示安装完相应的app， 请检查！！！")
                             assert False, "@@@@3分钟还没有终端或者平台还没显示安装完相应的app， 请检查！！！"
                         else:
@@ -667,10 +666,9 @@ class TestPublicPage:
                                 log.info("平台显示文件设置完毕")
                                 break
                         # wait upgrade 3 min at most
-                        if self.content_page.get_current_time() > self.content_page.return_end_time(report_now_time,
-                                                                                                    180):
+                        if self.content_page.get_current_time() > self.content_page.return_end_time(report_now_time, 180):
                             print(upgrade_list)
-                            if self.content_page.service_is_normal():
+                            if self.content_page.service_is_normal("content/log", case_pack.user_info):
                                 log.error("@@@@3分钟平台还没有设置完相应的文件， 请检查！！！")
                                 assert False, "@@@@3分钟平台还没有设置完相应的文件， 请检查！！！"
                             else:
@@ -837,7 +835,7 @@ class TestPublicPage:
                     if self.app_page.get_current_time() > self.app_page.return_end_time(report_time, 300):
                         diff_list = [package for package in apks_packages if package not in report_installed]
                         uninstalled_report = ",".join(diff_list)
-                        if self.app_page.service_is_normal():
+                        if self.app_page.service_is_normal("apps/logs", case_pack.user_info):
                             log.error("@@@@多应用推送中设备已经安装完毕所有的app, 平台超过5分钟还上报%s的安装记录" % uninstalled_report)
                             assert False, "@@@@多应用推送中设备已经安装完毕所有的app, 平台超过5分钟还上报%s的安装记录" % uninstalled_report
                         else:
@@ -916,7 +914,7 @@ class TestPublicPage:
                             break
                     # wait upgrade 3 min at most
                     if self.app_page.get_current_time() > self.app_page.return_end_time(report_time, 180):
-                        if self.app_page.service_is_normal():
+                        if self.app_page.service_is_normal("apps/uninstalllogs", case_pack.user_info):
                             log.error("@@@@3分钟还没有卸载完相应的app， 请检查！！！")
                             assert False, "@@@@3分钟还没有卸载完相应的app， 请检查！！！"
                         else:
@@ -1020,7 +1018,7 @@ class TestPublicPage:
                     # wait upgrade 3 min at most
                     if self.ota_page.get_current_time() > self.ota_page.return_end_time(download_time, 1800):
                         self.silent_ota_upgrade_flag = 1
-                        if self.ota_page.service_is_normal():
+                        if self.ota_page.service_is_normal("ota/log", case_pack.user_info):
                             log.error("@@@@30分钟还没有下载完相应的固件， 请检查！！！")
                             assert False, "@@@@30分钟还没有下载完相应的固件， 请检查！！！"
                         else:
@@ -1042,7 +1040,7 @@ class TestPublicPage:
                                 break
                         # wait upgrade 3 min at most
                         if self.ota_page.get_current_time() > self.ota_page.return_end_time(report_time, 600):
-                            if self.ota_page.service_is_normal():
+                            if self.ota_page.service_is_normal("ota/log", case_pack.user_info):
                                 self.silent_ota_upgrade_flag = 1
                                 log.error("@@@@30分钟还没有升级相应的ota包， 请检查！！！")
                                 assert False, "@@@@30分钟还没有升级相应的ota包， 请检查！！！"
@@ -1215,7 +1213,7 @@ class TestPublicPage:
                             break
                     # wait upgrade 3 min at most
                     if self.app_page.get_current_time() > self.app_page.return_end_time(report_time, 300):
-                        if self.app_page.service_is_normal():
+                        if self.app_page.service_is_normal("apps/logs", case_pack.user_info):
                             log.error("@@@@5分钟平台还没显示安装完相应的app， 请检查！！！")
                             assert False, "@@@@5分钟平台还没显示安装完相应的app， 请检查！！！"
                         else:
@@ -1377,7 +1375,7 @@ class TestPublicPage:
                                 break
                         # wait upgrade 3 min at most
                         if self.content_page.get_current_time() > self.content_page.return_end_time(report_time, 180):
-                            if self.content_page.service_is_normal():
+                            if self.content_page.service_is_normal("content/log", case_pack.user_info):
                                 log.error("@@@@3分钟还没有设置完相应的开机logo， 请检查！！！")
                                 assert False, "@@@@3分钟还没有设置完相应的开机logo， 请检查！！！"
                             else:
@@ -1602,7 +1600,7 @@ class TestPublicPage:
                                     assert False, "@@@@平台显示已经完成安装了app, 终端发现没有安装此app， 请检查！！！！"
                         # wait upgrade 3 min at most
                         if self.app_page.get_current_time() > self.app_page.return_end_time(report_upgrade_time, 180):
-                            if self.app_page.service_is_normal():
+                            if self.app_page.service_is_normal("apps/logs", case_pack.user_info):
                                 log.error("@@@@3分钟还没有安装完相应的app， 请检查！！！")
                                 assert False, "@@@@3分钟还没有安装完相应的app， 请检查！！！"
                             else:

@@ -21,6 +21,7 @@ class AndroidBasePageWiFi(interface):
 
     def get_screen_size(self):
         text = self.u2_send_command("wm size")
+        print("屏幕大小: ", text)
         size = self.extract_integers(text)
         return size
 
