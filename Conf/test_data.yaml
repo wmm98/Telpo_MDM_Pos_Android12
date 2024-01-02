@@ -10,10 +10,10 @@ MDMTestData:
 
   #  一般只需填用户密码信息
   website_info:
-    test_url: https://sa.telpoai.com
-    test_user: zidonghua_wuc
-    test_password: 123456
-    test_api: http://sa.telpopaas.com/
+    test_url: http://192.168.29.176:8081
+    test_user: test_zdh_mm
+    test_password: "123456"
+    test_api: http://192.168.29.176:8102/
     # 当前测试的网址
 #    test_url: https://sa.telpoai.com
 #    test_user: zidonghua
@@ -28,6 +28,7 @@ MDMTestData:
     release_user: ceshibu_wuch
     release_password: 123456
     release_api: https://www.telpopaas.com/
+
 
   #  普通app名字
   work_app:
@@ -56,7 +57,7 @@ MDMTestData:
     # TPS900_msm8937_sv10_fv1.1.19_pv1.1.19-1.2.20.zip
     # TPS900_msm8937_sv10_fv1.1.19_pv1.1.19-1.2.22.zip
     # T20_bengal_sv12_fv1.4.3_pv1.4.3-9.9.9.zip
-    package_name: T10_bengal_sv12_fv1.1.0_pv1.1.0-9.9.9.zip
+    package_name: TPS530_bengal_sv12_fv1.0.0_pv1.0.0-9.9.9.zip
     # 有分android和linux两种系统  Android Linux
     platform: Android
 

@@ -428,6 +428,8 @@ class DevicesPage(TelpoMDMPage):
             self.select_by_text(self.loc_select_dev_mode, dev_info['model'])
         # save
         self.click(self.loc_save_dev_btn)
+        self.confirm_tips_alert_show(self.loc_save_dev_btn)
+        # self.time_sleep(5)
 
     def get_add_dev_warning_alert(self):
         flag = 0

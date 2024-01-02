@@ -27,13 +27,13 @@ class TestLogin:
         self.wifi_flag = 0
 
     def teardown_class(self):
-        # pass
-        self.android_mdm_page.reboot_device(self.wifi_ip)
+        pass
+        # self.android_mdm_page.reboot_device(self.wifi_ip)
 
     @allure.feature('MDM_test02_login')
     @allure.title("连接上wifi/登录--辅助测试用例")  # 设置case的名字
     @pytest.mark.dependency(name="test_login_ok", scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    # @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_connect_wifi_and_login_ok(self):
         while True:
             try:
@@ -50,19 +50,16 @@ class TestLogin:
                         wifi_list = []
                         for wifi in wifi_available:
                             wifi_list.append(wifi_available[wifi])
-                        try:
-                            self.android_mdm_page.connect_available_wifi(wifi_list)
-                        except Exception as e:
-                            raise Exception(e)
+
+                        self.android_mdm_page.connect_available_wifi(wifi_list)
 
                         self.android_mdm_page.clear_recent_app_USB()
                 self.android_mdm_page.ping_network(timeout=180)
-
+                #
                 username = test_yaml['website_info']['test_user']
                 password = test_yaml['website_info']['test_password']
                 #
                 self.mdm_page.login_ok(username, password)
-
                 self.device_page.go_to_new_address("devices")
                 # devices_sn = [device["SN"] for device in self.device_page.get_dev_info_list()]
                 device_sn = self.android_mdm_page.get_device_sn()
@@ -111,7 +108,6 @@ class TestLogin:
                     # self.device_page.refresh_page()
                     if self.device_page.get_current_time() > self.device_page.return_end_time(now_time, 600):
                         assert False, "@@@@无法添加设备: %s，请检查！！！" % devices_list["SN"]
-                    self.device_page.refresh_page()
                     self.device_page.time_sleep(2)
 
                 if test_yaml["android_device_info"]["install_aimdm"]:
@@ -184,7 +180,7 @@ class TestLogin:
                     log.info("**********************服务器恢复正常*************************")
                     self.ota_page.go_to_new_address("ota")
 
-    @allure.feature('MDM_test02_login')
+    @allure.feature('MDM_test02_login11')
     @allure.title("Apps-添加APK包--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)

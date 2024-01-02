@@ -8,11 +8,12 @@ class BaseWebDriver:
     def open_web_site(self, url):
         try:
             global driver
-
             chrome_options = pack.Options()
             chrome_options.add_argument("--allow-insecure-localhost")  # 允许访问不安全的本地主机（可选）
             chrome_options.add_argument("--ignore-certificate-errors")  # 忽略证书错误
             driver = pack.webdriver.Chrome(options=chrome_options)
+
+            # driver = pack.webdriver.Edge()
 
             # driver = pack.webdriver.Chrome()
             driver.implicitly_wait(5)
@@ -46,6 +47,8 @@ class BaseWebDriver:
 
 
 if __name__ == '__main__':
+    # pass
     case = BaseWebDriver()
-    case.open_web_site("https://www.baidu.com")
+    case.open_web_site("http://192.168.29.176:8081")
+    pack.time.sleep(5)
     case.get_web_driver()

@@ -57,9 +57,9 @@ class MDMPage(BasePage):
             self.input_pwd_value(password)
             self.choose_agree_btn()
             self.click_login_btn()
+            self.time_sleep(10)
             try:
-                if self.web_driver_wait_until(public_pack.EC.url_contains("device"), 10):
-                    break
+                self.web_driver_wait_until(public_pack.EC.url_contains("device"), 10)
             except Exception:
                 if "device" in self.get_current_window_url():
                     break
@@ -74,6 +74,6 @@ class MDMPage(BasePage):
 #     driver.implicitly_wait(30)
 #     driver.maximize_window()
 #     url = 'https://mdm.telpoai.com/login'
-#     # 窗口最大化
-#     MDMPage(driver)
-#     driver.get(url)
+    # 窗口最大化
+    # MDMPage(driver)
+    # driver.get(url)

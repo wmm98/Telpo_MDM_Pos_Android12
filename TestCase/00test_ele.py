@@ -8,6 +8,21 @@ import time
 # from concurrent.futures import ThreadPoolExecutor
 #
 from selenium import webdriver
+
+from selenium import webdriver
+
+# 创建一个 Edge 浏览器实例
+# driver = webdriver.Edge()
+driver = webdriver.Chrome()
+# 打开 Microsoft 的网站
+driver.get("https://www.baidu.com")
+driver.implicitly_wait(5)
+driver.maximize_window()
+time.sleep(5)
+# 执行其他自动化测试操作...
+
+# 关闭浏览器
+driver.quit()
 #
 # # chrome_options = pack.Options()
 # # chrome_options.add_argument("--allow-insecure-localhost")  # 允许访问不安全的本地主机（可选）
@@ -39,7 +54,7 @@ from selenium import webdriver
 #
 # # cmd_send = Shell()
 # # # # #
-# usb_device = u2.connect()
+# usb_device = u2.connect("d")
 # print(usb_device.device_info)
 # # usb_device.freeze_rotation(True)
 # print(usb_device.info)

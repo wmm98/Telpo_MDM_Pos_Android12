@@ -1,4 +1,4 @@
-from selenium.common import TimeoutException, StaleElementReferenceException, ElementNotInteractableException
+from selenium.common import TimeoutException, StaleElementReferenceException, ElementNotInteractableException, UnexpectedAlertPresentException
 from datetime import datetime
 from selenium.webdriver import Keys
 from selenium.webdriver.support.wait import WebDriverWait

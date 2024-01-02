@@ -438,7 +438,7 @@ class AndroidBasePageUSB(interface):
 
     def open_root_auth_usb(self):
         if 'Qualcomm' in self.get_device_info()['cpu']['hardware']:
-            if self.get_device_info()['model'] in ['T20', 'T10']:
+            if self.get_device_info()['model'] in ['T20', 'T10', 'TPS530']:
                 act = self.open_root_usb()
                 if not act:
                     assert False, "@@@@无法root, 请检查！！！"

@@ -615,7 +615,7 @@ class TestNetworkCases:
                     self.ota_page.refresh_page()
                 log.info("****************************ota升级升级包下载完成***************************")
                 self.android_mdm_page.screen_keep_on()
-                self.android_mdm_page.confirm_alert_show()
+                self.android_mdm_page.confirm_alert_show(timeout=300)
                 log.info("*****************检测到有升级提示框********************")
                 try:
                     self.android_mdm_page.click_cancel_btn()
