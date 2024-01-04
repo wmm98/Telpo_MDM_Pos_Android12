@@ -539,7 +539,7 @@ class TestDevicesPage:
         # self.android_mdm_page.device_existed(self.wifi_ip)
         # self.android_mdm_page.device_boot_complete()
 
-    @allure.feature('MDM_device_test')
+    @allure.feature('MDM_device_test-01')
     @allure.story('MDM-Show')
     @allure.title("Devices- AIMDM 切换正式测试服服务api ")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -788,7 +788,7 @@ class TestDevicesPage:
                     self.android_mdm_page.reboot_device(self.wifi_ip)
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('MDM_device_test')
+    @allure.feature('MDM_device_test-01')
     @allure.title("Devices- 日志的抓取")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=1, reruns_delay=3)

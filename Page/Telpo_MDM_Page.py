@@ -6,6 +6,7 @@ By = public_pack.By
 EC = public_pack.EC
 t_time = public_pack.t_time
 test_yml = public_pack.yaml_data
+log = public_pack.MyLog()
 
 
 class TelpoMDMPage(MDMPage):
@@ -121,14 +122,25 @@ class TelpoMDMPage(MDMPage):
 
     def get_service_status(self):
         cur_tab_title = self.get_title()
-        print("当前tab title: %s" % cur_tab_title)
+        log.info("当前tab title: %s" % cur_tab_title)
         return cur_tab_title
 
     def service_is_normal(self, address, user_info):
         if len(self.extract_integers(self.get_service_status())) == 0:
+            self.refresh_page()
             if "login" in self.remove_space(self.get_current_window_url()):
                 self.login_ok(user_info["username"], user_info["password"])
                 self.go_to_new_address(address)
             return True
         elif self.extract_integers(self.get_service_status()) in self.service_unavailable_list():
             return False
+
+    def check_service_expired(self, user_info):
+        if len(self.extract_integers(self.get_service_status())) == 0:
+            self.refresh_page()
+            if "login" in self.remove_space(self.get_current_window_url()):
+                self.login_ok(user_info["username"], user_info["password"])
+                log.info("登录成功！！！")
+        else:
+            self.recovery_after_service_unavailable("devices", user_info)
+

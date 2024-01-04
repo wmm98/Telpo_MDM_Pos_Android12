@@ -285,9 +285,9 @@ class AndroidBasePageWiFi(interface):
             package = self.get_apk_package_name(apk_path)
             now_time = self.get_current_time()
             while True:
-                self.client.app_install(apk_path)
                 if self.app_is_installed(package):
                     break
+                self.client.app_install(apk_path)
                 if self.get_current_time() > self.return_end_time(now_time):
                     assert False, "@@@@无法安装%s--app, 请检查！！！" % package
                 self.time_sleep(3)

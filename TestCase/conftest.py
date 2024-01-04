@@ -22,6 +22,15 @@ content_page = TestCase.ContentPage(driver, 40)
 android_page = TestCase.AndroidAimdmPage(TestCase.device_data, 30)
 wifi_ip = TestCase.device_data["wifi_device_info"]["ip"]
 serial = TestCase.Serial()
+user_info = TestCase.user_info
+
+
+@pytest.fixture()
+def recover_and_login_mdm():
+    # content_page.time_sleep(30)
+    content_page.check_service_expired(user_info)
+    yield
+    content_page.check_service_expired(user_info)
 
 
 @pytest.fixture()

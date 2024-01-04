@@ -30,10 +30,10 @@ class TestLogin:
         pass
         # self.android_mdm_page.reboot_device(self.wifi_ip)
 
-    @allure.feature('MDM_test02_login')
+    @allure.feature('MDM_test02_login-01')
     @allure.title("连接上wifi/登录--辅助测试用例")  # 设置case的名字
     @pytest.mark.dependency(name="test_login_ok", scope='package')
-    # @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_connect_wifi_and_login_ok(self):
         while True:
             try:
@@ -59,7 +59,8 @@ class TestLogin:
                 username = test_yaml['website_info']['test_user']
                 password = test_yaml['website_info']['test_password']
                 #
-                self.mdm_page.login_ok(username, password)
+                if "login" in self.device_page.get_current_window_url():
+                    self.mdm_page.login_ok(username, password)
                 self.device_page.go_to_new_address("devices")
                 # devices_sn = [device["SN"] for device in self.device_page.get_dev_info_list()]
                 device_sn = self.android_mdm_page.get_device_sn()
@@ -115,8 +116,8 @@ class TestLogin:
                         conf.project_path + "\\Param\\Work_APP\\%s" % test_yaml["work_app"]["aidmd_apk"])
                 self.android_mdm_page.push_file_to_device(self.api_path,
                                                           self.android_mdm_page.get_internal_storage_directory() + "/")
-                self.android_mdm_page.reboot_device(self.wifi_ip)
-                opt_case.confirm_device_online(device_sn)
+                # self.android_mdm_page.reboot_device(self.wifi_ip)
+                # opt_case.confirm_device_online(device_sn)
                 log.info("************登录测试结束***************")
                 break
             except Exception as e:
@@ -132,7 +133,7 @@ class TestLogin:
     @allure.title("OTA-添加ota升级包-- 辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
-    def test_add_OTA_package_and_cate(self, go_to_ota_page):
+    def test_add_OTA_package_and_cate(self, recover_and_login_mdm, go_to_ota_page):
         exp_existed_text = "ota already existed"
         exp_success_text = "success"
         package_info = {"package_name": test_yaml['ota_packages_info']['package_name'], "file_category": "test",
@@ -180,12 +181,12 @@ class TestLogin:
                     log.info("**********************服务器恢复正常*************************")
                     self.ota_page.go_to_new_address("ota")
 
-    @allure.feature('MDM_test02_login11')
+    @allure.feature('MDM_test02_login')
     @allure.title("Apps-添加APK包--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
     # @pytest.mark.parametrize('package_info', package_infos)
-    def test_add_cate_and_apps(self, go_to_app_page):
+    def test_add_cate_and_apps(self, recover_and_login_mdm, go_to_app_page):
         exp_success_text = "Success"
         # package_info = {"package_name": "Bus_Recharge_System_1.0.1_20220615.apk", "file_category": "test",
         #                 "developer": "engineer", "description": "test"}

@@ -39,7 +39,7 @@ class TestNetworkCases:
         self.android_mdm_page.del_updated_zip()
         self.android_mdm_page.reboot_device(self.wifi_ip)
 
-    @allure.feature('MDM_usb-test11')
+    @allure.feature('MDM_usb-test')
     @allure.story('MDM-Show')
     @allure.title("Apps- 断网重连获取aimdm消耗的流量")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -144,7 +144,7 @@ class TestNetworkCases:
                     self.android_mdm_page.confirm_wifi_status_open()
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('MDM_usb-test')
+    @allure.feature('MDM_usb-test-01')
     @allure.story('MDM-Show111')
     @allure.title("Apps-限定4G网络推送app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -301,7 +301,7 @@ class TestNetworkCases:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.page.go_to_new_address("apps")
 
-    @allure.feature('MDM_usb-test')
+    @allure.feature('MDM_usb-test-01')
     @allure.title("Apps-限定WIFI网络推送app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -451,7 +451,7 @@ class TestNetworkCases:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.page.go_to_new_address("apps")
 
-    @allure.feature('MDM_usb-test')
+    @allure.feature('MDM_usb-test-01')
     @allure.title("OTA-OTA断网重连5次断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)

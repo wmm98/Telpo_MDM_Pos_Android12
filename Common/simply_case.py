@@ -93,26 +93,33 @@ class Optimize_Case:
                 self.page.refresh_page()
             # wait 20 min
             if self.page.get_current_time() > self.page.return_end_time(now_time, 60):
-                assert False, "@@@@超过 60s 还没有相应的catch log！！！"
+                log.error("@@@@平台显示超过 60s 还没有相应的catch log！！！")
+                assert False, "@@@@平台显示超过 60s 还没有相应的catch log！！！"
             self.page.time_sleep(2)
 
         success_flag = self.page.remove_space(self.page.upper_transfer("Success"))
         report_flag = self.page.remove_space(self.page.upper_transfer("Reporting"))
         fail_flag = self.page.remove_space_and_upper("Failed")
+        cancel_flag = self.page.remove_space_and_upper("Cancel")
         now_time = self.page.get_current_time()
         while True:
             if len(self.cat_log_page.get_latest_catch_log_list(send_time, sn)) != 0:
                 action = self.page.remove_space_and_upper(
                     self.cat_log_page.get_latest_catch_log_list(send_time, sn)[0]["Action"])
+                log.info("日志采集状态：%s" % action)
                 if report_flag in action or success_flag in action:
                     break
                 elif fail_flag in action:
-                    assert False, "@@@@日志文件上传失败！！！"
+                    log.error("@@@@平台显示日志文件上传失败！！！")
+                    assert False, "@@@@平台显示日志文件上传失败！！！"
+                elif cancel_flag in action:
+                    log.error("@@@@平台显示日志文件上传取消！！！")
+                    assert False, "@@@@平台显示日志文件上传取消！！！"
                 else:
                     self.page.refresh_page()
                 # wait 20 min
             if self.page.get_current_time() > self.page.return_end_time(now_time, time_out):
-                assert False, "@@@@超过 %ss 还没有采集完 %d分钟的log！！！" % (time_out, duration)
+                assert False, "@@@@平台显示超过 %ss 还没有采集完 %d分钟的log！！！" % (time_out, duration)
             self.page.time_sleep(20)
 
         now_time = self.page.get_current_time()
@@ -124,11 +131,16 @@ class Optimize_Case:
                 if success_flag in action:
                     break
                 elif fail_flag in action:
-                    assert False, "@@@@日志文件上传失败！！！"
+                    log.error("@@@@平台显示日志文件上传失败！！！")
+                    assert False, "@@@@平台显示日志文件上传失败！！！"
+                elif cancel_flag in action:
+                    log.error("@@@@平台显示日志文件上传取消！！！")
+                    assert False, "@@@@平台显示日志文件上传取消！！！"
                 else:
                     self.page.refresh_page()
             # wait 20 min
             if self.page.get_current_time() > self.page.return_end_time(now_time, time_out):
+                log.error("@@@@超过 %s 还没有上传完 %s分钟的log！！！" % (time_out, duration))
                 assert False, "@@@@超过 %s 还没有上传完 %s分钟的log！！！" % (time_out, duration)
             self.page.time_sleep(10)
 

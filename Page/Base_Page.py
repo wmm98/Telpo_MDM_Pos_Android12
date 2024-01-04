@@ -167,7 +167,8 @@ class BasePage(interface):
     def refresh_page(self):
         self.driver.refresh()
         public_pack.t_time.sleep(1)
-        self.hide_telpo_support_alert()
+        if "login" not in self.get_current_window_url():
+            self.hide_telpo_support_alert()
 
     def get_selector(self, loc):
         ele = self.get_element(loc)
