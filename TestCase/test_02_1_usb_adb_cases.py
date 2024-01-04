@@ -44,7 +44,7 @@ class TestNetworkCases:
     @allure.title("Apps- 断网重连获取aimdm消耗的流量")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
-    def test_reconnect_get_mobile_data(self, connect_wifi_adb_USB):
+    def test_reconnect_get_mobile_data(self, recover_and_login_mdm, connect_wifi_adb_USB):
         while True:
             try:
                 log.info("********断网重连获取aimdm消耗的流量用例开始**********")
@@ -144,12 +144,12 @@ class TestNetworkCases:
                     self.android_mdm_page.confirm_wifi_status_open()
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('MDM_usb-test-01')
+    @allure.feature('MDM_usb-test')
     @allure.story('MDM-Show111')
     @allure.title("Apps-限定4G网络推送app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=2)
-    def test_release_app_limit_4G(self, connect_wifi_adb_USB, del_all_app_release_log,
+    def test_release_app_limit_4G(self, recover_and_login_mdm, connect_wifi_adb_USB, del_all_app_release_log,
                                   del_all_app_uninstall_release_log, uninstall_multi_apps, go_to_app_page):
         release_info = {"package_name": test_yml['app_info']['other_app_limit_network_A'], "sn": self.device_sn,
                         "silent": "Yes", "download_network": "Sim Card"}
@@ -301,11 +301,11 @@ class TestNetworkCases:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.page.go_to_new_address("apps")
 
-    @allure.feature('MDM_usb-test-01')
+    @allure.feature('MDM_usb-test')
     @allure.title("Apps-限定WIFI网络推送app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
-    def test_release_app_limit_wifi(self, connect_wifi_adb_USB, del_all_app_release_log,
+    def test_release_app_limit_wifi(self, recover_and_login_mdm, connect_wifi_adb_USB, del_all_app_release_log,
                                     del_all_app_uninstall_release_log,
                                     go_to_app_page):
         while True:
@@ -451,11 +451,11 @@ class TestNetworkCases:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.page.go_to_new_address("apps")
 
-    @allure.feature('MDM_usb-test-01')
+    @allure.feature('MDM_usb-test')
     @allure.title("OTA-OTA断网重连5次断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
-    def test_upgrade_OTA_package_reconnect_network_5times(self, connect_wifi_adb_USB, del_all_ota_release_log,
+    def test_upgrade_OTA_package_reconnect_network_5times(self, recover_and_login_mdm, connect_wifi_adb_USB, del_all_ota_release_log,
                                                           delete_ota_package_relate):
         while True:
             try:
@@ -641,7 +641,7 @@ class TestNetworkCases:
     @allure.title("public case- 设备下线无法发送捕捉日志命令")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
-    def test_fail_to_catch_log_when_offline(self, go_to_device_page, connect_wifi_adb_USB):
+    def test_fail_to_catch_log_when_offline(self, recover_and_login_mdm, go_to_device_page, connect_wifi_adb_USB):
         while True:
             try:
                 print("***********设备下线无法发送捕捉日志命令*******************")
@@ -694,7 +694,7 @@ class TestNetworkCases:
     @pytest.mark.dependency(name="test_release_app_ok", scope='package')
     @pytest.mark.filterwarnings("ignore")
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
-    def test_release_low_version_app(self, del_all_app_release_log, del_all_app_uninstall_release_log, go_to_app_page):
+    def test_release_low_version_app(self, recover_and_login_mdm, del_all_app_release_log, del_all_app_uninstall_release_log, go_to_app_page):
         release_info = {"package_name": test_yml['app_info']['low_version_app'], "sn": self.device_sn,
                         "silent": "Yes", "download_network": "NO Limit"}
 
@@ -857,7 +857,7 @@ class TestNetworkCases:
     @allure.title("Apps-推送高版本APP覆盖安装/卸载后检测重新下载/卸载重启检查安装/同版本覆盖安装/低版本覆盖安装")
     @pytest.mark.dependency(depends=["test_release_app_ok"], scope='package')
     # @pytest.mark.flaky(reruns=1, reruns_delay=3)
-    def test_high_version_app_cover_low_version_app(self, del_all_app_release_log, del_all_app_uninstall_release_log,
+    def test_high_version_app_cover_low_version_app(self, recover_and_login_mdm, del_all_app_release_log, del_all_app_uninstall_release_log,
                                                     go_to_app_page):
         release_info = {"package_name": test_yml['app_info']['high_version_app'], "sn": self.device_sn,
                         "silent": "Yes", "download_network": "NO Limit"}
@@ -1073,7 +1073,7 @@ class TestNetworkCases:
 
     @allure.feature('MDM_usb-test---no need test now')
     @allure.title("public case-有线休眠推送app")
-    def test_report_device_sleep_status_usb(self, del_app_install_uninstall_release_log, connected_wifi_adb,
+    def test_report_device_sleep_status_usb(self, recover_and_login_mdm, del_app_install_uninstall_release_log, connected_wifi_adb,
                                             login_and_logout_serial, del_all_ota_release_log):
         while True:
             try:
@@ -1259,7 +1259,3 @@ class TestNetworkCases:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.page.go_to_new_address("apps")
 
-    @allure.feature('MDM_usb-test1')
-    @allure.title("public case-debug")
-    def test_test_usb(self):
-        pass

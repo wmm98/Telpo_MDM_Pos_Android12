@@ -593,3 +593,166 @@ class TestAppPage:
             new_length = len(self.page.get_apps_text_list())
             if org_length != (new_length + 1):
                 assert False, "@@@@删除apk包失败请检查！！！"
+
+    @allure.feature('MDM_device-no need to test')
+    @allure.title("辅助测试用例")  # 设置case的名字
+    # @pytest.mark.dependency(depends=["test_TelpoMdM_Page"], scope='package')
+    def test_go_to_devices_page(self):
+        exp_main_title = "Total Devices"
+        try:
+            self.page.click_devices_btn()
+            # click devices list btn  -- just for test version
+            self.page.click_devices_list_btn()
+            # wait Page load complete
+            self.page.page_load_complete()
+            # check current Page
+            act_main_title = self.page.get_loc_main_title()
+            now_time = self.page.get_current_time()
+            while True:
+                if exp_main_title in act_main_title:
+                    break
+                else:
+                    self.page.go_to_new_address("devices")
+                if self.page.get_current_time() > self.page.return_end_time(now_time):
+                    log.error("@@@打开device页超时")
+                    assert False, "@@@打开device页超时"
+                self.page.time_sleep(1)
+            log.info("当前默认的副标题为：%s" % act_main_title)
+        except Exception as e:
+            log.error(str(e))
+            assert False
+
+    @allure.feature('MDM_test-no need to test')
+    @allure.title("Devices-add category and  model")  # 设置case的名字
+    @pytest.mark.parametrize('cate_model', data_cate_mode)
+    def test_add_category_model(self, cate_model):
+        exp_existed_name = "name already existed"
+        exp_add_cate_success = "Add Category Success"
+        exp_add_mode_success = "Add Model Success"
+        if not self.page.category_is_existed(cate_model["cate"]):
+            self.page.click_category()
+            self.page.add_category(cate_model["cate"])
+            now_time = self.page.get_current_time()
+            while True:
+                self.page.time_sleep(1)
+                if cate_model["cate"] in self.page.get_categories_list():
+                    break
+                if self.page.get_current_time() > self.page.return_end_time(now_time, timeout=5):
+                    e = "@@@添加种类失败，请检查！！！"
+                    log.error(e)
+                    assert False, e
+
+        if cate_model["model"] not in self.page.get_models_list():
+            self.page.click_model()
+            self.page.add_model(cate_model["model"])
+            now_time = self.page.get_current_time()
+            while True:
+                self.page.time_sleep(1)
+                if cate_model["model"] in self.page.get_models_list():
+                    break
+                if self.page.get_current_time() > self.page.return_end_time(now_time, timeout=5):
+                    e = "@@@添加种类失败，请检查！！！"
+                    log.error(e)
+                    assert False, e
+        self.page.confirm_add_category_box_fade()
+
+        self.page.find_category()
+        self.page.find_model()
+
+    @allure.feature('MDM_test0- no need to test')
+    @allure.title("Devices-new devices")  # 设置case的名字
+    @pytest.mark.parametrize('devices_list', devices)
+    def test_new_devices(self, devices_list):
+        exp_success_text = "Device created successfully,pls reboot device to active!"
+        exp_existed_text = "sn already existed"
+        try:
+            # check if device is existed before test, if not, skip
+            devices_sn = [device["SN"] for device in self.page.get_dev_info_list()]
+            print(devices_sn)
+            if devices_list["SN"] not in devices_sn:
+                # check if device model is existed, if not, add model
+                if devices_list["model"] not in self.page.get_models_list():
+                    self.page.click_model()
+                    self.page.add_model(devices_list["model"])
+                    self.page.refresh_page()
+                    assert devices_list["model"] in self.page.get_models_list(), "@@@model 不存在， 请检查！！！！"
+                # check if device category is existed, if not, add category
+                if not self.page.category_is_existed(devices_list["cate"]):
+                    self.page.click_category()
+                    self.page.add_category(devices_list["cate"])
+                    assert self.page.category_is_existed(devices_list["cate"]), "@@@category 不存在， 请检查！！！！"
+
+                info_len_pre = self.page.get_dev_info_length()
+                print(info_len_pre)
+                self.page.click_new_btn()
+                self.page.add_devices_info(devices_list)
+                # text = self.Page.get_alert_text()
+                # print(text)
+                self.page.get_add_dev_warning_alert()
+                # refresh current Page and clear warning war
+                self.page.refresh_page()
+                info_len_pos = self.page.get_dev_info_length()
+                print(info_len_pos)
+                assert info_len_pre == info_len_pos - 1
+                # print all devices info
+                print(self.page.get_dev_info_list())
+        except Exception as e:
+            print("发生的异常是", e)
+            assert False
+
+    @allure.feature('MDM_test- no need to test')
+    @allure.title("Devices- test import btn")
+    def test_import_devices(self):
+        exp_success_text = "Add Device Success"
+        # devices_info = {"cate": "手持终端", "model": "TPS980P"}
+        file_path = conf.project_path + "\\Param\\device import.xlsx"
+        devices_info = excel.get_template_data(file_path, "cate_model")[0]
+
+        if devices_info["model"] not in self.page.get_models_list():
+            self.page.click_model()
+            self.page.add_model(devices_info["model"])
+            self.page.refresh_page()
+            assert devices_info["model"] in self.page.get_models_list(), "@@@model 不存在， 请检查！！！！"
+        # check if device category is existed, if not, add category
+        if not self.page.category_is_existed(devices_info["cate"]):
+            self.page.click_category()
+            self.page.add_category(devices_info["cate"])
+            assert self.page.category_is_existed(devices_info["cate"]), "@@@category 不存在， 请检查！！！！"
+
+        # click import-btn
+        self.page.click_import_btn()
+        self.page.import_devices_info(devices_info)
+        # print(self.Page.get_alert_text())
+        # if exp_success_text in self.Page.get_alert_text():
+        #     self.Page.alert_fade()
+
+        # need to add check length of data list
+
+        @allure.feature('MDM_device_test--covered in below test case')
+        @allure.title("Devices- AIMDM发送包含特殊字符串信息")
+        # @pytest.mark.flaky(reruns=1, reruns_delay=3)
+        def test_send_message_to_single_device(self, recover_and_login_mdm, go_to_and_return_device_page):
+            exp_success_send_text = "Message Sent"
+            # sn would change after debug with devices
+            self.android_mdm_page.screen_keep_on()
+            sn = self.device_sn
+            date_time = '%m-%d %H:%M'
+            self.page.refresh_page()
+            now = case_pack.time.strftime(date_time, case_pack.time.localtime(case_pack.time.time()))
+            msg = "%s:1#$*" % now
+            msg_box_header = "Notification"
+            # confirm if device is online and execute next step, if not, end the case execution
+            opt_case.check_single_device(sn)
+
+            self.page.select_device(sn)
+            self.page.click_send_btn()
+            self.page.msg_input_and_send(msg)
+
+            # check message in device
+            wait_time = 60
+            # self.page.time_sleep(10)
+            if not self.android_mdm_page.mdm_msg_alert_show(wait_time):
+                assert False, "@@@@%ss内无法接收到信息， 请检查设备是否在线！！！！" % wait_time
+            self.android_mdm_page.confirm_received_text(msg)
+            self.android_mdm_page.click_msg_confirm_btn()
+            self.android_mdm_page.confirm_msg_alert_fade(msg)
