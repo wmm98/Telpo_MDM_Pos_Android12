@@ -30,7 +30,7 @@ class TestLogin:
         pass
         # self.android_mdm_page.reboot_device(self.wifi_ip)
 
-    @allure.feature('MDM_test02_login-01')
+    @allure.feature('MDM_test02_login')
     @allure.title("连接上wifi/登录--辅助测试用例")  # 设置case的名字
     @pytest.mark.dependency(name="test_login_ok", scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
