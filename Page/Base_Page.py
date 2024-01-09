@@ -167,7 +167,7 @@ class BasePage(interface):
     def refresh_page(self):
         self.driver.refresh()
         public_pack.t_time.sleep(1)
-        if "login" not in self.get_current_window_url():
+        if "login" not in self.get_current_window_url() or "map" not in self.get_current_window_url():
             self.hide_telpo_support_alert()
 
     def get_selector(self, loc):
@@ -260,6 +260,7 @@ class BasePage(interface):
         return ["503", "302"]
 
     def web_driver_wait_until(self, condition, wait_times=0):
+
         if wait_times == 0:
             return public_pack.WebDriverWait(self.driver, self.times).until(condition)
         else:
@@ -279,9 +280,13 @@ class BasePage(interface):
         if self.ele_is_selected(ele):
             self.web_driver_wait_until_not(public_pack.EC.element_to_be_selected(ele))
 
-    def switch_to_alert(self):
+    def switch_to_alert(self, timeout=10):
+        self.web_driver_wait_until(public_pack.EC.alert_is_present(), timeout)
         al = self.driver.switch_to.alert
         return al
+
+    def accept_alert(self, alert):
+        alert.accept()
 
     def confirm_sn_is_selected(self, ele_sn):
         now_time = self.get_current_time()
@@ -308,6 +313,7 @@ class BasePage(interface):
     def get_tips_alert(self, timeout=6):
         try:
             ele = self.web_driver_wait_until(public_pack.EC.presence_of_element_located(self.loc_tips), timeout)
+            log.info(ele.text)
             print(ele.text)
             return True
         except public_pack.TimeoutException:

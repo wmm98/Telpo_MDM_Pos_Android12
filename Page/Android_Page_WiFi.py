@@ -670,6 +670,12 @@ class AndroidBasePageWiFi(interface):
     def get_device_sn(self):
         return self.remove_space(str(self.u2_send_command("getprop ro.serialno")))
 
+    def get_mdmApiUrl_text(self, txt="mdmApiUrl.txt"):
+        if txt in self.u2_send_command("ls sdcard/"):
+            return self.u2_send_command("cat /%s/%s" % (self.get_internal_storage_directory(), txt))
+        else:
+            return ""
+
 
 if __name__ == '__main__':
     from utils.client_connect import ClientConnect

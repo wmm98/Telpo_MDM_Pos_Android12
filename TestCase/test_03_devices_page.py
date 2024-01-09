@@ -376,7 +376,7 @@ class TestDevicesPage:
         # self.android_mdm_page.device_existed(self.wifi_ip)
         # self.android_mdm_page.device_boot_complete()
 
-    @allure.feature('MDM_device_test-01')
+    @allure.feature('MDM_device_test')
     @allure.story('MDM-Show')
     @allure.title("Devices- AIMDM 切换正式测试服服务api ")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -405,7 +405,7 @@ class TestDevicesPage:
                 case_pack.BaseWebDriver().open_web_site(release_version_url)
                 release_driver = case_pack.BaseWebDriver().get_web_driver()
                 release_page = case_pack.ReleaseDevicePage(release_driver, 40)
-                release_page.login_release_version(release_user_info, release_login_ok_title)
+                release_page.login_release_version(release_user_info)
                 log.info("成功登录平台B： %s" % release_version_url)
 
                 log.info("在平台B添加设备： %s" % sn)
@@ -435,8 +435,9 @@ class TestDevicesPage:
                 opt_case.confirm_device_online(sn)
                 log.info("当前平台A 显示设备%s在线在线" % sn)
                 self.page.select_device(sn)
-                log.info("当前设备的api地址为： %s" % self.android_mdm_page.u2_send_command(
-                            "cat /%s/%s" % (root_dir, test_yml["work_app"]["api_txt"])))
+                # log.info("当前设备的api地址为： %s" % self.android_mdm_page.u2_send_command(
+                #             "cat /%s/%s" % (root_dir, test_yml["work_app"]["api_txt"])))
+                log.info("当前设备的api地址为： %s" % self.android_mdm_page.get_mdmApiUrl_text())
                 self.page.click_server_btn()
                 self.page.api_transfer(release_version_api)
                 log.info("设备切换服务器B： %s指令下达" % release_version_api)
@@ -523,8 +524,9 @@ class TestDevicesPage:
                     self.page.time_sleep(2)
                 log.info("设备再次切换回 服务器A 的api: %s, 切换回原来的服务器" % test_version_api)
                 release_page.select_device(sn)
-                log.info("当前设备的api地址为： %s" % self.android_mdm_page.u2_send_command(
-                    "cat /%s/%s" % (root_dir, test_yml["work_app"]["api_txt"])))
+                # log.info("当前设备的api地址为： %s" % self.android_mdm_page.u2_send_command(
+                #     "cat /%s/%s" % (root_dir, test_yml["work_app"]["api_txt"])))
+                log.info("当前设备的api地址为： %s" % self.android_mdm_page.get_mdmApiUrl_text())
                 release_page.click_server_btn()
                 release_page.api_transfer(test_version_api)
                 log.info("切换服务器 api : %s指令下达成功" % test_version_api)
@@ -620,8 +622,9 @@ class TestDevicesPage:
                     self.page.recovery_after_service_unavailable("devices", case_pack.user_info)
                     log.info("**********************服务器恢复正常*************************")
                     api_path = conf.project_path + "\\Param\\Work_APP\\%s" % test_yml["work_app"]["api_txt"]
-                    self.android_mdm_page.push_file_to_device(api_path,
-                                                              "/" + self.android_mdm_page.get_internal_storage_directory() + "/")
+                    if test_yml["website_info"]["test_api"] not in self.android_mdm_page.get_mdmApiUrl_text():
+                        self.android_mdm_page.push_file_to_device(api_path,
+                                                                  "/" + self.android_mdm_page.get_internal_storage_directory() + "/")
                     self.android_mdm_page.reboot_device(self.wifi_ip)
                     self.page.go_to_new_address("devices")
 

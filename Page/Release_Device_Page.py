@@ -15,46 +15,8 @@ class ReleaseDevicePage(DevicesPage, MDMPage):
         DevicesPage.__init__(self, driver, times)
         self.driver = driver
 
-    def login_release_version(self, user_info, login_ok_title):
-        # username = "ceshibu03"
-        # password = "123456"
-
-        # login_ok_title = "Telpo MDM"
-        # login_ok_url = "http://test.telpoai.com/device/map"
-        # now_time = self.get_current_time()
-        # while True:
-        #     self.input_user_name(user_info["username"])
-        #     self.input_pwd_value(user_info["password"])
-        #     self.choose_agree_btn()
-        #     self.click_login_btn()
-        #     text = self.get_alert_text()
-        #     if "success" in text:
-        #         break
-        #     else:
-        #         self.refresh_page()
-        #     if self.get_current_time() > self.return_end_time(now_time):
-        #         e = "@@@@ 3分钟内多次登录， 登录失败， 请检查！！！"
-        #         log.error(e)
-        #         assert False, e
-        #     self.refresh_page()
-        #     self.time_sleep(1)
-        now_time = self.get_current_time()
-        # while True:
+    def login_release_version(self, user_info):
         self.login_ok(user_info["username"], user_info["password"])
-            # self.input_user_name(user_info["username"])
-            # self.input_pwd_value(user_info["password"])
-            # self.choose_agree_btn()
-            # self.click_login_btn()
-            # try:
-            #     if self.web_driver_wait_until(public_pack.EC.url_contains("device"), 10):
-            #         break
-            # except Exception:
-            #     if "device" in self.get_current_window_url():
-            #         break
-            # if self.get_current_time() > self.return_end_time(now_time, 180):
-            #     assert False, "无法登录，请检查！！！"
-            # self.time_sleep(1)
-            # self.refresh_page()
 
     def go_to_device_page(self, top_title):
         self.click_devices_btn()

@@ -47,26 +47,33 @@ class MDMPage(BasePage):
         # self.
 
     def login_ok(self, name, password):
-        # self.input_user_name(name)
-        # self.input_pwd_value(password)
-        # self.choose_agree_btn()
-        # self.click_login_btn()
+        self.input_user_name(name)
+        self.input_pwd_value(password)
+        self.choose_agree_btn()
+        self.click_login_btn()
         now_time = self.get_current_time()
         while True:
+            url = self.get_current_window_url()
             self.input_user_name(name)
             self.input_pwd_value(password)
             self.choose_agree_btn()
             self.click_login_btn()
-            self.time_sleep(10)
+            if "telpo" not in url:
+                try:
+                    alert = self.switch_to_alert(timeout=30)
+                    self.accept_alert(alert)
+                except:
+                    pass
             try:
                 self.web_driver_wait_until(public_pack.EC.url_contains("device"), 10)
-            except Exception:
+                break
+            except public_pack.UnexpectedAlertPresentException as e:
                 if "device" in self.get_current_window_url():
                     break
             if self.get_current_time() > self.return_end_time(now_time, 180):
                 assert False, "无法登录，请检查！！！"
-            self.time_sleep(1)
-            self.refresh_page()
+            self.time_sleep(3)
+            # self.refresh_page()
 
 # if __name__ == '__main__':
 #     from selenium import webdriver
@@ -74,6 +81,6 @@ class MDMPage(BasePage):
 #     driver.implicitly_wait(30)
 #     driver.maximize_window()
 #     url = 'https://mdm.telpoai.com/login'
-    # 窗口最大化
-    # MDMPage(driver)
-    # driver.get(url)
+# 窗口最大化
+# MDMPage(driver)
+# driver.get(url)

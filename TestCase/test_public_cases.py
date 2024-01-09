@@ -936,7 +936,7 @@ class TestPublicPage:
                     self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('MDM_public-01')
+    @allure.feature('MDM_public')
     @allure.title("public case- 静默ota升级")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=1)
@@ -1001,6 +1001,8 @@ class TestPublicPage:
                         assert False, "@@@@推送中超过3分钟还没有升级包: %s的下载记录" % release_info["package_name"]
                     self.ota_page.time_sleep(10)
 
+                self.silent_ota_upgrade_flag = 1
+
                 self.ota_page.go_to_new_address("ota/log")
                 upgrade_flag = 0
                 download_time = self.ota_page.get_current_time()
@@ -1041,7 +1043,6 @@ class TestPublicPage:
                         # wait upgrade 3 min at most
                         if self.ota_page.get_current_time() > self.ota_page.return_end_time(report_time, 600):
                             if self.ota_page.service_is_normal("ota/log", case_pack.user_info):
-                                self.silent_ota_upgrade_flag = 1
                                 log.error("@@@@30分钟还没有升级相应的ota包， 请检查！！！")
                                 assert False, "@@@@30分钟还没有升级相应的ota包， 请检查！！！"
                             else:
@@ -1250,7 +1251,7 @@ class TestPublicPage:
                     self.android_mdm_page.confirm_system_app_uninstalled()
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('MDM_public-01')
+    @allure.feature('MDM_public')
     @allure.title("public case-推送开机logo/动画")
     @allure.story('MDM-Show')
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -1624,7 +1625,7 @@ class TestPublicPage:
                     self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
                     self.device_page.go_to_new_address("devices")
 
-    @allure.feature('MDM_public')
+    @allure.feature('MDM_public--no  test now')
     @allure.title("Devices- 关机 -- test in the last")
     @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_device_shutdown(self, recover_and_login_mdm):
