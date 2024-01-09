@@ -27,8 +27,8 @@ class TestLogin:
         self.wifi_flag = 0
 
     def teardown_class(self):
-        # pass
-        self.android_mdm_page.reboot_device(self.wifi_ip)
+        pass
+        # self.android_mdm_page.reboot_device(self.wifi_ip)
 
     @allure.feature('MDM_test02_login')
     @allure.title("连接上wifi/登录--辅助测试用例")  # 设置case的名字
@@ -130,7 +130,7 @@ class TestLogin:
                     log.info("**********************服务器恢复正常*************************")
                     self.ota_page.go_to_new_address("devices")
 
-    @allure.feature('MDM_test02_login')
+    @allure.feature('MDM_test02_login-99')
     @allure.title("OTA-添加ota升级包-- 辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -182,7 +182,7 @@ class TestLogin:
                     log.info("**********************服务器恢复正常*************************")
                     self.ota_page.go_to_new_address("ota")
 
-    @allure.feature('MDM_test02_login')
+    @allure.feature('MDM_test02_login-99')
     @allure.title("Apps-添加APK包--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)

@@ -155,6 +155,12 @@ class BasePage(interface):
                 self.time_sleep(1)
         self.refresh_page()
         self.page_load_complete()
+        # close devices page tips
+        url = self.get_current_window_url()
+        if "telpoai" in url:
+            if "devices" in url:
+                self.close_release_version_tips()
+
         # hide Telpo support alert
         self.hide_telpo_support_alert()
 
@@ -167,6 +173,10 @@ class BasePage(interface):
     def refresh_page(self):
         self.driver.refresh()
         public_pack.t_time.sleep(1)
+        url = self.get_current_window_url()
+        if "telpoai" in url:
+            if "devices" in url:
+                self.close_release_version_tips()
         if "login" not in self.get_current_window_url() or "map" not in self.get_current_window_url():
             self.hide_telpo_support_alert()
 
@@ -174,6 +184,9 @@ class BasePage(interface):
         ele = self.get_element(loc)
         select = public_pack.Select(ele)
         return select
+
+    def close_release_version_tips(self):
+        self.execute_js_cmd(public_pack.js_release_tips)
 
     def exc_js_click(self, ele):
         self.driver.execute_script("arguments[0].click();", ele)

@@ -628,7 +628,7 @@ class TestDevicesPage:
                     self.android_mdm_page.reboot_device(self.wifi_ip)
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('MDM_device_test-01')
+    @allure.feature('MDM_device_test')
     @allure.title("Devices- 日志的抓取")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)

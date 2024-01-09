@@ -10,10 +10,10 @@ MDMTestData:
 
   #  一般只需填用户密码信息
   website_info:
-    test_url: http://192.168.30.31:8081
+    test_url: http://121.9.230.133:8081/
     test_user: test_zdh_mm
     test_password: "123456"
-    test_api: http://192.168.30.31:8102/
+    test_api: http://121.9.230.133:8102/
     # 当前测试的网址
 #    test_url: https://sa.telpoai.com
 #    test_user: zidonghua

@@ -31,5 +31,6 @@ yaml_data = Config().get_yaml_data()['MDMTestData']
 
 js_telpo_support = "document.getElementsByClassName(\"globalClass_f38a\")[0].style.display=\"none\""
 js_load_status = 'return document.readyState;'
+js_release_tips = "$('.introjs-overlay').click()"
 
 

@@ -419,9 +419,12 @@ class AndroidAimdmPage(AndroidBasePageUSB, AndroidBasePageWiFi):
         return self.u2_send_command("getprop ro.product.version")
 
     def confirm_received_alert(self, exp_tips):
-        # self.mdm_msg_alert_show()
-        self.confirm_alert_show()
+        print("111111111111111111111111")
+        self.mdm_msg_alert_show()
+        # self.confirm_alert_show()
+        print("222222222222222222222222")
         self.confirm_received_text(exp_tips)
+        print("3333333333333333333333333")
         self.click_msg_confirm_btn()
         self.confirm_msg_alert_fade(exp_tips)
 
@@ -573,6 +576,12 @@ class AndroidAimdmPage(AndroidBasePageUSB, AndroidBasePageWiFi):
 
     def click_msg_confirm_btn(self):
         ele = self.get_element_by_id(self.msg_confirm_id)
+        # print("进入点击页面")
+        # print(ele)
+        # ele.long_click(duration=2)
+        # print("==========================")
+        # print(ele.get_text())
+        # print("==========================")
         self.click_element(ele)
 
     def click_cancel_btn(self):

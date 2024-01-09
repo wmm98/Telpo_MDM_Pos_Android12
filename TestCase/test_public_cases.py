@@ -305,7 +305,7 @@ class TestPublicPage:
                     self.android_mdm_page.del_all_content_file()
                     self.android_mdm_page.screen_keep_on()
 
-    @allure.feature('MDM_public')
+    @allure.feature('MDM_public-01')
     @allure.story('MDM-Show')
     @allure.title("OTA-OTA重启5次断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -936,7 +936,7 @@ class TestPublicPage:
                     self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('MDM_public')
+    @allure.feature('MDM_public-01')
     @allure.title("public case- 静默ota升级")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=1)

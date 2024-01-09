@@ -159,7 +159,7 @@ class TestNetworkCases:
             try:
                 log.info("*********限定4G网络推送app用例开始**************")
                 # self.android_mdm_page.confirm_wifi_adb_connected(self.wifi_ip)
-                self.android_mdm_page.reboot_device(self.wifi_ip)
+                # self.android_mdm_page.reboot_device(self.wifi_ip)
                 self.android_mdm_page.confirm_wifi_status_open()
                 log.info("成功连接wifi")
                 # file_path = conf.project_path + "\\Param\\Package\\%s" % release_info["package_name"]
@@ -451,10 +451,10 @@ class TestNetworkCases:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.page.go_to_new_address("apps")
 
-    @allure.feature('MDM_usb-test')
+    @allure.feature('MDM_usb-test-01')
     @allure.title("OTA-OTA断网重连5次断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    # @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_upgrade_OTA_package_reconnect_network_5times(self, recover_and_login_mdm, connect_wifi_adb_USB, del_all_ota_release_log,
                                                           delete_ota_package_relate):
         while True:
@@ -506,7 +506,7 @@ class TestNetworkCases:
                 # nolimit  simcard  wifiethernet
                 self.ota_page.input_release_OTA_package(release_info)
                 log.info("平台释放ota升级包指令下达成功")
-                self.android_mdm_page.screen_keep_on()
+                # self.android_mdm_page.screen_keep_on()
                 self.android_mdm_page.confirm_received_alert(download_tips)
                 log.info("终端弹出下载提示框并且点击确认下载")
                 # flag = 0
@@ -522,14 +522,23 @@ class TestNetworkCases:
                 #         assert False, "@@@@无法接收到下载提示框， 请检查！！！！"
 
                 # check download record in device
-                now_time = self.page.get_current_time()
+                # now_time = self.page.get_current_time()
+                # while True:
+                #     # check if app in download list
+                #     if self.android_mdm_page.download_file_is_existed_USB(release_info["package_name"]):
+                #         break
+                #     if self.page.get_current_time() > self.page.return_end_time(now_time, 300):
+                #         log.error("@@@@推送中超过5分钟还没有升级包: %s的下载记录" % release_info["package_name"])
+                #         assert False, "@@@@推送中超过5分钟还没有升级包: %s的下载记录" % release_info["package_name"]
+                now_time = self.ota_page.get_current_time()
                 while True:
                     # check if app in download list
-                    if self.android_mdm_page.download_file_is_existed_USB(release_info["package_name"]):
+                    if self.android_mdm_page.download_file_is_existed(release_info["package_name"]):
+                        log.info("存在： %s的下载记录" % release_info["package_name"])
                         break
-                    if self.page.get_current_time() > self.page.return_end_time(now_time, 300):
-                        log.error("@@@@推送中超过5分钟还没有升级包: %s的下载记录" % release_info["package_name"])
-                        assert False, "@@@@推送中超过5分钟还没有升级包: %s的下载记录" % release_info["package_name"]
+                    if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 180):
+                        log.error("@@@@推送中超过3分钟还没有升级包: %s的下载记录" % release_info["package_name"])
+                        assert False, "@@@@推送中超过3分钟还没有升级包: %s的下载记录" % release_info["package_name"]
 
                 log.info("****************终端检测到下载记录*******************")
 
@@ -853,7 +862,7 @@ class TestNetworkCases:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.page.go_to_new_address("apps")
 
-    @allure.feature('MDM_usb-test')
+    @allure.feature('MDM_usb-test-01')
     @allure.title("Apps-推送高版本APP覆盖安装/卸载后检测重新下载/卸载重启检查安装/同版本覆盖安装/低版本覆盖安装")
     @pytest.mark.dependency(depends=["test_release_app_ok"], scope='package')
     # @pytest.mark.flaky(reruns=1, reruns_delay=3)
