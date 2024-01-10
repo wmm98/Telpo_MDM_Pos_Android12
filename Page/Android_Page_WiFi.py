@@ -177,7 +177,15 @@ class AndroidBasePageWiFi(interface):
         self.device_existed(wlan0_ip)
         self.device_boot_complete()
         self.wifi_adb_root(wlan0_ip)
-        self.screen_keep_on()
+        # self.screen_keep_on()
+        self.screen_keep_on_no_back()
+
+    def reboot_devices_no_back(self, wlan0_ip):
+        self.send_adb_command("reboot")
+        self.time_sleep(30)
+        self.confirm_usb_adb_connect(wlan0_ip)
+        self.device_boot_complete()
+        self.screen_keep_on_no_back()
 
     def reboot_device(self, wlan0_ip):
         self.send_adb_command("reboot")
@@ -188,6 +196,7 @@ class AndroidBasePageWiFi(interface):
         self.device_boot_complete()
         # self.wifi_adb_root(wlan0_ip)
         self.screen_keep_on()
+        # self.screen_keep_on_no_back()
 
     def reboot_device_root(self, wlan0_ip):
         self.send_adb_command("reboot")
@@ -391,7 +400,7 @@ class AndroidBasePageWiFi(interface):
             "ls /%s/aimdm/download/ |grep %s" % (self.get_internal_storage_directory(), file_name))
         print(res.split("\n")[0])
         download_file_name = res.split("\n")[0]
-        cmd = "sha256sum /%s/aimdm/download/%s" % (self.get_internal_storage_directory(), download_file_name)
+        cmd = "md5sum /%s/aimdm/download/%s" % (self.get_internal_storage_directory(), download_file_name)
         print(self.u2_send_command(cmd))
         print(self.u2_send_command(cmd).split(" "))
         result = self.u2_send_command(cmd).split(" ")[0]
@@ -427,6 +436,15 @@ class AndroidBasePageWiFi(interface):
         self.client.swipe(0.1, 0.9, 0.9, 0.1)
         self.client.swipe(0.1, 0.9, 0.9, 0.1)
         self.back_to_home()
+
+    def screen_keep_on_no_back(self):
+        self.u2_send_command("settings put system screen_off_timeout 1800000")
+        # self.device_unlock()
+        # self.swipe_unlock_screen()
+        self.client.screen_off()
+        self.client.press("power")
+        self.client.swipe(0.1, 0.9, 0.9, 0.1)
+        self.client.swipe(0.1, 0.9, 0.9, 0.1)
 
     def swipe_unlock_screen(self, battery=True):
         width, height = self.client.window_size()

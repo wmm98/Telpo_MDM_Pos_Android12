@@ -8,6 +8,33 @@ class interface:
     def __init__(self):
         pass
 
+    def copy_file(self, origin, des):
+        if self.path_is_existed(origin):
+            while True:
+                if not self.path_is_existed(des):
+                    public_pack.shutil.copy(origin, des)
+                else:
+                    break
+                self.time_sleep(1)
+        else:
+            raise Exception("此路径不存在: %s, 请检查！！！" % origin)
+
+    def rename_file_name(self, src, dst):
+        while True:
+            if not self.path_is_existed(dst):
+                public_pack.shutil.move(src, dst)
+            else:
+                break
+            self.time_sleep(1)
+
+    def delete_file(self, file_path):
+        while True:
+            if self.path_is_existed(file_path):
+                public_pack.os.remove(file_path)
+            else:
+                break
+            self.time_sleep(1)
+
     def text_is_existed(self, text1, text2):
         sub = self.remove_space(text1)
         string = self.remove_space(text2)
@@ -154,13 +181,22 @@ class interface:
     def calculate_sha256_in_windows(self, file, directory="Package"):
         if directory == "Package":
             file_path = self.get_apk_path(file)
+        elif directory == "Public_Package":
+            file_path = conf.project_path + '\\Public_Package\\new\\%s' % file
         else:
             file_path = conf.project_path + "\\Param\\%s\\%s" % (directory, file)
-        sha256 = public_pack.hashlib.sha256()
-        with open(file_path, "rb") as file:
-            for chunk in iter(lambda: file.read(4096), b""):
-                sha256.update(chunk)
-        return sha256.hexdigest()
+
+        # sha256 = public_pack.hashlib.sha256()
+        # with open(file_path, "rb") as file:
+        #     for chunk in iter(lambda: file.read(4096), b""):
+        #         sha256.update(chunk)
+        # return sha256.hexdigest()
+
+        with open(file_path, 'rb') as file:
+            md5_hash = public_pack.hashlib.md5()
+            while chunk := file.read(4096):
+                md5_hash.update(chunk)
+        return md5_hash.hexdigest()
 
     def value_str_is_equal(self, value1, value2):
         if value1 == value2:
@@ -228,9 +264,15 @@ if __name__ == '__main__':
     public_pack.Config().load_yaml_data()
     case = interface()
     # case.extract_integers(" userId=10106")
-    print(case.calculate_sha256_in_windows("TPS900_msm8937_sv10_fv1.1.19_pv1.1.19-1.2.20.zip"))
+    # print(case.calculate_sha256_in_windows("TPS900_msm8937_sv10_fv1.1.19_pv1.1.19-1.2.20.zip"))
     # name = case.get_apk_package_name(path)
     # print(name)
     # version = case.get_apk_package_version(path)
     # print(version)
+    src = conf.project_path + '\\Public_Package\\origin\\test.zip'
+    des = conf.project_path + '\\Public_Package\\new\\test.zip'
+    rename_file = conf.project_path + '\\Public_Package\\new\\new.zip'
+    case.copy_file(src, des)
+    case.rename_file_name(des, rename_file)
+    case.delete_file(rename_file)
     #

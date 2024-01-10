@@ -305,12 +305,12 @@ class TestPublicPage:
                     self.android_mdm_page.del_all_content_file()
                     self.android_mdm_page.screen_keep_on()
 
-    @allure.feature('MDM_public-01')
+    @allure.feature('MDM_public')
     @allure.story('MDM-Show')
     @allure.title("OTA-OTA重启5次断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
-    def test_upgrade_OTA_package_reboot_5times(self, recover_and_login_mdm, del_all_ota_release_log, delete_ota_package_relate):
+    def test_upgrade_OTA_package_reboot_5times(self, recover_and_login_mdm, fake_ota_package_operation, del_all_ota_release_log, delete_ota_package_relate):
         download_tips = "Foundanewfirmware,whethertoupgrade?"
         upgrade_tips = "whethertoupgradenow?"
         release_info = {"package_name": test_yml['ota_packages_info']['package_name'], "sn": self.device_sn,
@@ -337,13 +337,14 @@ class TestPublicPage:
                 log.info("当前版本为： %s" % device_current_firmware_version)
                 log.info("目的版本为: %s" % release_info["version"])
                 # check file size and hash value in directory Param/package
-                ota_package_path = self.android_mdm_page.get_apk_path(release_info["package_name"])
+                # ota_package_path = self.android_mdm_page.get_apk_path(release_info["package_name"])
+                ota_package_path = conf.project_path + '\\Public_Package\\new\\%s' % release_info["package_name"]
                 act_ota_package_size = self.ota_page.get_zip_size(ota_package_path)
                 log.info("act_ota_package_size: %s" % act_ota_package_size)
                 # check file hash value in directory Param/package
                 act_ota_package_hash_value = self.android_mdm_page.calculate_sha256_in_windows(
-                    release_info["package_name"])
-                log.info("act_ota_package_hash_value: %s" % act_ota_package_hash_value)
+                    release_info["package_name"], directory="Public_Package")
+                log.info("ota 包的md5值为: %s" % act_ota_package_hash_value)
                 self.ota_page.search_device_by_pack_name(release_info["package_name"])
                 # ele = self.Page.get_package_ele(release_info["package_name"])
                 send_time = case_pack.time.strftime('%Y-%m-%d %H:%M',
@@ -373,8 +374,9 @@ class TestPublicPage:
                 package_size = self.android_mdm_page.get_file_size_in_device(release_info["package_name"])
                 log.info("第一次下载的的ota package size: %s" % str(package_size))
                 for i in range(times):
-                    self.android_mdm_page.reboot_device(self.wifi_ip)
+                    self.android_mdm_page.reboot_devices_no_back(self.wifi_ip)
                     log.info("***********第%d次重启************" % (i + 1))
+                    self.android_mdm_page.ping_network(timeout=180)
                     try:
                         self.android_mdm_page.confirm_received_alert(download_tips)
                         log.info("设备显示下载提示并且确认下载")
@@ -396,7 +398,8 @@ class TestPublicPage:
                             assert False, "@@@@确认下载提示后， 2分钟内ota升级包没有大小没变， 没在下载"
                         self.ota_page.time_sleep(1)
                 log.info("*******************完成%d次重启*********************************" % (times + 1))
-
+                # 防止滑动解锁点击取消按钮
+                self.android_mdm_page.screen_keep_on()
                 now_time = self.ota_page.get_current_time()
                 while True:
                     download_file_size = self.android_mdm_page.get_file_size_in_device(release_info["package_name"])
@@ -433,9 +436,10 @@ class TestPublicPage:
                             report_now_time = self.ota_page.get_current_time()
                     self.ota_page.time_sleep(5)
                     self.ota_page.refresh_page()
-
-                self.android_mdm_page.screen_keep_on()
+                self.android_mdm_page.screen_keep_on_no_back()
+                # self.android_mdm_page.screen_keep_on()
                 self.android_mdm_page.confirm_alert_show(timeout=300)
+                self.android_mdm_page.back_to_home()
                 log.info("检测到有升级提示框")
                 try:
                     self.android_mdm_page.click_cancel_btn()
@@ -936,11 +940,11 @@ class TestPublicPage:
                     self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('MDM_public-01')
+    @allure.feature('MDM_public')
     @allure.title("public case- 静默ota升级")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=1)
-    def test_silent_ota_upgrade(self, recover_and_login_mdm, del_all_ota_release_log, delete_ota_package_relate):
+    def test_silent_ota_upgrade(self, recover_and_login_mdm, real_ota_package_operation, del_all_ota_release_log, delete_ota_package_relate):
         while True:
             try:
                 log.info("*******************静默ota升级用例开始***************************")

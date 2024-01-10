@@ -20,7 +20,6 @@ class TestNetworkCases:
         self.system_page = case_pack.SystemPage(self.driver, 40)
         self.cat_log_page = case_pack.CatchLogPage(self.driver, 40)
         self.android_mdm_page = case_pack.AndroidAimdmPage(case_pack.device_data, 5)
-        # self.android_mdm_page.reboot_device(case_pack.device_data["wifi_device_info"]["ip"])
         self.page.delete_app_install_and_uninstall_logs()
         self.ota_page.delete_all_ota_release_log()
         self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
@@ -144,7 +143,7 @@ class TestNetworkCases:
                     self.android_mdm_page.confirm_wifi_status_open()
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('MDM_usb-test-no-test-now')
+    @allure.feature('MDM_usb-test')
     @allure.story('MDM-Show111')
     @allure.title("Apps-限定4G网络推送app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -451,11 +450,11 @@ class TestNetworkCases:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.page.go_to_new_address("apps")
 
-    @allure.feature('MDM_usb-test-01')
+    @allure.feature('MDM_usb-test')
     @allure.title("OTA-OTA断网重连5次断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    # @pytest.mark.flaky(reruns=3, reruns_delay=3)
-    def test_upgrade_OTA_package_reconnect_network_5times(self, recover_and_login_mdm, connect_wifi_adb_USB, del_all_ota_release_log,
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    def test_upgrade_OTA_package_reconnect_network_5times(self, recover_and_login_mdm, fake_ota_package_operation, connect_wifi_adb_USB, del_all_ota_release_log,
                                                           delete_ota_package_relate):
         while True:
             try:
@@ -472,7 +471,6 @@ class TestNetworkCases:
                 times = 5
                 self.page.go_to_new_address("ota")
                 self.android_mdm_page.screen_keep_on()
-                self.android_mdm_page.back_to_home()
                 # close mobile data first
                 log.info("先关闭流量数据")
                 self.android_mdm_page.close_mobile_data()
@@ -488,13 +486,14 @@ class TestNetworkCases:
                 device_current_firmware_version = self.android_mdm_page.check_firmware_version()
                 log.info("固件升级的目标版本%s" % release_info["version"])
                 # check file size and hash value in directory Param/package
-                ota_package_path = self.android_mdm_page.get_apk_path(release_info["package_name"])
+                # ota_package_path = self.android_mdm_page.get_apk_path(release_info["package_name"])
+                ota_package_path = conf.project_path + '\\Public_Package\\new\\%s' % release_info["package_name"]
                 act_ota_package_size = self.ota_page.get_zip_size(ota_package_path)
                 log.info("原ota升级包的大小: %s" % str(act_ota_package_size))
                 # check file hash value in directory Param/package
                 act_ota_package_hash_value = self.android_mdm_page.calculate_sha256_in_windows(
-                    release_info["package_name"])
-                log.info("ota升级包的hash值: %s" % str(act_ota_package_hash_value))
+                    release_info["package_name"], directory="Public_Package")
+                log.info("ota升级包的md5值: %s" % str(act_ota_package_hash_value))
                 # search package
                 self.ota_page.search_device_by_pack_name(release_info["package_name"])
                 # ele = self.Page.get_package_ele(release_info["package_name"])
@@ -584,7 +583,8 @@ class TestNetworkCases:
                         self.ota_page.time_sleep(3)
 
                 log.info("*******************完成%d次断网操作*********************************" % (times + 1))
-
+                # 防止滑动解锁点击取消按钮
+                self.android_mdm_page.screen_keep_on()
                 now_time = self.ota_page.get_current_time()
                 while True:
                     download_file_size = self.android_mdm_page.get_file_size_in_device(release_info["package_name"])
@@ -594,8 +594,8 @@ class TestNetworkCases:
                         log.info("下载完成后的 package_hash_value：%s" % str(package_hash_value))
                         break
 
-                    if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 420):
-                        err_msg = "@@@@断网重连%d次， 50分钟后还没有下载完相应的ota package， 请检查！！！" % times
+                    if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 1800):
+                        err_msg = "@@@@断网重连%d次， 30分钟后还没有下载完相应的ota package， 请检查！！！" % times
                         log.error(err_msg)
                         assert False, err_msg
                     self.ota_page.time_sleep(10)
@@ -623,7 +623,7 @@ class TestNetworkCases:
                     self.ota_page.time_sleep(5)
                     self.ota_page.refresh_page()
                 log.info("****************************ota升级升级包下载完成***************************")
-                self.android_mdm_page.screen_keep_on()
+                # self.android_mdm_page.screen_keep_on()
                 self.android_mdm_page.confirm_alert_show(timeout=300)
                 log.info("*****************检测到有升级提示框********************")
                 try:
@@ -862,7 +862,7 @@ class TestNetworkCases:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.page.go_to_new_address("apps")
 
-    @allure.feature('MDM_usb-test-01')
+    @allure.feature('MDM_usb-test')
     @allure.title("Apps-推送高版本APP覆盖安装/卸载后检测重新下载/卸载重启检查安装/同版本覆盖安装/低版本覆盖安装")
     @pytest.mark.dependency(depends=["test_release_app_ok"], scope='package')
     # @pytest.mark.flaky(reruns=1, reruns_delay=3)

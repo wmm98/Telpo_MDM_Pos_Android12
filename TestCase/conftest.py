@@ -23,6 +23,126 @@ android_page = TestCase.AndroidAimdmPage(TestCase.device_data, 30)
 wifi_ip = TestCase.device_data["wifi_device_info"]["ip"]
 serial = TestCase.Serial()
 user_info = TestCase.user_info
+conf = TestCase.Config()
+
+
+@pytest.fixture()
+def fake_ota_package_operation():
+    ota_name = TestCase.yaml_data["ota_packages_info"]["package_name"]
+    src = conf.project_path + '\\Public_Package\\origin\\test.zip'
+    des = conf.project_path + '\\Public_Package\\new\\test.zip'
+    rename_file = conf.project_path + '\\Public_Package\\new\\%s' % ota_name
+    ota_page.copy_file(src, des)
+    ota_page.rename_file_name(des, rename_file)
+    ota_page.go_to_new_address("ota")
+    del_time = ota_page.get_current_time()
+    while True:
+        try:
+            ota_page.search_device_by_pack_name(ota_name)
+            if len(ota_page.get_ota_package_list()) == 0:
+                break
+            ota_page.delete_ota_package()
+        except:
+            pass
+            ota_page.refresh_page()
+            ota_page.time_sleep(2)
+            if ota_page.get_current_time() > ota_page.return_end_time(del_time, 900):
+                assert False, "@@@@平台无法删除ota包：%s, 请检查！！！！" % ota_name
+
+    ota_page.refresh_page()
+    ota_page.time_sleep(2)
+    now_time = ota_page.get_current_time()
+
+    while True:
+        try:
+            ota_page.search_device_by_pack_name(ota_name)
+            if len(ota_page.get_ota_package_list()) == 0:
+                ota_page.click_add_btn()
+                ota_page.input_ota_package_info({"file_name": rename_file})
+                ota_page.click_save_add_ota_pack(timeout=1800)
+                ota_page.refresh_page()
+                ota_page.time_sleep(1)
+            else:
+                break
+        except:
+            pass
+        if ota_page.get_current_time() > ota_page.return_end_time(now_time, 3600):
+            assert False, "@@@@无法上传ota包：%s, 请检查！！！！" % rename_file
+        ota_page.refresh_page()
+        ota_page.time_sleep(3)
+    yield
+    ota_page.delete_file(rename_file)
+    ota_page.go_to_new_address("ota")
+    del_time = ota_page.get_current_time()
+    while True:
+        try:
+            ota_page.search_device_by_pack_name(ota_name)
+            if len(ota_page.get_ota_package_list()) == 0:
+                break
+            ota_page.delete_ota_package()
+        except:
+            pass
+            ota_page.refresh_page()
+            ota_page.time_sleep(2)
+            if ota_page.get_current_time() > ota_page.return_end_time(del_time, 900):
+                assert False, "@@@@平台无法删除ota包：%s, 请检查！！！！" % ota_name
+
+
+@pytest.fixture()
+def real_ota_package_operation():
+    ota_name = TestCase.yaml_data["ota_packages_info"]["package_name"]
+    ota_path = ota_page.get_apk_path(ota_name)
+    ota_page.go_to_new_address("ota")
+    del_time = ota_page.get_current_time()
+    while True:
+        try:
+            ota_page.search_device_by_pack_name(ota_name)
+            if len(ota_page.get_ota_package_list()) == 0:
+                break
+            ota_page.delete_ota_package()
+        except:
+            pass
+            ota_page.refresh_page()
+            ota_page.time_sleep(2)
+            if ota_page.get_current_time() > ota_page.return_end_time(del_time, 900):
+                assert False, "@@@@平台无法删除ota包：%s, 请检查！！！！" % ota_name
+
+    ota_page.refresh_page()
+    ota_page.time_sleep(2)
+    now_time = ota_page.get_current_time()
+    while True:
+        try:
+            ota_page.search_device_by_pack_name(ota_name)
+            if len(ota_page.get_ota_package_list()) == 0:
+                ota_page.click_add_btn()
+                ota_page.input_ota_package_info({"file_name": ota_path})
+                ota_page.click_save_add_ota_pack(timeout=1800)
+                ota_page.refresh_page()
+                ota_page.time_sleep(1)
+            else:
+                break
+        except:
+            pass
+        if ota_page.get_current_time() > ota_page.return_end_time(now_time, 3600):
+            assert False, "@@@@无法上传ota包：%s, 请检查！！！！" % ota_path
+        ota_page.refresh_page()
+        ota_page.time_sleep(3)
+
+    yield
+    ota_page.go_to_new_address("ota")
+    del_time = ota_page.get_current_time()
+    while True:
+        try:
+            ota_page.search_device_by_pack_name(ota_name)
+            if len(ota_page.get_ota_package_list()) == 0:
+                break
+            ota_page.delete_ota_package()
+        except:
+            pass
+            ota_page.refresh_page()
+            ota_page.time_sleep(2)
+            if ota_page.get_current_time() > ota_page.return_end_time(del_time, 900):
+                assert False, "@@@@平台无法删除ota包：%s, 请检查！！！！" % ota_name
 
 
 @pytest.fixture()

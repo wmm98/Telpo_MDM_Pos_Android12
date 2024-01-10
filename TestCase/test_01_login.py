@@ -130,7 +130,7 @@ class TestLogin:
                     log.info("**********************服务器恢复正常*************************")
                     self.ota_page.go_to_new_address("devices")
 
-    @allure.feature('MDM_test02_login-99')
+    @allure.feature('MDM_test02_login')
     @allure.title("OTA-添加ota升级包-- 辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -156,22 +156,22 @@ class TestLogin:
                         assert False, "@@@@创建种类失败，请检查！！！！"
                     self.ota_page.time_sleep(3)
                 # check if ota package is existed, if not, add package, else skip
-                now_time = self.ota_page.get_current_time()
-                while True:
-                    self.ota_page.search_device_by_pack_name(package_info["package_name"])
-                    if len(self.ota_page.get_ota_package_list()) == 0:
-                        self.ota_page.click_add_btn()
-                        self.ota_page.input_ota_package_info(ota_info)
-                        self.ota_page.click_save_add_ota_pack(timeout=1800)
-                        self.ota_page.refresh_page()
-                        self.ota_page.time_sleep(5)
-                        self.ota_page.search_device_by_pack_name(package_info["package_name"])
-                    else:
-                        break
-                    if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 3600):
-                        assert False, "@@@@无法上传Ota包：%s, 请检查！！！！" % package_info["package_name"]
-                    self.ota_page.refresh_page()
-                    self.ota_page.time_sleep(3)
+                # now_time = self.ota_page.get_current_time()
+                # while True:
+                #     self.ota_page.search_device_by_pack_name(package_info["package_name"])
+                #     if len(self.ota_page.get_ota_package_list()) == 0:
+                #         self.ota_page.click_add_btn()
+                #         self.ota_page.input_ota_package_info(ota_info)
+                #         self.ota_page.click_save_add_ota_pack(timeout=1800)
+                #         self.ota_page.refresh_page()
+                #         self.ota_page.time_sleep(5)
+                #         self.ota_page.search_device_by_pack_name(package_info["package_name"])
+                #     else:
+                #         break
+                #     if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 3600):
+                #         assert False, "@@@@无法上传Ota包：%s, 请检查！！！！" % package_info["package_name"]
+                #     self.ota_page.refresh_page()
+                #     self.ota_page.time_sleep(3)
                 break
             except Exception as e:
                 if self.ota_page.service_is_normal("ota", TestCase.user_info):
@@ -182,7 +182,7 @@ class TestLogin:
                     log.info("**********************服务器恢复正常*************************")
                     self.ota_page.go_to_new_address("ota")
 
-    @allure.feature('MDM_test02_login-99')
+    @allure.feature('MDM_test02_login')
     @allure.title("Apps-添加APK包--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)

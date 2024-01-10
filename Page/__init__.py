@@ -25,9 +25,11 @@ from ping3 import ping
 import threading
 from Common.Serial import Serial
 from adbutils import AdbError
+import shutil
+
 
 yaml_data = Config().get_yaml_data()['MDMTestData']
-# warnings.simplefilter('ignore', category=DeprecationWarning)
+
 
 js_telpo_support = "document.getElementsByClassName(\"globalClass_f38a\")[0].style.display=\"none\""
 js_load_status = 'return document.readyState;'
