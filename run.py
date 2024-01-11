@@ -26,13 +26,16 @@ from Common.Serial import Serial
 from Common.DealAlert import AlertData
 
 if __name__ == '__main__':
-    # init config file
+    # update venv
+    shell = Shell.Shell()
     conf = Config.Config()
+    shell.invoke(conf.conf_path + "\\update_venv.bat")
+    # init config file
+
     conf.load_yaml_data()
     CheckYaml().check_test_data()
     test_info = conf.get_yaml_data()['MDMTestData']
     log = Log.MyLog()
-    shell = Shell.Shell()
 
     # get COM port related
     usb_serial = Serial()
@@ -70,7 +73,7 @@ if __name__ == '__main__':
     shutil.copy(env_path, xml_report_path)
 
     # # 定义测试集
-    allure_list = '--allure-features=MDM_test02_login'
+    allure_list = '--allure-features=MDM_test02_login,MDM_usb-test-01'
     # allure_list = '--allure-features=MDM_test02_login11'
     # allure_list = '--allure-stories=MDM_test02_login,MDM-Show'
     # pytest -s --allure-features pytest_debug

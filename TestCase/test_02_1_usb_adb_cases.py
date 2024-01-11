@@ -143,7 +143,7 @@ class TestNetworkCases:
                     self.android_mdm_page.confirm_wifi_status_open()
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('MDM_usb-test')
+    @allure.feature('MDM_usb-test-01')
     @allure.story('MDM-Show111')
     @allure.title("Apps-限定4G网络推送app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -174,6 +174,9 @@ class TestNetworkCases:
                 # check app size(bytes) in windows
                 app_size = self.page.get_file_size_in_windows(file_path)
                 log.info("获取到 app的size: %s" % app_size)
+                original_hash_value = self.android_mdm_page.calculate_sha256_in_windows(
+                    "%s" % release_info["package_name"])
+                log.info("原始文件的 hash value: %s" % original_hash_value)
                 send_time = case_pack.time.strftime('%Y-%m-%d %H:%M',
                                                     case_pack.time.localtime(self.page.get_current_time()))
                 self.page.time_sleep(10)
@@ -236,9 +239,6 @@ class TestNetworkCases:
                         assert False, "@@@@多应用推送中超过3分钟还没有app: %s的下载记录" % release_info["package_name"]
                 log.info("**************设备中检测到下载记录*********************")
                 now_time = self.page.get_current_time()
-                original_hash_value = self.android_mdm_page.calculate_sha256_in_windows(
-                    "%s" % release_info["package_name"])
-                log.info("原始文件的 hash value: %s" % original_hash_value)
                 while True:
                     shell_hash_value = self.android_mdm_page.calculate_sha256_in_device_USB(shell_app_apk_name)
                     log.info("终端检测到下载后的hash 值为： %s" % shell_hash_value)
