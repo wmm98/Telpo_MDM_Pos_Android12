@@ -22,7 +22,6 @@ class TestLogin:
         self.android_mdm_page.screen_keep_on()
         self.android_mdm_page.rotation_freeze(freeze=True)
         self.wifi_ip = TestCase.device_data["wifi_device_info"]["ip"]
-        self.android_mdm_page.back_to_home()
         self.wait_times = 10
         self.wifi_flag = 0
 

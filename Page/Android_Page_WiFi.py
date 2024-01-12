@@ -436,6 +436,7 @@ class AndroidBasePageWiFi(interface):
         self.client.swipe(0.1, 0.9, 0.9, 0.1)
         self.client.swipe(0.1, 0.9, 0.9, 0.1)
         self.back_to_home()
+        self.back_to_home()
 
     def screen_keep_on_no_back(self):
         self.u2_send_command("settings put system screen_off_timeout 1800000")

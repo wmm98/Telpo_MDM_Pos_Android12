@@ -53,7 +53,7 @@ class AndroidBasePageUSB(interface):
             "ls /%s/aimdm/download/ |grep %s" % (self.get_internal_storage_directory_USB(), file_name))
         print(res.split("\n")[0])
         download_file_name = res.split("\n")[0]
-        cmd = "sha256sum /%s/aimdm/download/%s" % (self.get_internal_storage_directory_USB(), download_file_name)
+        cmd = "md5sum /%s/aimdm/download/%s" % (self.get_internal_storage_directory_USB(), download_file_name)
         print(self.u2_send_command_USB(cmd))
         print(self.u2_send_command_USB(cmd).split(" "))
         result = self.u2_send_command_USB(cmd).split(" ")[0]
