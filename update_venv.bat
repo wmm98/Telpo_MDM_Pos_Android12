@@ -1,4 +1,3 @@
-
 cd /d %~dp0
 
 set VENV_DIR=myvenv
