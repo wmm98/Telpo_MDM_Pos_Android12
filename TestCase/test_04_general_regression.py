@@ -505,6 +505,7 @@ class TestGeneralRegressionTesting:
                 log.info("设备升级后的固件版本：%s" % after_upgrade_version)
                 assert self.ota_page.remove_space(str(after_upgrade_version)) == self.ota_page.remove_space(
                     release_info["version"]), "@@@@升级后的固件版本为%s, ota升级失败， 请检查！！！" % after_upgrade_version
+                self.ota_page.refresh_page()
                 report_time = self.ota_page.get_current_time()
                 while True:
                     info = self.ota_page.get_ota_latest_upgrade_log(send_time, release_info)
