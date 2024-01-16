@@ -33,6 +33,22 @@ class Optimize_Case:
                 assert False, "@@@@@设备不在线，请检查！！！！"
             self.page.refresh_page()
 
+    def confirm_device_offline(self, sn, timeout=180):
+        self.page.go_to_new_address("devices")
+        now_time = self.page.get_current_time()
+        while True:
+            try:
+                self.page.search_device_by_sn(sn)
+                devices_list = self.page.get_dev_info_list()
+                if self.page.upper_transfer("off") in self.page.upper_transfer(devices_list[0]["Status"]):
+                    break
+            except Exception as e:
+                log.error(e)
+            if self.page.get_current_time() > self.page.return_end_time(now_time, timeout):
+                log.error("@@@@@设备在线，请检查！！！！")
+                assert False, "@@@@@设备在线，请检查！！！！"
+            self.page.refresh_page()
+
     def check_single_device(self, sn):
         try:
             self.page.go_to_new_address("devices")

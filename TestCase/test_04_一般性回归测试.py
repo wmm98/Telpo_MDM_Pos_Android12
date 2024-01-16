@@ -546,7 +546,7 @@ class TestGeneralRegressionTesting:
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_release_low_version_app_general_regression(self, recover_and_login_mdm, del_all_app_release_log,
-                                     del_all_app_uninstall_release_log, go_to_app_page):
+                                     del_all_app_uninstall_release_log, go_to_app_page, uninstall_multi_apps):
         release_info = {"package_name": test_yml['app_info']['low_version_app'], "sn": self.device_sn,
                         "silent": "Yes", "download_network": "NO Limit"}
 
@@ -705,13 +705,14 @@ class TestGeneralRegressionTesting:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('GeneralRegressionTesting')
+    @allure.feature('GeneralRegressionTesting-test')
     @allure.title("一般性回归测试-推送高版本APP覆盖安装/卸载后检测重新下载/卸载重启检查安装/同版本覆盖安装/低版本覆盖安装")
-    @pytest.mark.dependency(depends=["test_release_app_ok"], scope='package')
-    # @pytest.mark.flaky(reruns=1, reruns_delay=3)
+    # @pytest.mark.dependency(depends=["test_release_app_ok"], scope='package')
+    @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_high_version_app_cover_low_version_app_general_regression(self, recover_and_login_mdm, del_all_app_release_log,
                                                     del_all_app_uninstall_release_log,
-                                                    go_to_app_page):
+                                                    go_to_app_page, uninstall_multi_apps):
         release_info = {"package_name": test_yml['app_info']['high_version_app'], "sn": self.device_sn,
                         "silent": "Yes", "download_network": "NO Limit"}
         while True:
@@ -719,6 +720,9 @@ class TestGeneralRegressionTesting:
                 log.info("Apps-推送高版本APP覆盖安装/卸载后检测重新下载/卸载重启检查安装/同版本覆盖安装/低版本覆盖安装")
                 log.info("*******************推送高版本APP覆盖安装用例开始***************************")
                 file_path = conf.project_path + "\\Param\\Package\\%s" % release_info["package_name"]
+
+                self.android_mdm_page.confirm_app_installed(self.android_mdm_page.get_apk_path(test_yml['app_info']['low_version_app']))
+
                 package = self.app_page.get_apk_package_name(file_path)
                 release_info["package"] = package
                 version = self.app_page.get_apk_package_version(file_path)
