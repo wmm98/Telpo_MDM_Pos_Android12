@@ -209,7 +209,7 @@ class TestStability:
                 self.device_page.refresh_page()
                 break
             except Exception as e:
-                if self.device_page.service_is_normal():
+                if self.device_page.service_is_normal("devices", st.user_info):
                     assert False, e
                 else:
                     self.device_page.go_to_new_address("devices")
@@ -353,7 +353,7 @@ class TestStability:
                 log.info("**********多设备重启在线成功率用例结束****************")
                 break
             except Exception as e:
-                if self.app_page.service_is_normal():
+                if self.app_page.service_is_normal("devices", st.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503***********************")
@@ -504,7 +504,7 @@ class TestStability:
                                     break
                             # wait upgrade 3 min at most
                             if content_page.get_current_time() > content_page.return_end_time(report_now_time, 180):
-                                if self.content_page.service_is_normal():
+                                if self.content_page.service_is_normal("content/log", st.user_info):
                                     log.error("@@@@3分钟还没有上报设置完相应的文件， 请检查！！！")
                                     assert False, "@@@@3分钟还没有上报设置完相应的文件， 请检查！！！"
                                 else:
@@ -543,7 +543,7 @@ class TestStability:
                 # for thread in check_message_reboot_threads:
                 #     thread.join()
             except Exception as e:
-                if self.app_page.service_is_normal():
+                if self.app_page.service_is_normal("content", st.user_info):
                     assert False, e
                 else:
                     self.app_page.recovery_after_service_unavailable("content", st.user_info)
@@ -763,7 +763,7 @@ class TestStability:
                     if self.app_page.get_current_app_release_log_total() == len(release_info["sn"]):
                         break
                     if self.app_page.get_current_time() > self.app_page.return_end_time(now_time):
-                        if app_page.service_is_normal():
+                        if app_page.service_is_normal("apps/releases", st.user_info):
                             log.error("@@@@超过3分钟没有相应的 app release log， 请检查！！！")
                             assert False, "@@@@超过3分钟没有相应的 app release log， 请检查！！！"
                         else:
@@ -825,7 +825,7 @@ class TestStability:
                             if app_page.get_action_status(action) == 4:
                                 break
                         if app_page.get_current_time() > app_page.return_end_time(report_now_time, 300):
-                            if self.app_page.service_is_normal():
+                            if self.app_page.service_is_normal("apps/logs", st.user_info):
                                 assert False, "@@@@应用推送中设备:%s已经安装完毕app, 平台超过5分钟还上报%s的安装记录" % (
                                     device_msg["sn"], release_info["package_name"])
                             else:
@@ -968,7 +968,7 @@ class TestStability:
                                 break
                         # wait upgrade 30 min at most
                         if ota_page.get_current_time() > ota_page.return_end_time(report_now_time_, 1800):
-                            if self.ota_page.service_is_normal():
+                            if self.ota_page.service_is_normal("ota/log", st.user_info):
                                 log.error("@@@@设备： %s, 30分钟还没有升级相应的ota包， 请检查！！！" % device_msg["sn"])
                                 assert False, "@@@@设备： %s, 30分钟还没有升级相应的ota包， 请检查！！！" % device_msg["sn"]
                             else:
@@ -995,7 +995,7 @@ class TestStability:
                 log.info("*****************用例结束******************")
                 break
             except Exception as e:
-                if self.app_page.service_is_normal():
+                if self.app_page.service_is_normal("apps", st.user_info):
                     assert False, e
                 else:
                     log.info("****************检测到服务器503******************")
