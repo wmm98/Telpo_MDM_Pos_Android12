@@ -241,7 +241,8 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QTreeView
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
 import sys
-from PyQt5.QtWidgets import QApplication, QTreeView, QWidget, QVBoxLayout, QAbstractItemView, QCheckBox, QHBoxLayout
+from PyQt5.QtWidgets import QApplication, QTreeView, QWidget, QVBoxLayout, QLabel, \
+    QAbstractItemView, QCheckBox, QHBoxLayout, QLineEdit
 
 class CheckableTreeView(QTreeView):
     def __init__(self, parent=None):

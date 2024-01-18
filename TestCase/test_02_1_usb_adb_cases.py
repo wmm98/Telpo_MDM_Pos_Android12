@@ -702,9 +702,8 @@ class TestNetworkCases:
 
     @allure.feature('MDM_usb-test')
     @allure.title("Apps-推送低版本的APP/卸载后重新安装")
-    @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.dependency(name="test_release_app_ok", scope='package')
-    @pytest.mark.filterwarnings("ignore")
+    @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_release_low_version_app(self, recover_and_login_mdm, del_all_app_release_log, del_all_app_uninstall_release_log, go_to_app_page):
         release_info = {"package_name": test_yml['app_info']['low_version_app'], "sn": self.device_sn,

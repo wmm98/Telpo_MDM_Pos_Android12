@@ -19,6 +19,8 @@ class TestRegressionTesting:
         self.cat_log_page = case_pack.CatchLogPage(self.driver, 40)
         self.telpo_mdm_page = case_pack.TelpoMDMPage(self.driver, 40)
         self.android_mdm_page = case_pack.AndroidAimdmPage(case_pack.device_data, 5)
+        self.app_page.delete_app_install_and_uninstall_logs()
+        self.android_mdm_page.del_all_downloaded_apk()
         self.wifi_ip = case_pack.device_data["wifi_device_info"]["ip"]
         self.device_sn = self.android_mdm_page.get_device_sn()
         self.page.go_to_new_address("devices")
@@ -377,8 +379,8 @@ class TestRegressionTesting:
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_cat_logs_regression(self, recover_and_login_mdm, go_to_and_return_device_page):
-        # durations = [5, 10, 30]
-        durations = [5]
+        durations = [5, 10, 30]
+        # durations = [5]
         while True:
             try:
                 log.info("*****************日志的抓取用例开始********************")
@@ -512,9 +514,9 @@ class TestRegressionTesting:
                     self.android_mdm_page.confirm_wifi_status_open()
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('RegressionTesting')
+    @allure.feature('RegressionTesting-test')
     @allure.story('MDM-Show')
-    @allure.title("需要测试时回归测试- 断网重连压测消耗流量情况")
+    @allure.title("需要测试时回归测试- 断网重连压静默升级app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_reconnect_silent_upgrade_regression(self, recover_and_login_mdm, connect_wifi_adb_USB, del_app_install_uninstall_release_log,
@@ -525,7 +527,7 @@ class TestRegressionTesting:
                 self.android_mdm_page.reboot_device(self.wifi_ip)
                 length = 1
                 # settings interval minutes
-                disconnect_time = [2, 30]
+                disconnect_time = [2, 5]
                 #
                 apks = [test_yml['app_info']['other_app_limit_network_A'],
                         test_yml['app_info']['other_app_limit_network_B']]
@@ -674,8 +676,8 @@ class TestRegressionTesting:
                     self.android_mdm_page.confirm_wifi_status_open()
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('RegressionTesting-test')
-    @allure.title("Devices- 关机 -- test in the last")
+    @allure.feature('RegressionTesting')
+    @allure.title("Devices- 关机t")
     @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_device_shutdown_regression(self, recover_and_login_mdm):
         while True:
@@ -692,6 +694,7 @@ class TestRegressionTesting:
                 while True:
                     self.page.refresh_page()
                     if "Off" in opt_case.get_single_device_list(sn)[0]["Status"]:
+                        log.info("平台显示设备已经不在线")
                         break
                     if self.page.get_current_time() > self.page.return_end_time(now_time, 60):
                         assert False, "@@@@已发送关机命令， 平台显示设备1分钟内还显示在线状态"
@@ -700,6 +703,7 @@ class TestRegressionTesting:
                 while True:
                     try:
                         self.android_mdm_page.device_not_existed(self.wifi_ip)
+                        log.info("检测到设备已经下线")
                         break
                     except AssertionError:
                         pass

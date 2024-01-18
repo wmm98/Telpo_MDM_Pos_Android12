@@ -153,7 +153,9 @@ class BasePage(interface):
                 if self.get_current_time() > self.return_end_time(now_time):
                     assert False, "@@@打开 %s 失败， 请检查！！！" % address
                 self.time_sleep(1)
+        # print("运行到这里================")
         self.refresh_page()
+        # print("运行到这里================")
         self.page_load_complete()
         # close devices page tips
         url = self.get_current_window_url()
@@ -162,7 +164,7 @@ class BasePage(interface):
                 self.close_release_version_tips()
 
         # hide Telpo support alert
-        self.hide_telpo_support_alert()
+        # self.hide_telpo_support_alert()
 
     def move_and_click(self, ele):
         public_pack.ActionChains(self.driver).move_to_element(ele).click().perform()
@@ -172,13 +174,14 @@ class BasePage(interface):
 
     def refresh_page(self):
         self.driver.refresh()
+        # print("刷新===============")
         public_pack.t_time.sleep(1)
         url = self.get_current_window_url()
         if "telpoai" in url:
             if "devices" in url:
                 self.close_release_version_tips()
-        if "login" not in self.get_current_window_url() or "map" not in self.get_current_window_url():
-            self.hide_telpo_support_alert()
+        # if "login" not in self.get_current_window_url() or "map" not in self.get_current_window_url():
+        #     self.hide_telpo_support_alert()
 
     def get_selector(self, loc):
         ele = self.get_element(loc)
