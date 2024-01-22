@@ -37,7 +37,9 @@ class TestMDM2SpecialPage:
         self.device_sn = self.android_mdm_page.get_device_sn()
         self.app_page.delete_app_install_and_uninstall_logs()
         self.android_mdm_page.del_all_downloaded_apk()
+        print("运行到这里==========================")
         self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
+        print("运行到这里==========================")
         self.android_mdm_page.del_updated_zip()
         self.android_mdm_page.reboot_device(self.wifi_ip)
         self.content_page.refresh_page()
@@ -53,7 +55,7 @@ class TestMDM2SpecialPage:
         self.app_page.refresh_page()
         self.android_mdm_page.reboot_device(self.wifi_ip)
 
-    @allure.feature('MDM2_test')
+    @allure.feature('MDM2_test-add')
     @allure.title("public case-添加 content 种类--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -81,7 +83,7 @@ class TestMDM2SpecialPage:
                     log.info("**********************服务器恢复正常*************************")
                     self.content_page.go_to_new_address("content")
 
-    @allure.feature('MDM2_test')
+    @allure.feature('MDM2_test-add')
     @allure.title("public case-添加 content 文件--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -478,101 +480,6 @@ class TestMDM2SpecialPage:
                     self.content_page.recovery_after_service_unavailable("content", case_pack.user_info)
                     log.info("**********************服务器恢复正常*************************")
                     self.content_page.go_to_new_address("content")
-                    self.content_page.delete_all_content_release_log()
-                    self.android_mdm_page.del_all_content_file()
-                    self.android_mdm_page.screen_keep_on()
-
-    @allure.feature('MDM2_test')
-    @allure.title("public case-推送text.zip文件")
-    @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
-    def test_release_normal_files_MDM2(self, recover_and_login_mdm, del_all_content_release_logs):
-        # "All Files" "Normal Files" "Boot Animations" "Wallpaper" "LOGO"
-        while True:
-            try:
-                log.info("*******************推送文件用例开始***************************")
-                self.android_mdm_page.reboot_device(self.wifi_ip)
-                self.android_mdm_page.screen_keep_on()
-                animations = test_yml["Content_info"]["normal_file"]
-                release_to_path = "%s/aimdm" % self.android_mdm_page.get_internal_storage_directory()
-                grep_cmd = "ls %s" % release_to_path
-                # if the file is existed, delete it
-                for animation in animations:
-                    if animation in self.android_mdm_page.u2_send_command(grep_cmd):
-                        self.android_mdm_page.rm_file("%s/%s" % (release_to_path, animation))
-                    opt_case.confirm_device_online(self.device_sn)
-                    self.content_page.go_to_new_address("content")
-                    file_path = conf.project_path + "\\Param\\Content\\%s" % animation
-                    file_size = self.content_page.get_file_size_in_windows(file_path)
-                    log.info("获取到的文件 的size(bytes): %s" % str(file_size))
-                    file_hash_value = self.android_mdm_page.calculate_sha256_in_windows("%s " % animation,
-                                                                                        directory="Content")
-                    log.info("文件的hash_value: %s" % str(file_hash_value))
-                    send_time = case_pack.time.strftime('%Y-%m-%d %H:%M',
-                                                        case_pack.time.localtime(self.content_page.get_current_time()))
-                    self.content_page.time_sleep(4)
-                    self.content_page.search_content('Normal Files', animation)
-                    release_info = {"sn": self.device_sn, "content_name": animation}
-                    self.content_page.time_sleep(3)
-                    assert len(self.content_page.get_content_list()) == 1, "@@@@平台上没有相关文件： %s, 请检查" % animation
-                    self.content_page.release_content_file(self.device_sn, file_path=release_to_path)
-                    log.info("@@@@推送文件指令下达成功")
-                    now_time = self.content_page.get_current_time()
-                    while True:
-                        if self.android_mdm_page.download_file_is_existed(animation):
-                            log.info("终端检测到文件：%s的下载记录" % animation)
-                            break
-                        if self.content_page.get_current_time() > self.content_page.return_end_time(now_time):
-                            log.error("@@@@终端检测不到到文件：%s的下载记录" % animation)
-                            assert False, "@@@@终端检测不到到文件：%s的下载记录" % animation
-                        self.content_page.time_sleep(5)
-                    log.info("*************************************文件下载记录检测完毕**************************************")
-                    now_time = self.content_page.get_current_time()
-                    while True:
-                        shell_file_hash_value = self.android_mdm_page.calculate_sha256_in_device(animation)
-                        log.info("终端检测到文件的hash 值为： %s" % shell_file_hash_value)
-                        if file_hash_value == shell_file_hash_value:
-                            log.info("终端检测到文件的hash值与原来的一致")
-                            break
-                        if self.content_page.get_current_time() > self.content_page.return_end_time(now_time, 1200):
-                            log.error("超过20分钟终端检测到文件的hash值与原来的不一致")
-                            assert False, "超过20分钟终端检测到文件的hash值与原来的不一致"
-                        self.content_page.time_sleep(10)
-                    log.info("*************************************终端检测到文件下载完毕**************************************")
-                    self.content_page.go_to_new_address("content/log")
-                    report_now_time = self.content_page.get_current_time()
-                    while True:
-                        upgrade_list = self.content_page.get_content_latest_upgrade_log(send_time, release_info)
-                        if len(upgrade_list) != 0:
-                            action = upgrade_list[0]["Action"]
-                            log.info("平台检测到upgrade log 的action: %s" % action)
-                            if self.content_page.get_action_status(action) == 7:
-                                log.info("平台显示文件设置完毕")
-                                break
-                        # wait upgrade 3 min at most
-                        if self.content_page.get_current_time() > self.content_page.return_end_time(report_now_time, 180):
-                            print(upgrade_list)
-                            if self.content_page.service_is_normal("content/log", case_pack.user_info):
-                                log.error("@@@@3分钟平台还没有设置完相应的文件， 请检查！！！")
-                                assert False, "@@@@3分钟平台还没有设置完相应的文件， 请检查！！！"
-                            else:
-                                self.content_page.recovery_after_service_unavailable("content/log", case_pack.user_info)
-                                report_now_time = self.content_page.get_current_time()
-                        self.content_page.time_sleep(3)
-                        self.content_page.refresh_page()
-                    self.content_page.time_sleep(5)
-                    assert animation in self.android_mdm_page.u2_send_command(
-                        grep_cmd), "@@@@文件没有释放到设备指定的路径%s, 请检查！！！" % release_to_path
-                    log.info("终端检测到文件已经推送到指定的路径： %s" % release_to_path)
-                log.info("*******************推送文件用例结束***************************")
-                break
-            except Exception as e:
-                if self.content_page.service_is_normal("content", case_pack.user_info):
-                    assert False, e
-                else:
-                    log.info("**********************检测到服务器503*************************")
-                    self.app_page.recovery_after_service_unavailable("content", case_pack.user_info)
-                    log.info("**********************服务器恢复正常*************************")
                     self.content_page.delete_all_content_release_log()
                     self.android_mdm_page.del_all_content_file()
                     self.android_mdm_page.screen_keep_on()
@@ -1324,11 +1231,11 @@ class TestMDM2SpecialPage:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('MDM2_test')
+    @allure.feature('MDM2_test-content')
     @allure.title("stability case-文件文件推送成功率-请在报告右侧log文件查看文件文件推送成功率")
-    def test_multi_release_content(self, del_all_content_release_logs,del_all_content_file):
+    def test_multi_release_content_MDM2(self, del_all_content_release_logs, del_all_content_file):
         # 设置断店续传重启得次数
-        reboot_times = 1
+        reboot_times = 2
         while True:
             try:
                 log.info("**********文件文件推送成功率用例开始****************")
@@ -1356,27 +1263,26 @@ class TestMDM2SpecialPage:
                     self.content_page.time_sleep(4)
                     assert len(self.content_page.get_content_list()) == 1, "@@@@平台上没有相关文件： %s, 请检查" % file
                     self.content_page.release_content_file(release_info["sn"], file_path=release_to_path)
-                    log.info("释放文件: %s 到 %s" % (file, ",".join(release_info["sn"])))
+                    log.info("释放文件: %s 到 %s" % (file, self.device_sn))
                     # check release log
-                    self.content_page.go_to_new_address("content/release")
-                    self.content_page.time_sleep(3)
-                    now_time = self.content_page.get_current_time()
-                    while True:
-                        release_len = self.content_page.get_current_content_release_log_total()
-                        if release_len == len(release_info["sn"]) + release_flag:
-                            break
-                        if self.content_page.get_current_time() > self.content_page.return_end_time(now_time):
-                            if content_page.service_unavailable_list():
-                                log.error("@@@@没有相应的文件 release log， 请检查！！！")
-                                assert False, "@@@@没有相应的文件 release log， 请检查！！！"
-                            else:
-                                self.content_page.recovery_after_service_unavailable("content/release", case_pack.user_info)
-                                now_time = self.content_page.get_current_time()
-                        self.content_page.time_sleep(5)
-                        self.content_page.refresh_page()
-
-                    log.info("************释放log检测完毕*****************")
-
+                    # self.content_page.go_to_new_address("content/release")
+                    # self.content_page.time_sleep(3)
+                    # now_time = self.content_page.get_current_time()
+                    # while True:
+                    #     release_len = self.content_page.get_current_content_release_log_total()
+                    #     if release_len == len(release_info["sn"]) + release_flag:
+                    #         break
+                    #     if self.content_page.get_current_time() > self.content_page.return_end_time(now_time):
+                    #         if content_page.service_unavailable_list():
+                    #             log.error("@@@@没有相应的文件 release log， 请检查！！！")
+                    #             assert False, "@@@@没有相应的文件 release log， 请检查！！！"
+                    #         else:
+                    #             self.content_page.recovery_after_service_unavailable("content/release", case_pack.user_info)
+                    #             now_time = self.content_page.get_current_time()
+                    #     self.content_page.time_sleep(5)
+                    #     self.content_page.refresh_page()
+                    #
+                    # log.info("************释放log检测完毕*****************")
 
                     self.android_mdm_page.screen_keep_on()
                     # check the content download record in device
@@ -1393,8 +1299,10 @@ class TestMDM2SpecialPage:
                     before_reboot_file_size = self.android_mdm_page.get_file_size_in_device(file)
                     log.info("%s: 第一次下载的的file size: %s" % (self.device_sn, before_reboot_file_size))
                     for i in range(reboot_times):
-                        self.android_mdm_page.reboot_device(self.device_sn)
-                        log.info("%s 完成第 %d 重启" % (self.device_sn, (i + 1)))
+                        self.android_mdm_page.reboot_device(self.wifi_ip)
+                        log.info("%s 完成第 %d 重启" % (self.wifi_ip, (i + 1)))
+                        self.android_mdm_page.ping_network()
+                        log.info("确定注册上网络")
                         now_time = content_page.get_current_time()
                         while True:
                             current_size = self.android_mdm_page.get_file_size_in_device(file)
@@ -1457,6 +1365,7 @@ class TestMDM2SpecialPage:
                     assert file in self.android_mdm_page.u2_send_command(
                         grep_cmd), "@@@@文件没有释放到设备指定的路径%s, 请检查！！！" % release_to_path
                     log.info("终端检测到文件已经推送到指定的路径： %s" % release_to_path)
+                    log.info("推送文件：%s 结束" % file)
                 log.info("**************多设备推送文件用例断点续传结束************************")
                 break
             except Exception as e:
@@ -1464,6 +1373,137 @@ class TestMDM2SpecialPage:
                     assert False, e
                 else:
                     self.app_page.recovery_after_service_unavailable("content", case_pack.user_info)
+
+    @allure.feature('MDM2_test')
+    @allure.title("public case-文件推送-网络恢复断点续传")
+    @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    def test_release_normal_files_MDM2(self, recover_and_login_mdm, del_all_content_release_logs):
+        # "All Files" "Normal Files" "Boot Animations" "Wallpaper" "LOGO"
+        times = 5
+        while True:
+            try:
+                log.info("***********文件推送-网络恢复断点续传******************")
+                self.android_mdm_page.reboot_device(self.wifi_ip)
+                self.android_mdm_page.screen_keep_on()
+                animation = test_yml["Content_info"]["stability_test_file"][0]
+                release_to_path = "%s/aimdm" % self.android_mdm_page.get_internal_storage_directory()
+                grep_cmd = "ls %s" % release_to_path
+                # if the file is existed, delete it
+                if animation in self.android_mdm_page.u2_send_command(grep_cmd):
+                    self.android_mdm_page.rm_file("%s/%s" % (release_to_path, animation))
+                opt_case.confirm_device_online(self.device_sn)
+                self.content_page.go_to_new_address("content")
+                file_path = conf.project_path + "\\Param\\Content\\%s" % animation
+                file_size = self.content_page.get_file_size_in_windows(file_path)
+                log.info("获取到的文件 的size(bytes): %s" % str(file_size))
+                file_hash_value = self.android_mdm_page.calculate_sha256_in_windows("%s " % animation,
+                                                                                    directory="Content")
+                log.info("文件的hash_value: %s" % str(file_hash_value))
+                send_time = case_pack.time.strftime('%Y-%m-%d %H:%M',
+                                                    case_pack.time.localtime(self.content_page.get_current_time()))
+                self.content_page.time_sleep(4)
+                self.content_page.search_content('Normal Files', animation)
+                release_info = {"sn": self.device_sn, "content_name": animation}
+                self.content_page.time_sleep(3)
+                assert len(self.content_page.get_content_list()) == 1, "@@@@平台上没有相关文件： %s, 请检查" % animation
+                self.content_page.release_content_file(self.device_sn, file_path=release_to_path)
+                log.info("@@@@推送文件指令下达成功")
+                now_time = self.content_page.get_current_time()
+                while True:
+                    if self.android_mdm_page.download_file_is_existed(animation):
+                        log.info("终端检测到文件：%s的下载记录" % animation)
+                        break
+                    if self.content_page.get_current_time() > self.content_page.return_end_time(now_time):
+                        log.error("@@@@终端检测不到到文件：%s的下载记录" % animation)
+                        assert False, "@@@@终端检测不到到文件：%s的下载记录" % animation
+                    self.content_page.time_sleep(5)
+                log.info("*************************************文件下载记录检测完毕**************************************")
+                package_size = self.android_mdm_page.calculate_sha256_in_device(animation)
+                # 断网恢复
+                for i in range(times):
+                    self.android_mdm_page.disconnect_ip(self.wifi_ip)
+                    self.android_mdm_page.close_wifi_btn()
+                    self.android_mdm_page.confirm_wifi_btn_close()
+                    self.android_mdm_page.no_network()
+                    log.info("确认断开网络，终端无法上网")
+                    self.ota_page.time_sleep(5)
+                    log.info("等待...")
+                    self.android_mdm_page.open_wifi_btn()
+                    self.android_mdm_page.confirm_wifi_btn_open()
+                    self.android_mdm_page.confirm_wifi_adb_connected(self.wifi_ip)
+                    self.android_mdm_page.ping_network(timeout=300)
+                    log.info("打开wifi开关并且确认可以上网")
+
+                    while True:
+                        current_size = self.android_mdm_page.calculate_sha256_in_device(animation)
+                        log.info("断网%s次之后当前文件 的size: %s" % (str(i + 1), current_size))
+                        if current_size == file_hash_value:
+                            err_info = "@@@@升级包下载完成, 请检查文件的大小是否适合！！！！"
+                            log.error(err_info)
+                            assert False, err_info
+                        if current_size > package_size:
+                            package_size = current_size
+                            break
+                        if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 120):
+                            err_msg = "@@@@确认下载提示后， 2分钟内文件大小没变， 没在下载， 请检查！！！"
+                            print(err_msg)
+                            log.error(err_msg)
+                            assert False, err_msg
+                        self.ota_page.time_sleep(3)
+
+                log.info("*******************完成%d次断网操作*********************************" % (times + 1))
+
+                now_time = self.content_page.get_current_time()
+                while True:
+                    shell_file_hash_value = self.android_mdm_page.calculate_sha256_in_device(animation)
+                    log.info("终端检测到文件的hash 值为： %s" % shell_file_hash_value)
+                    if file_hash_value == shell_file_hash_value:
+                        log.info("终端检测到文件的hash值与原来的一致")
+                        break
+                    if self.content_page.get_current_time() > self.content_page.return_end_time(now_time, 1200):
+                        log.error("超过20分钟终端检测到文件的hash值与原来的不一致")
+                        assert False, "超过20分钟终端检测到文件的hash值与原来的不一致"
+                    self.content_page.time_sleep(10)
+                log.info("*************************************终端检测到文件下载完毕**************************************")
+                self.content_page.go_to_new_address("content/log")
+                report_now_time = self.content_page.get_current_time()
+                while True:
+                    upgrade_list = self.content_page.get_content_latest_upgrade_log(send_time, release_info)
+                    if len(upgrade_list) != 0:
+                        action = upgrade_list[0]["Action"]
+                        log.info("平台检测到upgrade log 的action: %s" % action)
+                        if self.content_page.get_action_status(action) == 7:
+                            log.info("平台显示文件设置完毕")
+                            break
+                    # wait upgrade 3 min at most
+                    if self.content_page.get_current_time() > self.content_page.return_end_time(report_now_time,
+                                                                                                180):
+                        print(upgrade_list)
+                        if self.content_page.service_is_normal("content/log", case_pack.user_info):
+                            log.error("@@@@3分钟平台还没有设置完相应的文件， 请检查！！！")
+                            assert False, "@@@@3分钟平台还没有设置完相应的文件， 请检查！！！"
+                        else:
+                            self.content_page.recovery_after_service_unavailable("content/log", case_pack.user_info)
+                            report_now_time = self.content_page.get_current_time()
+                    self.content_page.time_sleep(3)
+                    self.content_page.refresh_page()
+                self.content_page.time_sleep(5)
+                assert animation in self.android_mdm_page.u2_send_command(
+                    grep_cmd), "@@@@文件没有释放到设备指定的路径%s, 请检查！！！" % release_to_path
+                log.info("终端检测到文件已经推送到指定的路径： %s" % release_to_path)
+                log.info("*******************推送文件用例结束***************************")
+                break
+            except Exception as e:
+                if self.content_page.service_is_normal("content", case_pack.user_info):
+                    assert False, e
+                else:
+                    log.info("**********************检测到服务器503*************************")
+                    self.app_page.recovery_after_service_unavailable("content", case_pack.user_info)
+                    log.info("**********************服务器恢复正常*************************")
+                    self.content_page.delete_all_content_release_log()
+                    self.android_mdm_page.del_all_content_file()
+                    self.android_mdm_page.screen_keep_on()
 
 
 
