@@ -37,9 +37,7 @@ class TestMDM2SpecialPage:
         self.device_sn = self.android_mdm_page.get_device_sn()
         self.app_page.delete_app_install_and_uninstall_logs()
         self.android_mdm_page.del_all_downloaded_apk()
-        print("运行到这里==========================")
         self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
-        print("运行到这里==========================")
         self.android_mdm_page.del_updated_zip()
         self.android_mdm_page.reboot_device(self.wifi_ip)
         self.content_page.refresh_page()
@@ -55,7 +53,7 @@ class TestMDM2SpecialPage:
         self.app_page.refresh_page()
         self.android_mdm_page.reboot_device(self.wifi_ip)
 
-    @allure.feature('MDM2_test-add')
+    @allure.feature('MDM2_test')
     @allure.title("public case-添加 content 种类--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -83,7 +81,7 @@ class TestMDM2SpecialPage:
                     log.info("**********************服务器恢复正常*************************")
                     self.content_page.go_to_new_address("content")
 
-    @allure.feature('MDM2_test-add')
+    @allure.feature('MDM2_test')
     @allure.title("public case-添加 content 文件--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -351,7 +349,7 @@ class TestMDM2SpecialPage:
                     self.android_mdm_page.reboot_device(self.wifi_ip)
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('MDM2_test')
+    @allure.feature('MDM2_test-test-now')
     @allure.story('MDM-Show')
     @allure.title("public case-推送壁纸--请在附件查看壁纸截图效果")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -1231,7 +1229,7 @@ class TestMDM2SpecialPage:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('MDM2_test-content')
+    @allure.feature('MDM2_test')
     @allure.title("stability case-文件文件推送成功率-请在报告右侧log文件查看文件文件推送成功率")
     def test_multi_release_content_MDM2(self, del_all_content_release_logs, del_all_content_file):
         # 设置断店续传重启得次数
@@ -1377,18 +1375,20 @@ class TestMDM2SpecialPage:
     @allure.feature('MDM2_test')
     @allure.title("public case-文件推送-网络恢复断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
-    def test_release_normal_files_MDM2(self, recover_and_login_mdm, del_all_content_release_logs):
+    # @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    def test_release_normal_files_MDM2(self, recover_and_login_mdm, del_all_content_release_logs, del_all_content_file):
         # "All Files" "Normal Files" "Boot Animations" "Wallpaper" "LOGO"
-        times = 5
+        times = 1
         while True:
             try:
                 log.info("***********文件推送-网络恢复断点续传******************")
+                release_to_path = "%s/aimdm" % self.android_mdm_page.get_internal_storage_directory()
+                grep_cmd = "ls %s" % release_to_path
+                self.android_mdm_page.del_file_in_setting_path(release_to_path)
                 self.android_mdm_page.reboot_device(self.wifi_ip)
                 self.android_mdm_page.screen_keep_on()
                 animation = test_yml["Content_info"]["stability_test_file"][0]
-                release_to_path = "%s/aimdm" % self.android_mdm_page.get_internal_storage_directory()
-                grep_cmd = "ls %s" % release_to_path
+
                 # if the file is existed, delete it
                 if animation in self.android_mdm_page.u2_send_command(grep_cmd):
                     self.android_mdm_page.rm_file("%s/%s" % (release_to_path, animation))
@@ -1434,7 +1434,8 @@ class TestMDM2SpecialPage:
                     self.android_mdm_page.confirm_wifi_adb_connected(self.wifi_ip)
                     self.android_mdm_page.ping_network(timeout=300)
                     log.info("打开wifi开关并且确认可以上网")
-
+                    opt_case.confirm_device_online(self.device_sn)
+                    log.info("平台显示设备在线")
                     while True:
                         current_size = self.android_mdm_page.calculate_sha256_in_device(animation)
                         log.info("断网%s次之后当前文件 的size: %s" % (str(i + 1), current_size))

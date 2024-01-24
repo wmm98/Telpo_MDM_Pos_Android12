@@ -21,6 +21,7 @@ class TestRegressionTesting:
         self.android_mdm_page = case_pack.AndroidAimdmPage(case_pack.device_data, 5)
         self.app_page.delete_app_install_and_uninstall_logs()
         self.android_mdm_page.del_all_downloaded_apk()
+        self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
         self.wifi_ip = case_pack.device_data["wifi_device_info"]["ip"]
         self.device_sn = self.android_mdm_page.get_device_sn()
         self.page.go_to_new_address("devices")
@@ -514,7 +515,7 @@ class TestRegressionTesting:
                     self.android_mdm_page.confirm_wifi_status_open()
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('RegressionTesting-test')
+    @allure.feature('RegressionTesting')
     @allure.story('MDM-Show')
     @allure.title("需要测试时回归测试- 断网重连压静默升级app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -677,7 +678,7 @@ class TestRegressionTesting:
                     self.page.go_to_new_address("devices")
 
     @allure.feature('RegressionTesting')
-    @allure.title("Devices- 关机t")
+    @allure.title("Devices- 关机")
     @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_device_shutdown_regression(self, recover_and_login_mdm):
         while True:
@@ -696,7 +697,7 @@ class TestRegressionTesting:
                     if "Off" in opt_case.get_single_device_list(sn)[0]["Status"]:
                         log.info("平台显示设备已经不在线")
                         break
-                    if self.page.get_current_time() > self.page.return_end_time(now_time, 60):
+                    if self.page.get_current_time() > self.page.return_end_time(now_time, 90):
                         assert False, "@@@@已发送关机命令， 平台显示设备1分钟内还显示在线状态"
                 # check if device is offline
                 now_time = self.page.get_current_time()

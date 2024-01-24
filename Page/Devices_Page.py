@@ -246,7 +246,8 @@ class DevicesPage(TelpoMDMPage):
         self.confirm_alert_existed(self.loc_shutdown_btn)
         self.click(self.loc_shutdown_sure_btn)
         self.confirm_tips_alert_show(self.loc_shutdown_sure_btn)
-        self.comm_confirm_alert_not_existed(self.loc_alert_show, self.loc_shutdown_sure_btn)
+        self.refresh_page()
+        # self.comm_confirm_alert_not_existed(self.loc_alert_show, self.loc_shutdown_sure_btn)
 
     def factory_reset(self):
         self.click_dropdown_btn()

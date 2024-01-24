@@ -122,6 +122,7 @@ class AndroidBasePageWiFi(interface):
     def start_app(self, package_name):
         self.client.app_start(package_name)
         self.time_sleep(3)
+        # self.confirm_app_is_running(package_name)
         self.confirm_app_start(package_name)
 
     def get_current_app(self):
@@ -435,8 +436,11 @@ class AndroidBasePageWiFi(interface):
         self.client.press("power")
         self.client.swipe(0.1, 0.9, 0.9, 0.1)
         self.client.swipe(0.1, 0.9, 0.9, 0.1)
-        self.back_to_home()
-        self.back_to_home()
+        if self.get_current_app() == 'com.mediatek.camera':
+            self.back_to_home()
+        self.time_sleep(3)
+        if self.get_current_app() == 'com.mediatek.camera':
+            self.back_to_home()
 
     def screen_keep_on_no_back(self):
         self.u2_send_command("settings put system screen_off_timeout 1800000")

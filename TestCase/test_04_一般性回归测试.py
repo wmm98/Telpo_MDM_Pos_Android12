@@ -705,7 +705,7 @@ class TestGeneralRegressionTesting:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('GeneralRegressionTesting-test')
+    @allure.feature('GeneralRegressionTesting')
     @allure.title("一般性回归测试-推送高版本APP覆盖安装/卸载后检测重新下载/卸载重启检查安装/同版本覆盖安装/低版本覆盖安装")
     # @pytest.mark.dependency(depends=["test_release_app_ok"], scope='package')
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -1437,7 +1437,7 @@ class TestGeneralRegressionTesting:
                     self.android_mdm_page.reboot_device(self.wifi_ip)
                     self.device_page.go_to_new_address("devices")
 
-    @allure.feature('GeneralRegressionTesting')
+    @allure.feature('GeneralRegressionTesting-test-now')
     @allure.title("Devices- 日志的抓取")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)

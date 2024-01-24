@@ -43,13 +43,13 @@ import uiautomator2 as u2
 # print(driver.current_url)
 #
 
-# device = u2.Device()
+device = u2.Device()
 # device.screen_off()
 # device.press("power")
 # device.swipe(0.1, 0.9, 0.9, 0.1)
 # device.swipe(0.1, 0.9, 0.9, 0.1)
 # device.unlock()
-# print(device.current_app())
+print(device.current_app())
 # print(device.current_app())
 #
 # # cmd_send = Shell()
@@ -222,120 +222,3 @@ import uiautomator2 as u2
 # print(d.info)
 # 调用函数来防止设备休眠
 
-
-# name = {"name": [1, 3], "age": [40, 60]}
-#
-# for i in name:
-#     print(name[i])
-#
-# print(list(name.values()))
-#
-# print(type(name.values()))
-# for i in list(name.values()):
-#     print(i)
-#     # for j in i:
-#     #     print(j)
-
-import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTreeView
-from PyQt5.QtGui import QStandardItemModel, QStandardItem
-
-import sys
-from PyQt5.QtWidgets import QApplication, QTreeView, QWidget, QVBoxLayout, QLabel, \
-    QAbstractItemView, QCheckBox, QHBoxLayout, QLineEdit
-
-class CheckableTreeView(QTreeView):
-    def __init__(self, parent=None):
-        super(CheckableTreeView, self).__init__(parent)
-        self.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.setModel(QStandardItemModel())
-
-class Example(QWidget):
-    def __init__(self):
-        super(Example, self).__init__()
-        self.initUI()
-
-    def initUI(self):
-        self.setWindowTitle('Checkable Tree View')
-
-        treeView = CheckableTreeView()
-        model = treeView.model()
-
-        # 添加根节点
-        rootItem = model.invisibleRootItem()
-        for i in range(3):
-            parentItem = QStandardItem(f'模块{i}')
-            parentItem.setCheckable(True)
-            rootItem.appendRow(parentItem)
-
-            # 添加子节点
-            for j in range(5):
-                childItem = QStandardItem(f'用例{j}')
-                childItem.setCheckable(True)
-                parentItem.appendRow(childItem)
-
-        layout = QVBoxLayout()
-        layout.addWidget(treeView)
-        self.setLayout(layout)
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = Example()
-    ex.show()
-    sys.exit(app.exec_())
-
-# class ModuleSubCaseSelectionWindow(QMainWindow):
-#     def __init__(self):
-#         super().__init__()
-#         self.init_ui()
-#
-#     def init_ui(self):
-#         self.setWindowTitle("Module Sub-Case Selection")
-#         self.setGeometry(400, 400, 300, 400)
-#
-#         self.tree_view = QTreeView(self)
-#         self.setCentralWidget(self.tree_view)
-#
-#         self.model = QStandardItemModel()
-#         self.tree_view.setModel(self.model)
-#
-#         self.add_module("Module 1")
-#         self.add_sub_case("Sub Case 1.1", "Module 1")
-#         self.add_sub_case("Sub Case 1.2", "Module 1")
-#
-#         self.add_module("Module 2")
-#         self.add_sub_case("Sub Case 2.1", "Module 2")
-#         self.add_sub_case("Sub Case 2.2", "Module 2")
-#         self.add_sub_case("Sub Case 2.3", "Module 2")
-#
-#         self.add_module("Module 3")
-#         self.add_sub_case("Sub Case 3.1", "Module 3")
-#
-#         self.tree_view.expandAll()
-#
-#         self.show()
-#
-#     def add_module(self, module_name):
-#         module_item = QStandardItem(module_name)
-#         module_item.setCheckable(True)
-#         self.model.appendRow(module_item)
-#
-#     def add_sub_case(self, case_name, module_name):
-#         module_item = self.find_module_item(module_name)
-#         if module_item is not None:
-#             case_item = QStandardItem(case_name)
-#             case_item.setCheckable(True)
-#             module_item.appendRow(case_item)
-#
-#     def find_module_item(self, module_name):
-#         for row in range(self.model.rowCount()):
-#             item = self.model.item(row)
-#             if item.text() == module_name:
-#                 return item
-#         return None
-#
-#
-# if __name__ == '__main__':
-#     app = QApplication(sys.argv)
-#     window = ModuleSubCaseSelectionWindow()
-#     sys.exit(app.exec_())

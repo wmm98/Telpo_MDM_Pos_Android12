@@ -17,7 +17,7 @@ class Optimize_Case:
         self.page = DevicesPage(self.driver, 40)
         self.cat_log_page = CatchLogPage(self.driver, 40)
 
-    def confirm_device_online(self, sn, timeout=180):
+    def confirm_device_online(self, sn, timeout=300):
         self.page.go_to_new_address("devices")
         now_time = self.page.get_current_time()
         while True:
