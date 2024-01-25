@@ -26,20 +26,13 @@ class Ui_MainWindow(object):
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
         self.treeWidget = QtWidgets.QTreeWidget(self.centralwidget)
+        # 设置多选模式
+        self.treeWidget.setSelectionMode(QtWidgets.QTreeWidget.ExtendedSelection)  # 设置多选模式
         self.treeWidget.setObjectName("treeWidget")
         self.treeWidget.headerItem().setText(0, "1")
         self.verticalLayout.addWidget(self.treeWidget)
 
 
-
-
-        # 我添加的
-
-        # self.submit_button = QtWidgets.QPushButton("提交")
-        #
-        # # 布局
-        #
-        # self.verticalLayout.addWidget(self.submit_button)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -56,18 +49,14 @@ class Ui_MainWindow(object):
         # 我添加的
         self.label = QtWidgets.QLabel("姓名:")
         self.line_edit = QtWidgets.QLineEdit()
-        # self.submit_button = QtWidgets.QPushButton("提交")
         self.verticalLayout.addWidget(self.label)
         self.verticalLayout.addWidget(self.line_edit)
-    #     self.verticalLayout.addWidget(self.submit_button)
-    #
-    #     # 连接信号和槽
-    #     self.submit_button.clicked.connect(self.handle_submit)
-    #
-    # def handle_submit(self):
-    #     name = self.line_edit.text()
-    #     print(f"提交的姓名是: {name}")
+        # 我添加的
+        self.submit_button = QtWidgets.QPushButton("提交")
+        self.verticalLayout.addWidget(self.submit_button)
 
+
+    #
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
