@@ -102,7 +102,7 @@ class AllCertCaseValue:
 DictCommandInfo = {
     "A": AllCertCaseValue.ROOT_PROTOCON,
     # STA test case
-    "B": AllCertCaseValue.ROOT_PROTOCON_STA_CHILD,
+    "立项测试": AllCertCaseValue.ROOT_PROTOCON_STA_CHILD,
     "C": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0,
     "D": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B1,
     "E": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B2,
@@ -113,7 +113,7 @@ DictCommandInfo = {
     "J": AllCertCaseValue.ROOT_PROTOCON_STA_TM_B3,
 
     # CCO test case
-    "K": AllCertCaseValue.ROOT_PROTOCON_CCO_CHILD,
+    "一般性测试": AllCertCaseValue.ROOT_PROTOCON_CCO_CHILD,
     "L": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0,
     "M": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B1,
     "N": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B2,
@@ -124,7 +124,7 @@ DictCommandInfo = {
     "S": AllCertCaseValue.ROOT_PROTOCON_CCO_TM_B3,
 
     # communication performance
-    "T": AllCertCaseValue.ROOT_PERFORMANCE_CHILD,
+    "专项测试": AllCertCaseValue.ROOT_PERFORMANCE_CHILD,
     "U": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD,
     "V": AllCertCaseValue.ROOT_PERFORMANCE_STA_WN_B1,
     "W": AllCertCaseValue.ROOT_PERFORMANCE_STA_WN_B2,
@@ -140,7 +140,9 @@ DictCommandInfo = {
     "g": AllCertCaseValue.ROOT_PERFORMANCE_STA_PSD_B2,
     "h": AllCertCaseValue.ROOT_PERFORMANCE_STA_RATE_B1,
     "i": AllCertCaseValue.ROOT_PERFORMANCE_STA_RATE_B2,
-    "j": AllCertCaseValue.ROOT_PERFORMANCE_CCO_CHILD,
+
+    "回归测试": AllCertCaseValue.ROOT_PERFORMANCE_CCO_CHILD,
+
     "k": AllCertCaseValue.ROOT_PERFORMANCE_CCO_WN_B1,
     "l": AllCertCaseValue.ROOT_PERFORMANCE_CCO_WN_B2,
     "m": AllCertCaseValue.ROOT_PERFORMANCE_CCO_ANTIPPM_B1,
@@ -157,7 +159,7 @@ DictCommandInfo = {
     "x": AllCertCaseValue.ROOT_PERFORMANCE_CCO_RATE_B2,
 
     # other test case
-    "y": AllCertCaseValue.ROOT_OTHER_CHILD,
+    "稳定性测试": AllCertCaseValue.ROOT_OTHER_CHILD,
     "z": AllCertCaseValue.ROOT_OTHER_RATE,
 }
 
@@ -182,7 +184,9 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
         # 设置根节点
         self.AllTestCase = QTreeWidgetItem(self.treeWidget)
         self.AllTestCase.setText(0, '测试项')
-        self.AllTestCase.setCheckState(0, Qt.Unchecked)
+        # self.AllTestCase.setCheckState(0, Qt.Unchecked)
+        # self.AllTestCase.setFlags(self.AllTestCase.flags() | Qt.ItemIsSelectable)
+        # self.AllTestCase.setFlags(self.AllTestCase.flags() & ~Qt.ItemIsUserCheckable)  # 移除可选中的标志位
 
         # 通过字典获取所有子项
         item_protocon = ""
@@ -194,69 +198,61 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
         item_other_father = ""
 
         for value in DictCommandInfo.keys():
-            if (AllCertCaseValue.ROOT_PROTOCON_STA_CHILD < DictCommandInfo[value] <
-                    AllCertCaseValue.ROOT_PROTOCON_STA_MAX):
-                item_sta_child = QTreeWidgetItem(self.AllTestCase)
+            if DictCommandInfo[value] == AllCertCaseValue.ROOT_PROTOCON_STA_CHILD:
+                item_sta_father = QTreeWidgetItem(self.AllTestCase)
+                item_sta_father.setText(0, value)
+                item_sta_father.setCheckState(0, Qt.Unchecked)
+                item_sta_father.setFlags(item_sta_father.flags() | Qt.ItemIsSelectable)
+            elif (AllCertCaseValue.ROOT_PROTOCON_STA_CHILD < DictCommandInfo[value] <
+                  AllCertCaseValue.ROOT_PROTOCON_STA_MAX):
+                item_sta_child = QTreeWidgetItem(item_sta_father)
                 item_sta_child.setText(0, value)
                 item_sta_child.setCheckState(0, Qt.Unchecked)
                 item_sta_child.setFlags(item_sta_child.flags() | Qt.ItemIsSelectable)
-
-        # for value in DictCommandInfo.keys():
-        #     if DictCommandInfo[value] == AllCertCaseValue.ROOT_PROTOCON:
-        #         # 设置子项
-        #         item_protocon = QTreeWidgetItem(self.AllTestCase)
-        #         item_protocon.setText(0, value)
-        #         item_protocon.setCheckState(0, Qt.Unchecked)
-        #
-        #     elif DictCommandInfo[value] == AllCertCaseValue.ROOT_PROTOCON_STA_CHILD:
-        #         item_sta_father = QTreeWidgetItem(item_protocon)
-        #         item_sta_father.setText(0, value)
-        #         item_sta_father.setCheckState(0, Qt.Unchecked)
-        #     elif (AllCertCaseValue.ROOT_PROTOCON_STA_CHILD < DictCommandInfo[value] <
-        #           AllCertCaseValue.ROOT_PROTOCON_STA_MAX):
-        #         item_sta_child = QTreeWidgetItem(item_sta_father)
-        #         item_sta_child.setText(0, value)
-        #         item_sta_child.setCheckState(0, Qt.Unchecked)
-        #     elif DictCommandInfo[value] == AllCertCaseValue.ROOT_PROTOCON_CCO_CHILD:
-        #         item_cco_father = QTreeWidgetItem(item_protocon)
-        #         item_cco_father.setText(0, value)
-        #         item_cco_father.setCheckState(0, Qt.Unchecked)
-        #     elif (AllCertCaseValue.ROOT_PROTOCON_CCO_CHILD < DictCommandInfo[value] <
-        #           AllCertCaseValue.ROOT_PROTOCON_CCO_MAX):
-        #         item_cco_child = QTreeWidgetItem(item_cco_father)
-        #         item_cco_child.setText(0, value)
-        #         item_cco_child.setCheckState(0, Qt.Unchecked)
-        #     elif DictCommandInfo[value] == AllCertCaseValue.ROOT_PERFORMANCE_CHILD:
-        #         item_prerf_father = QTreeWidgetItem(self.AllTestCase)
-        #         item_prerf_father.setText(0, value)
-        #         item_prerf_father.setCheckState(0, Qt.Unchecked)
-        #     elif DictCommandInfo[value] == AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD:
-        #         item_prerf_sta_father = QTreeWidgetItem(item_prerf_father)
-        #         item_prerf_sta_father.setText(0, value)
-        #         item_prerf_sta_father.setCheckState(0, Qt.Unchecked)
-        #     elif (AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD < DictCommandInfo[value] <
-        #           AllCertCaseValue.ROOT_PERFORMANCE_STA_MAX):
-        #         item_perf_sta_child = QTreeWidgetItem(item_prerf_sta_father)
-        #         item_perf_sta_child.setText(0, value)
-        #         item_perf_sta_child.setCheckState(0, Qt.Unchecked)
-        #     elif DictCommandInfo[value] == AllCertCaseValue.ROOT_PERFORMANCE_CCO_CHILD:
-        #         item_prerf_cco_father = QTreeWidgetItem(item_prerf_father)
-        #         item_prerf_cco_father.setText(0, value)
-        #         item_prerf_cco_father.setCheckState(0, Qt.Unchecked)
-        #     elif (AllCertCaseValue.ROOT_PERFORMANCE_CCO_CHILD < DictCommandInfo[value] <
-        #           AllCertCaseValue.ROOT_PERFORMANCE_CCO_MAX):
-        #         item_perf_cco_child = QTreeWidgetItem(item_prerf_cco_father)
-        #         item_perf_cco_child.setText(0, value)
-        #         item_perf_cco_child.setCheckState(0, Qt.Unchecked)
-        #     elif DictCommandInfo[value] == AllCertCaseValue.ROOT_OTHER_CHILD:
-        #         item_other_father = QTreeWidgetItem(self.AllTestCase)
-        #         item_other_father.setText(0, value)
-        #         item_other_father.setCheckState(0, Qt.Unchecked)
-        #     elif AllCertCaseValue.ROOT_OTHER_CHILD < DictCommandInfo[value] < \
-        #             AllCertCaseValue.ROOT_OTHER_MAX:
-        #         item_other_child = QTreeWidgetItem(item_other_father)
-        #         item_other_child.setText(0, value)
-        #         item_other_child.setCheckState(0, Qt.Unchecked)
+            elif DictCommandInfo[value] == AllCertCaseValue.ROOT_PROTOCON_CCO_CHILD:
+                item_cco_father = QTreeWidgetItem(self.AllTestCase)
+                item_cco_father.setText(0, value)
+                item_cco_father.setCheckState(0, Qt.Unchecked)
+                item_cco_father.setFlags(item_cco_father.flags() | Qt.ItemIsSelectable)
+            elif (AllCertCaseValue.ROOT_PROTOCON_CCO_CHILD < DictCommandInfo[value] <
+                  AllCertCaseValue.ROOT_PROTOCON_CCO_MAX):
+                item_cco_child = QTreeWidgetItem(item_cco_father)
+                item_cco_child.setText(0, value)
+                item_cco_child.setCheckState(0, Qt.Unchecked)
+                item_cco_child.setFlags(item_cco_child.flags() | Qt.ItemIsSelectable)
+            elif DictCommandInfo[value] == AllCertCaseValue.ROOT_PERFORMANCE_CHILD:
+                item_prerf_father = QTreeWidgetItem(self.AllTestCase)
+                item_prerf_father.setText(0, value)
+                item_prerf_father.setCheckState(0, Qt.Unchecked)
+                item_prerf_father.setFlags(item_prerf_father.flags() | Qt.ItemIsSelectable)
+            elif (AllCertCaseValue.ROOT_PERFORMANCE_CHILD < DictCommandInfo[value] <
+                  AllCertCaseValue.ROOT_PERFORMANCE_STA_MAX):
+                item_perf_sta_child = QTreeWidgetItem(item_prerf_father)
+                item_perf_sta_child.setText(0, value)
+                item_perf_sta_child.setCheckState(0, Qt.Unchecked)
+                item_perf_sta_child.setFlags(item_perf_sta_child.flags() | Qt.ItemIsSelectable)
+            elif DictCommandInfo[value] == AllCertCaseValue.ROOT_PERFORMANCE_CCO_CHILD:
+                item_prerf_cco_father = QTreeWidgetItem(self.AllTestCase)
+                item_prerf_cco_father.setText(0, value)
+                item_prerf_cco_father.setCheckState(0, Qt.Unchecked)
+                item_prerf_cco_father.setFlags(item_prerf_cco_father.flags() | Qt.ItemIsSelectable)
+            elif (AllCertCaseValue.ROOT_PERFORMANCE_CCO_CHILD < DictCommandInfo[value] <
+                  AllCertCaseValue.ROOT_PERFORMANCE_CCO_MAX):
+                item_perf_cco_child = QTreeWidgetItem(item_prerf_cco_father)
+                item_perf_cco_child.setText(0, value)
+                item_perf_cco_child.setCheckState(0, Qt.Unchecked)
+                item_perf_cco_child.setFlags(item_perf_cco_child.flags() | Qt.ItemIsSelectable)
+            elif DictCommandInfo[value] == AllCertCaseValue.ROOT_OTHER_CHILD:
+                item_other_father = QTreeWidgetItem(self.AllTestCase)
+                item_other_father.setText(0, value)
+                item_other_father.setCheckState(0, Qt.Unchecked)
+                item_other_father.setFlags(item_other_father.flags() | Qt.ItemIsSelectable)
+            elif AllCertCaseValue.ROOT_OTHER_CHILD < DictCommandInfo[value] < \
+                    AllCertCaseValue.ROOT_OTHER_MAX:
+                item_other_child = QTreeWidgetItem(item_other_father)
+                item_other_child.setText(0, value)
+                item_other_child.setCheckState(0, Qt.Unchecked)
+                item_other_child.setFlags(item_other_child.flags() | Qt.ItemIsSelectable)
 
         # 节点全部展开
         self.treeWidget.expandAll()
@@ -268,29 +264,24 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
         # self.treeWidget.itemClicked.connect(self.handle_selection_changed)
         self.submit_button.clicked.connect(self.handle_submit)
 
-    # def handle_selection_changed(self, selected, deselected):
-    #     selected_indexes = selected.indexes()
-    #     if selected_indexes:
-    #         selected_items = [index.data() for index in selected_indexes]
-    #         print("被选中的项：", selected_items)
-    #     else:
-    #         print("没有选中项")
-
     def handle_submit(self):
         # 获取文本框中的文本内容
         text = self.line_edit.text()
         print("提交的姓名是: %s" % text)
+        tree_status = []
+        for i in range(self.treeWidget.topLevelItemCount()):
+            item = self.treeWidget.topLevelItem(i)
+
+            tree_status.append(self.get_tree_item_status(item))
+        print(tree_status)
         # 检查文本内容是否为空
         if len(text) == 0:
             # 显示错误消息框
             QMessageBox.warning(self, "错误", "文本框不能为空!")
             return
         else:
-            tree_status = []
-            for i in range(self.treeWidget.topLevelItemCount()):
-                item = self.treeWidget.topLevelItem(i)
-                tree_status.append(self.get_tree_item_status(item))
-            print(tree_status)
+
+            self.close()
             subprocess.run(["python", "UI_issue.py"])
 
     # 获取所有节点的状态
@@ -301,8 +292,11 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
             "status": status,
             "children": []
         }
+        # 我添加的
         for i in range(tree_item.childCount()):
             child_item = tree_item.child(i)
+            # print(child_item.text())
+            # print(self.get_tree_item_status(child_item))
             result["children"].append(self.get_tree_item_status(child_item))
         return result
 
