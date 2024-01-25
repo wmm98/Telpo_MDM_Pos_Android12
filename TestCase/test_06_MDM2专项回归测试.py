@@ -205,11 +205,11 @@ class TestMDM2SpecialPage:
                     log.info("**********************服务器恢复正常*************************")
                     self.device_page.go_to_new_address("apps")
 
-    @allure.feature('MDM2_test')
+    @allure.feature('MDM2_test-retest')
     @allure.story('MDM-Show')
     @allure.title("public case-应用满屏推送--请在附件查看满屏截图效果")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    # @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_release_app_full_screen_MDM2(self, recover_and_login_mdm, del_all_app_release_log,
                                           del_all_app_uninstall_release_log, go_to_app_page,
                                           uninstall_multi_apps):
@@ -236,7 +236,7 @@ class TestMDM2SpecialPage:
                 # check file hash value in directory Param/package
                 act_apk_package_hash_value = self.android_mdm_page.calculate_sha256_in_windows(
                     release_info["package_name"])
-                log.info("act_ota_package_hash_value: %s" % act_apk_package_hash_value)
+                log.info("原始包的MD5值为: %s" % act_apk_package_hash_value)
                 # go to app page
                 self.app_page.go_to_new_address("apps")
                 send_time = case_pack.time.strftime('%Y-%m-%d %H:%M',
@@ -265,17 +265,17 @@ class TestMDM2SpecialPage:
                 now_time = self.app_page.get_current_time()
                 original_hash_value = self.android_mdm_page.calculate_sha256_in_windows(
                     "%s" % release_info["package_name"])
-                log.info("原来是的 hash value: %s" % original_hash_value)
+                log.info("原始包的MD5值为: %s" % original_hash_value)
                 while True:
                     shell_hash_value = self.android_mdm_page.calculate_sha256_in_device(shell_app_apk_name)
-                    log.info("设备下载ota 包的下载记录: %s" % original_hash_value)
+                    log.info("设备下载ota 包的下载记录: %s" % shell_hash_value)
                     if original_hash_value == shell_hash_value:
                         log.info("终端检测到ota包下载完成")
                         break
                     if self.app_page.get_current_time() > self.app_page.return_end_time(now_time, 1800):
                         log.error("@@@@应用推送中超过30分钟还没有完成%s的下载" % release_info["package_name"])
                         assert False, "@@@@应用推送中超过30分钟还没有完成%s的下载" % release_info["package_name"]
-                    self.app_page.time_sleep(5)
+                    self.app_page.time_sleep(20)
                 log.info("**********************终端下载完成检测完毕*************************************")
 
                 now_time = self.app_page.get_current_time()
@@ -628,11 +628,11 @@ class TestMDM2SpecialPage:
                     self.android_mdm_page.del_all_downloaded_zip()
                     self.android_mdm_page.del_updated_zip()
 
-    @allure.feature('MDM2_test')
+    @allure.feature('MDM2_test-retest')
     @allure.title("Apps-普通应用静默升级")
-    @pytest.mark.dependency(depends=["test_release_app_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=1)
-    def test_high_version_app_cover_low_version_app_MDM2(self, recover_and_login_mdm, del_all_app_release_log, del_all_app_uninstall_release_log, del_download_apk, uninstall_multi_apps,
+    @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
+    # @pytest.mark.flaky(reruns=3, reruns_delay=1)
+    def test_high_version_app_cover_low_version_app_MDM2(self, recover_and_login_mdm, del_app_install_uninstall_release_log, del_download_apk, uninstall_multi_apps,
                                                     go_to_app_page):
         release_info = {"package_name": test_yml['app_info']['high_version_app'], "sn": self.device_sn,
                         "silent": "Yes", "download_network": "NO Limit"}
@@ -1372,7 +1372,7 @@ class TestMDM2SpecialPage:
                 else:
                     self.app_page.recovery_after_service_unavailable("content", case_pack.user_info)
 
-    @allure.feature('MDM2_test')
+    @allure.feature('MDM2_test-no test now')
     @allure.title("public case-文件推送-网络恢复断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     # @pytest.mark.flaky(reruns=3, reruns_delay=3)

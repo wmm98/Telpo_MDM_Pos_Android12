@@ -15,6 +15,7 @@
 """
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QCheckBox
 
 
 class Ui_MainWindow(object):
@@ -26,13 +27,18 @@ class Ui_MainWindow(object):
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
         self.treeWidget = QtWidgets.QTreeWidget(self.centralwidget)
+
+        # 我添加的
+        self.label = QtWidgets.QLabel("设备名称（adb devices）:")
+        self.line_edit = QtWidgets.QLineEdit()
+        self.verticalLayout.addWidget(self.label)
+        self.verticalLayout.addWidget(self.line_edit)
+
         # 设置多选模式
         self.treeWidget.setSelectionMode(QtWidgets.QTreeWidget.ExtendedSelection)  # 设置多选模式
         self.treeWidget.setObjectName("treeWidget")
         self.treeWidget.headerItem().setText(0, "1")
         self.verticalLayout.addWidget(self.treeWidget)
-
-
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -47,16 +53,43 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         # 我添加的
-        self.label = QtWidgets.QLabel("姓名:")
-        self.line_edit = QtWidgets.QLineEdit()
-        self.verticalLayout.addWidget(self.label)
-        self.verticalLayout.addWidget(self.line_edit)
+        # self.label = QtWidgets.QLabel("姓名:")
+        # self.line_edit = QtWidgets.QLineEdit()
+        # self.verticalLayout.addWidget(self.label)
+        # self.verticalLayout.addWidget(self.line_edit)
         # 我添加的
         self.submit_button = QtWidgets.QPushButton("提交")
         self.verticalLayout.addWidget(self.submit_button)
 
+        # 创建水平布局
+        layout = QHBoxLayout()
+
+        # 创建两个标签
+        self.checkbox1 = QCheckBox("串口")
+        self.checkbox2 = QCheckBox("横屏")
+        self.checkbox3 = QCheckBox("安装mdm软件")
+
+        # 将标签添加到水平布局中
+        layout.addWidget(self.checkbox1)
+        layout.addWidget(self.checkbox2)
+        layout.addWidget(self.checkbox3)
+
+
+        # 将标签放入水平布局
+        # horizontal_layout.addWidget(label)
+
+        # 添加一个拉伸因子以将水平布局放在窗口底部
+        layout.addStretch(1)
+
+        # 将水平布局放入垂直布局
+        self.verticalLayout.addLayout(layout)
+
+        # # 将垂直布局设置为窗口的布局
+        # self.treeWidget.setLayout(self.verticalLayout)
 
     #
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+
+

@@ -259,12 +259,17 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
         # 链接槽函数
         self.treeWidget.itemChanged.connect(self.handlechanged)
 
+        # 查看复选框的状态
+
+
         # 连接信号和槽
-        # self.treeWidget.selectionModel().selectionChanged.connect(self.handle_selection_changed)
-        # self.treeWidget.itemClicked.connect(self.handle_selection_changed)
         self.submit_button.clicked.connect(self.handle_submit)
 
     def handle_submit(self):
+
+        print("==================")
+        print(self.checkbox1.isChecked())
+
         # 获取文本框中的文本内容
         text = self.line_edit.text()
         print("提交的姓名是: %s" % text)
