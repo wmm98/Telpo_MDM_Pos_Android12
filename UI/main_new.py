@@ -261,17 +261,16 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # 查看复选框的状态
 
-
         # 连接信号和槽
         self.submit_button.clicked.connect(self.handle_submit)
 
     def handle_submit(self):
 
         print("==================")
-        print(self.checkbox1.isChecked())
+        print(self.checkbox_serial.isChecked())
 
         # 获取文本框中的文本内容
-        text = self.line_edit.text()
+        text = self.edit_device_name.text()
         print("提交的姓名是: %s" % text)
         tree_status = []
         for i in range(self.treeWidget.topLevelItemCount()):
@@ -282,7 +281,7 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
         # 检查文本内容是否为空
         if len(text) == 0:
             # 显示错误消息框
-            QMessageBox.warning(self, "错误", "文本框不能为空!")
+            QMessageBox.warning(self, "错误提示", "设备名称不能为空!")
             return
         else:
 

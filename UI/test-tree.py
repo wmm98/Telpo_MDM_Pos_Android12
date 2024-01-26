@@ -1,39 +1,28 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTreeWidget, QTreeWidgetItem
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QLabel
 
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
+# 创建应用程序实例
+app = QApplication(sys.argv)
 
-        self.tree_widget = QTreeWidget()
-        self.tree_widget.setSelectionMode(QTreeWidget.ExtendedSelection)  # 设置多选模式
+# 创建窗口
+window = QWidget()
 
-        self.setCentralWidget(self.tree_widget)
+# 创建水平布局
+layout = QHBoxLayout()
 
-        # 添加树节点
-        parent_item = QTreeWidgetItem(self.tree_widget)
-        parent_item.setText(0, "Parent 1")
+# 创建两个标签
+label1 = QLabel("标签1")
+label2 = QLabel("标签2")
 
-        child_item1 = QTreeWidgetItem(parent_item)
-        child_item1.setText(0, "Child 1")
+# 将标签添加到水平布局中
+layout.addWidget(label1)
+layout.addWidget(label2)
 
-        child_item2 = QTreeWidgetItem(parent_item)
-        child_item2.setText(0, "Child 2")
+# 将水平布局设置为窗口的布局
+window.setLayout(layout)
 
-        child_item3 = QTreeWidgetItem(parent_item)
-        child_item3.setText(0, "Child 3")
-
-        # 连接信号和槽函数
-        self.tree_widget.selectionModel().selectionChanged.connect(self.handle_selection_changed)
-
-    def handle_selection_changed(self, selected, deselected):
-        selected_indexes = selected.indexes()
-        if selected_indexes:
-            selected_items = [index.data() for index in selected_indexes]
-            print("被选中的项：", selected_items)
-        else:
-            print("没有选中项")
-
-app = QApplication([])
-window = MainWindow()
+# 显示窗口
 window.show()
-app.exec()
+
+# 运行应用程序
+sys.exit(app.exec_())

@@ -28,11 +28,47 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.treeWidget = QtWidgets.QTreeWidget(self.centralwidget)
 
+        # 创建水平布局
+
+        layout0 = QHBoxLayout()
         # 我添加的
-        self.label = QtWidgets.QLabel("设备名称（adb devices）:")
-        self.line_edit = QtWidgets.QLineEdit()
-        self.verticalLayout.addWidget(self.label)
-        self.verticalLayout.addWidget(self.line_edit)
+        self.label_device_name = QtWidgets.QLabel("设备名称:")
+        self.edit_device_name = QtWidgets.QLineEdit()
+        self.label_tips = QtWidgets.QLabel("(adb devices可查看)")
+        layout0.addWidget(self.label_device_name)
+        layout0.addWidget(self.edit_device_name, 2)
+        layout0.addWidget(self.label_tips)
+        layout0.addStretch(1)
+        # 将水平布局放入垂直布局
+        self.verticalLayout.addLayout(layout0)
+
+        # 创建两个标签
+        self.checkbox_serial = QCheckBox("串口")
+        self.checkbox_screen = QCheckBox("横屏")
+        self.checkbox_mdm = QCheckBox("安装mdm软件")
+        self.checkbox_financial = QCheckBox("金融版本")
+
+        # 将标签添加到水平布局中
+        layout = QHBoxLayout()
+        layout.addWidget(self.checkbox_serial)
+        layout.addWidget(self.checkbox_screen)
+        layout.addWidget(self.checkbox_mdm)
+        layout.addWidget(self.checkbox_financial)
+        # 添加一个拉伸因子以将水平布局放在窗口底部
+        layout.addStretch(1)
+        # 将水平布局放入垂直布局
+        self.verticalLayout.addLayout(layout)
+
+        # ota 包上传相关
+        layout1 = QHBoxLayout()
+        self.file_path = QtWidgets.QLineEdit()
+        layout1.addWidget(self.file_path)
+
+        # 上传按钮
+        self.upload_button = QtWidgets.QPushButton("上传ota包")
+        self.upload_button.clicked.connect(self.upload_file)
+        layout1.addWidget(self.upload_button)
+        self.verticalLayout.addLayout(layout1)
 
         # 设置多选模式
         self.treeWidget.setSelectionMode(QtWidgets.QTreeWidget.ExtendedSelection)  # 设置多选模式
@@ -48,48 +84,24 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         # 我添加的
-        # self.label = QtWidgets.QLabel("姓名:")
-        # self.line_edit = QtWidgets.QLineEdit()
-        # self.verticalLayout.addWidget(self.label)
-        # self.verticalLayout.addWidget(self.line_edit)
-        # 我添加的
         self.submit_button = QtWidgets.QPushButton("提交")
         self.verticalLayout.addWidget(self.submit_button)
 
-        # 创建水平布局
-        layout = QHBoxLayout()
+    def upload_file(self):
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.ReadOnly
 
-        # 创建两个标签
-        self.checkbox1 = QCheckBox("串口")
-        self.checkbox2 = QCheckBox("横屏")
-        self.checkbox3 = QCheckBox("安装mdm软件")
-
-        # 将标签添加到水平布局中
-        layout.addWidget(self.checkbox1)
-        layout.addWidget(self.checkbox2)
-        layout.addWidget(self.checkbox3)
-
-
-        # 将标签放入水平布局
-        # horizontal_layout.addWidget(label)
-
-        # 添加一个拉伸因子以将水平布局放在窗口底部
-        layout.addStretch(1)
-
-        # 将水平布局放入垂直布局
-        self.verticalLayout.addLayout(layout)
-
-        # # 将垂直布局设置为窗口的布局
-        # self.treeWidget.setLayout(self.verticalLayout)
+        # 打开文件选择对话框
+        file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, "选择文件", "", "All Files (*);;Text Files (*.txt)",
+                                                             options=options)
+        if file_name:
+            self.file_path.setText(file_name)
 
     #
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-
-
