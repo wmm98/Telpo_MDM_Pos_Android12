@@ -21,7 +21,7 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QCheckBox
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(618, 594)
+        MainWindow.resize(700, 800)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -29,9 +29,52 @@ class Ui_MainWindow(object):
         self.treeWidget = QtWidgets.QTreeWidget(self.centralwidget)
 
         # 创建水平布局
+        # 测试信息
+        layout_url = QHBoxLayout()
+        self.test_user_info = QtWidgets.QLabel("当前测试用户信息:")
+        self.verticalLayout.addWidget(self.test_user_info)
+        self.test_url_tips = QtWidgets.QLabel("测试地址:")
+        self.test_url_edit = QtWidgets.QLineEdit()
+        layout_url.addWidget(self.test_url_tips)
+        layout_url.addWidget(self.test_url_edit, 1)
+        self.verticalLayout.addLayout(layout_url)
+
+        layout_test = QHBoxLayout()
+        self.test_user_tips = QtWidgets.QLabel("测试用户名:")
+        self.test_user_edit = QtWidgets.QLineEdit()
+        self.test_psw_tips = QtWidgets.QLabel("测试密码:")
+        self.test_psw = QtWidgets.QLineEdit()
+        layout_test.addWidget(self.test_user_tips)
+        layout_test.addWidget(self.test_user_edit)
+        layout_test.addWidget(self.test_psw_tips)
+        layout_test.addWidget(self.test_psw)
+        self.verticalLayout.addLayout(layout_test)
+
+        # 正式版信息
+        layout_release_url = QHBoxLayout()
+        self.release_user_info = QtWidgets.QLabel("\n正式版本用户信息:")
+        self.verticalLayout.addWidget(self.release_user_info)
+        self.release_url_tips = QtWidgets.QLabel("测试地址:")
+        self.release_url_edit = QtWidgets.QLineEdit()
+        layout_release_url.addWidget(self.release_url_tips)
+        layout_release_url.addWidget(self.release_url_edit, 1)
+        self.verticalLayout.addLayout(layout_release_url)
+
+        layout_test = QHBoxLayout()
+        self.test_user_tips = QtWidgets.QLabel("测试用户名:")
+        self.test_user_edit = QtWidgets.QLineEdit()
+        self.test_psw_tips = QtWidgets.QLabel("测试密码:")
+        self.test_psw = QtWidgets.QLineEdit()
+        layout_test.addWidget(self.test_user_tips)
+        layout_test.addWidget(self.test_user_edit)
+        layout_test.addWidget(self.test_psw_tips)
+        layout_test.addWidget(self.test_psw)
+        self.verticalLayout.addLayout(layout_test)
 
         layout0 = QHBoxLayout()
         # 我添加的
+        self.device_info = QtWidgets.QLabel("\n设备信息：")
+        self.verticalLayout.addWidget(self.device_info)
         self.label_device_name = QtWidgets.QLabel("设备名称:")
         self.edit_device_name = QtWidgets.QLineEdit()
         self.label_tips = QtWidgets.QLabel("(adb devices可查看)")
@@ -60,6 +103,10 @@ class Ui_MainWindow(object):
         self.verticalLayout.addLayout(layout)
 
         # ota 包上传相关
+        # OTA 包
+        self.ota_info = QtWidgets.QLabel("\nOTA包：")
+        self.verticalLayout.addWidget(self.ota_info)
+
         layout1 = QHBoxLayout()
         self.file_path = QtWidgets.QLineEdit()
         layout1.addWidget(self.file_path)
