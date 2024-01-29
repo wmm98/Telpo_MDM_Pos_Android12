@@ -15,7 +15,8 @@
 """
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QCheckBox
+from PyQt5.QtCore import QModelIndex, QDir
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QCheckBox, QTreeView, QFileSystemModel
 
 
 class Ui_MainWindow(object):
@@ -33,16 +34,25 @@ class Ui_MainWindow(object):
         layout_url = QHBoxLayout()
         self.test_user_info = QtWidgets.QLabel("当前测试用户信息:")
         self.verticalLayout.addWidget(self.test_user_info)
-        self.test_url_tips = QtWidgets.QLabel("测试地址:")
+        self.test_url_tips = QtWidgets.QLabel("地址:")
         self.test_url_edit = QtWidgets.QLineEdit()
+        self.test_url_edit.setText("http://121.9.230.133:8081")
         layout_url.addWidget(self.test_url_tips)
         layout_url.addWidget(self.test_url_edit, 1)
         self.verticalLayout.addLayout(layout_url)
+        # api信息
+        layout_test_api = QHBoxLayout()
+        self.test_api = QtWidgets.QLabel("服务器api:")
+        layout_test_api.addWidget(self.test_api)
+        self.test_api_edit = QtWidgets.QLineEdit()
+        self.test_api_edit.setText("http://121.9.230.133:8102/")
+        layout_test_api.addWidget(self.test_api_edit)
+        self.verticalLayout.addLayout(layout_test_api)
 
         layout_test = QHBoxLayout()
-        self.test_user_tips = QtWidgets.QLabel("测试用户名:")
+        self.test_user_tips = QtWidgets.QLabel("用户名:")
         self.test_user_edit = QtWidgets.QLineEdit()
-        self.test_psw_tips = QtWidgets.QLabel("测试密码:")
+        self.test_psw_tips = QtWidgets.QLabel("密码:")
         self.test_psw = QtWidgets.QLineEdit()
         layout_test.addWidget(self.test_user_tips)
         layout_test.addWidget(self.test_user_edit)
@@ -50,21 +60,33 @@ class Ui_MainWindow(object):
         layout_test.addWidget(self.test_psw)
         self.verticalLayout.addLayout(layout_test)
 
-        # 正式版信息
+        # 正式服信息
         layout_release_url = QHBoxLayout()
         self.release_user_info = QtWidgets.QLabel("\n正式版本用户信息:")
         self.verticalLayout.addWidget(self.release_user_info)
-        self.release_url_tips = QtWidgets.QLabel("测试地址:")
+        self.release_url_tips = QtWidgets.QLabel("地址:")
         self.release_url_edit = QtWidgets.QLineEdit()
+        self.release_url_edit.setText("https://mdm2.telpoai.com")
         layout_release_url.addWidget(self.release_url_tips)
         layout_release_url.addWidget(self.release_url_edit, 1)
         self.verticalLayout.addLayout(layout_release_url)
 
+        # api信息
+        layout_release_api = QHBoxLayout()
+        self.release_api = QtWidgets.QLabel("服务器api:")
+        self.release_api_edit = QtWidgets.QLineEdit()
+        self.release_api_edit.setText("https://www.telpopaas.com/")
+        layout_release_api.addWidget(self.release_api)
+        layout_release_api.addWidget(self.release_api_edit)
+        self.verticalLayout.addLayout(layout_release_api)
+
         layout_test = QHBoxLayout()
-        self.test_user_tips = QtWidgets.QLabel("测试用户名:")
+        self.test_user_tips = QtWidgets.QLabel("用户名:")
         self.test_user_edit = QtWidgets.QLineEdit()
-        self.test_psw_tips = QtWidgets.QLabel("测试密码:")
+        self.test_user_edit.setText("ceshibu_wuch")
+        self.test_psw_tips = QtWidgets.QLabel("密码:")
         self.test_psw = QtWidgets.QLineEdit()
+        self.test_psw.setText("123456")
         layout_test.addWidget(self.test_user_tips)
         layout_test.addWidget(self.test_user_edit)
         layout_test.addWidget(self.test_psw_tips)

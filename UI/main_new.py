@@ -5,6 +5,11 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 from treewidget import Ui_MainWindow
+import yaml
+import os
+
+project_path = str(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
+print(project_path)
 
 
 class AllCertCaseValue:
@@ -173,7 +178,6 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
         self.intiui()
 
     def intiui(self):
-
         # 设置列数
         self.treeWidget.setColumnCount(1)
 
@@ -256,6 +260,7 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # 节点全部展开
         self.treeWidget.expandAll()
+        # self.treeWidget.expand(1)
         # 链接槽函数
         self.treeWidget.itemChanged.connect(self.handlechanged)
 
@@ -275,16 +280,35 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
         tree_status = []
         for i in range(self.treeWidget.topLevelItemCount()):
             item = self.treeWidget.topLevelItem(i)
-
             tree_status.append(self.get_tree_item_status(item))
-        print(tree_status)
+
+        # 加载 YAML 文件
+        file_path = project_path +"\\Conf\\test_ui.yaml"
+        print(file_path)
+        with open(file_path, 'r') as file:
+            data = yaml.safe_load(file)
+
+        # 修改属性值
+        if 'TestCase' not in data:
+            data["TestCase"] = [1, 2]  # 创建新的列表属性
+
+        print("修改前：", data['MDMTestData']["settings"]["version"])
+        data['MDMTestData']["settings"]["version"] = 2.0
+        print("修改后：", data['MDMTestData']["settings"]["version"])
+
+        # 保存修改后的内容回 YAML 文件
+        with open(file_path, 'w') as file:
+            yaml.safe_dump(data, file)
+
+        for slave in tree_status[0]["children"]:
+            print(slave)
+
         # 检查文本内容是否为空
         if len(text) == 0:
             # 显示错误消息框
             QMessageBox.warning(self, "错误提示", "设备名称不能为空!")
             return
         else:
-
             self.close()
             subprocess.run(["python", "UI_issue.py"])
 
@@ -309,7 +333,6 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
         for i in range(self.treeWidget.topLevelItemCount()):
             item = self.treeWidget.topLevelItem(i)
             tree_status.append(self.get_tree_item_status(item))
-        print(tree_status)
 
     def handlechanged(self, item, column):
         # 获取选中节点的子节点个数
