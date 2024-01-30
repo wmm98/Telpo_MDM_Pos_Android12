@@ -119,7 +119,7 @@ DictCommandInfo = {
 
     # CCO test case
     "一般性测试": AllCertCaseValue.ROOT_PROTOCON_CCO_CHILD,
-    "L": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0,
+    "远程OTA升级": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0,
     "M": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B1,
     "N": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B2,
     "O": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B3,
@@ -283,25 +283,62 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
             tree_status.append(self.get_tree_item_status(item))
 
         # 加载 YAML 文件
-        file_path = project_path +"\\Conf\\test_ui.yaml"
+        file_path = project_path + "\\Conf\\test_data.yaml"
         print(file_path)
         with open(file_path, 'r') as file:
             data = yaml.safe_load(file)
 
+        print(type(tree_status[0]["children"]))
+
         # 修改属性值
         if 'TestCase' not in data:
-            data["TestCase"] = [1, 2]  # 创建新的列表属性
+            data["TestCase"] = {}
 
-        print("修改前：", data['MDMTestData']["settings"]["version"])
-        data['MDMTestData']["settings"]["version"] = 2.0
-        print("修改后：", data['MDMTestData']["settings"]["version"])
+        for slave in tree_status[0]["children"]:
+            # print(slave)
+            if slave["text"] == '立项测试':
+                if "LiXiang_Test" not in data["TestCase"]:
+                    data["TestCase"]["LiXiang_Test"] = {}
+                i = 0
+                for child in slave['children']:
+                    data["TestCase"]["LiXiang_Test"]["LiXiang_Test-case%d" % i] = int(child["status"])
+                    i += 1
+            elif slave["text"] == '一般性测试':
+                if "General_Test" not in data["TestCase"]:
+                    data["TestCase"]["General_Test"] = {}
+                i = 0
+                for child in slave['children']:
+                    data["TestCase"]["General_Test"]["General_Test-case%d" % i] = int(child["status"])
+                    i += 1
+            elif slave["text"] == '专项测试':
+                if "Special_Test" not in data["TestCase"]:
+                    data["TestCase"]["Special_Test"] = {}
+                i = 0
+                for child in slave['children']:
+                    data["TestCase"]["Special_Test"]["Special_Test-case%d" % i] = int(child["status"])
+                    i += 1
+            elif slave["text"] == '回归测试':
+                if "Regression_Test" not in data["TestCase"]:
+                    data["TestCase"]["Regression_Test"] = {}
+                i = 0
+                for child in slave['children']:
+                    data["TestCase"]["Regression_Test"]["Regression_Test-case%d" % i] = int(child["status"])
+                    i += 1
+            elif slave["text"] == '稳定性测试':
+                if "Stability_Test" not in data["TestCase"]:
+                    data["TestCase"]["Stability_Test"] = {}
+                i = 0
+                for child in slave['children']:
+                    data["TestCase"]["Stability_Test"]["Stability_Test-case%d" % i] = int(child["status"])
+                    i += 1
+
+            # print("修改前：", data['MDMTestData']["settings"]["version"])
+            # data['MDMTestData']["settings"]["version"] = 2.0
+            # print("修改后：", data['MDMTestData']["settings"]["version"])
 
         # 保存修改后的内容回 YAML 文件
         with open(file_path, 'w') as file:
             yaml.safe_dump(data, file)
-
-        for slave in tree_status[0]["children"]:
-            print(slave)
 
         # 检查文本内容是否为空
         if len(text) == 0:
