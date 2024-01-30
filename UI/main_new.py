@@ -14,7 +14,12 @@ class AllCertCaseValue:
     # 立项测试 cases
     ROOT_PROTOCON_STA_CHILD = 1
     # sta scan tmi band0/1/2/3
-    ROOT_PROTOCON_STA_TMISCAN_B0 = 2
+    ROOT_PROTOCON_STA_TMISCAN_B0_0 = 1.1
+    ROOT_PROTOCON_STA_TMISCAN_B0_1 = 1.2
+    ROOT_PROTOCON_STA_TMISCAN_B0_2 = 1.3
+    ROOT_PROTOCON_STA_TMISCAN_B0_3 = 1.4
+    ROOT_PROTOCON_STA_TMISCAN_B0 = 1.5
+    # ROOT_PROTOCON_STA_TMISCAN_B_2 = 2
     ROOT_PROTOCON_STA_TMISCAN_B1 = 3
     ROOT_PROTOCON_STA_TMISCAN_B2 = 4
     ROOT_PROTOCON_STA_TMISCAN_B3 = 5
@@ -39,9 +44,12 @@ class AllCertCaseValue:
 
     ROOT_PROTOCON_STA_MAX = ROOT_PROTOCON_STA_TM_B16 + 1
 
-    # 专项测试 cases
+    # 一般性测试 cases
     ROOT_PROTOCON_CCO_CHILD = 40
     # cco scan tmi band0/1/2/3
+    ROOT_PROTOCON_CCO_TMISCAN_B0_0 = 40.1
+    ROOT_PROTOCON_CCO_TMISCAN_B0_1 = 40.2
+    ROOT_PROTOCON_CCO_TMISCAN_B0_2 = 40.3
     ROOT_PROTOCON_CCO_TMISCAN_B0 = 41
     ROOT_PROTOCON_CCO_TMISCAN_B1 = 42
     ROOT_PROTOCON_CCO_TMISCAN_B2 = 43
@@ -55,8 +63,12 @@ class AllCertCaseValue:
 
     ROOT_PROTOCON_CCO_MAX = ROOT_PROTOCON_CCO_TM_B4 + 1
 
-    # 回归测试 cases
+    # 专项测试 cases
     ROOT_PERFORMANCE_CHILD = 80
+    ROOT_PERFORMANCE_STA_CHILD_0 = 80.1
+    ROOT_PERFORMANCE_STA_CHILD_1 = 80.2
+    ROOT_PERFORMANCE_STA_CHILD_2 = 80.3
+    ROOT_PERFORMANCE_STA_CHILD_3 = 80.4
     ROOT_PERFORMANCE_STA_CHILD = 81
 
     # white noise
@@ -85,6 +97,7 @@ class AllCertCaseValue:
 
     ROOT_PERFORMANCE_CCO_CHILD = 100
     # white noise
+    ROOT_PERFORMANCE_CCO_WN_B0 = 100.1
     ROOT_PERFORMANCE_CCO_WN_B1 = 101
     ROOT_PERFORMANCE_CCO_WN_B2 = 102
     # anti-ppm
@@ -116,9 +129,14 @@ class AllCertCaseValue:
 
 
 DictCommandInfo = {
+
     "A": AllCertCaseValue.ROOT_PROTOCON,
     # STA test case
     "立项测试": AllCertCaseValue.ROOT_PROTOCON_STA_CHILD,
+    "登录连网-辅助测试用例": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0_0,
+    "添加ota升级包--辅助测试用例": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0_1,
+    "添加APK包--辅助测试用例": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0_2,
+    "添加content文件--辅助测试用例": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0_3,
     "断网重连获取aimdm消耗的流量": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0,
     "限定4G网络推送app ": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B1,
     "限定WIFI网络推送app ": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B2,
@@ -146,6 +164,9 @@ DictCommandInfo = {
 
     # CCO test case
     "一般性测试": AllCertCaseValue.ROOT_PROTOCON_CCO_CHILD,
+    "登录连网-辅助测试用例 ": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0_0,
+    "添加ota升级包--辅助测试用例 ": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0_1,
+    "添加APK包--辅助测试用例 ": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0_2,
     "OTA断网重连次断点续传": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0,
     "OTA重启断点续传": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B1,
     "OTA升级": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B2,
@@ -158,6 +179,10 @@ DictCommandInfo = {
 
     # communication performance
     "专项测试": AllCertCaseValue.ROOT_PERFORMANCE_CHILD,
+    "登录连网-辅助测试用例  ": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD_0,
+    "添加ota升级包--辅助测试用例  ": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD_1,
+    "添加APK包--辅助测试用例  ": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD_2,
+    "添加content文件--辅助测试用例  ": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD_3,
     "系统/应用日志的抓取": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD,
     "应用满屏推送": AllCertCaseValue.ROOT_PERFORMANCE_STA_WN_B1,
     "推送壁纸": AllCertCaseValue.ROOT_PERFORMANCE_STA_WN_B2,
@@ -175,8 +200,8 @@ DictCommandInfo = {
     # "i": AllCertCaseValue.ROOT_PERFORMANCE_STA_RATE_B2,
 
     "回归测试": AllCertCaseValue.ROOT_PERFORMANCE_CCO_CHILD,
-
-    " 锁机和解锁": AllCertCaseValue.ROOT_PERFORMANCE_CCO_WN_B1,
+    "登录连网 - 辅助测试用例": AllCertCaseValue.ROOT_PERFORMANCE_CCO_WN_B0,
+    "锁机和解锁  ": AllCertCaseValue.ROOT_PERFORMANCE_CCO_WN_B1,
     "发送设备重启指令：设备重启5次压测": AllCertCaseValue.ROOT_PERFORMANCE_CCO_WN_B2,
     "重置设备TPUI密码": AllCertCaseValue.ROOT_PERFORMANCE_CCO_ANTIPPM_B1,
     "重置设备密码": AllCertCaseValue.ROOT_PERFORMANCE_CCO_ANTIPPM_B2,
