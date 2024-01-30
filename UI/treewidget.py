@@ -17,9 +17,19 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QModelIndex, QDir
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QCheckBox, QTreeView, QFileSystemModel
+import yaml
+import os
 
 
 class Ui_MainWindow(object):
+    options = QtWidgets.QFileDialog.Options()
+    options |= QtWidgets.QFileDialog.ReadOnly
+    project_path = str(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
+    yaml_file_path = project_path + "\\Conf\\test_data.yaml"
+    # 加载 YAML 文件
+    with open(yaml_file_path, 'r') as file:
+        data = yaml.safe_load(file)
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(700, 800)
@@ -36,7 +46,8 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.test_user_info)
         self.test_url_tips = QtWidgets.QLabel("地址:")
         self.test_url_edit = QtWidgets.QLineEdit()
-        self.test_url_edit.setText("http://121.9.230.133:8081")
+        # 默认显示为上次的URL
+        self.test_url_edit.setText(self.data["MDMTestData"]["website_info"]["test_url"])
         layout_url.addWidget(self.test_url_tips)
         layout_url.addWidget(self.test_url_edit, 1)
         self.verticalLayout.addLayout(layout_url)
@@ -45,15 +56,17 @@ class Ui_MainWindow(object):
         self.test_api = QtWidgets.QLabel("服务器api:")
         layout_test_api.addWidget(self.test_api)
         self.test_api_edit = QtWidgets.QLineEdit()
-        self.test_api_edit.setText("http://121.9.230.133:8102/")
+        self.test_api_edit.setText(self.data["MDMTestData"]["website_info"]["test_api"])
         layout_test_api.addWidget(self.test_api_edit)
         self.verticalLayout.addLayout(layout_test_api)
 
         layout_test = QHBoxLayout()
         self.test_user_tips = QtWidgets.QLabel("用户名:")
         self.test_user_edit = QtWidgets.QLineEdit()
+        self.test_user_edit.setText(self.data["MDMTestData"]["website_info"]["test_user"])
         self.test_psw_tips = QtWidgets.QLabel("密码:")
         self.test_psw = QtWidgets.QLineEdit()
+        self.test_psw.setText(self.data["MDMTestData"]["website_info"]["test_password"])
         layout_test.addWidget(self.test_user_tips)
         layout_test.addWidget(self.test_user_edit)
         layout_test.addWidget(self.test_psw_tips)
@@ -66,7 +79,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.release_user_info)
         self.release_url_tips = QtWidgets.QLabel("地址:")
         self.release_url_edit = QtWidgets.QLineEdit()
-        self.release_url_edit.setText("https://mdm2.telpoai.com")
+        self.release_url_edit.setText(self.data["MDMTestData"]["website_info"]["release_url"])
         layout_release_url.addWidget(self.release_url_tips)
         layout_release_url.addWidget(self.release_url_edit, 1)
         self.verticalLayout.addLayout(layout_release_url)
@@ -75,7 +88,7 @@ class Ui_MainWindow(object):
         layout_release_api = QHBoxLayout()
         self.release_api = QtWidgets.QLabel("服务器api:")
         self.release_api_edit = QtWidgets.QLineEdit()
-        self.release_api_edit.setText("https://www.telpopaas.com/")
+        self.release_api_edit.setText(self.data["MDMTestData"]["website_info"]["release_api"])
         layout_release_api.addWidget(self.release_api)
         layout_release_api.addWidget(self.release_api_edit)
         self.verticalLayout.addLayout(layout_release_api)
@@ -83,10 +96,10 @@ class Ui_MainWindow(object):
         layout_test = QHBoxLayout()
         self.test_user_tips = QtWidgets.QLabel("用户名:")
         self.test_user_edit = QtWidgets.QLineEdit()
-        self.test_user_edit.setText("ceshibu_wuch")
+        self.test_user_edit.setText(self.data["MDMTestData"]["website_info"]["release_user"])
         self.test_psw_tips = QtWidgets.QLabel("密码:")
         self.test_psw = QtWidgets.QLineEdit()
-        self.test_psw.setText("123456")
+        self.test_psw.setText(self.data["MDMTestData"]["website_info"]["release_password"])
         layout_test.addWidget(self.test_user_tips)
         layout_test.addWidget(self.test_user_edit)
         layout_test.addWidget(self.test_psw_tips)
@@ -124,18 +137,48 @@ class Ui_MainWindow(object):
         # 将水平布局放入垂直布局
         self.verticalLayout.addLayout(layout)
 
+        # aimdm软件上传
+        self.aimdm_info = QtWidgets.QLabel("\nAIMDM软件：")
+        self.verticalLayout.addWidget(self.aimdm_info)
+
+        layout_aimdm = QHBoxLayout()
+        self.aimdm_file_path = QtWidgets.QLineEdit()
+        self.aimdm_file_path.setText(self.data["MDMTestData"]["work_app"]["aidmd_apk"])
+        layout_aimdm.addWidget(self.aimdm_file_path)
+
+        self.aimdm_upload_button = QtWidgets.QPushButton("点击上传")
+        self.aimdm_upload_button.clicked.connect(self.aimdm_upload_file)
+        self.aimdm_upload_button.setEnabled(False)  # 默认禁用上传按钮
+        layout_aimdm.addWidget(self.aimdm_upload_button)
+        self.verticalLayout.addLayout(layout_aimdm)
+
+        # tpui软件上传
+        self.tpui_info = QtWidgets.QLabel("TPUI软件：")
+        self.verticalLayout.addWidget(self.tpui_info)
+
+        layout_tpui_info = QHBoxLayout()
+        self.tpui_info_file_path = QtWidgets.QLineEdit()
+        self.tpui_info_file_path.setText(self.data["MDMTestData"]["work_app"]["aidmd_apk"])
+        layout_tpui_info.addWidget(self.tpui_info_file_path)
+
+        self.tpui_info_upload_button = QtWidgets.QPushButton("点击上传")
+        self.tpui_info_upload_button.clicked.connect(self.tpui_upload_file)
+        layout_tpui_info.addWidget(self.tpui_info_upload_button)
+        self.verticalLayout.addLayout(layout_tpui_info)
+
         # ota 包上传相关
         # OTA 包
-        self.ota_info = QtWidgets.QLabel("\nOTA包：")
+        self.ota_info = QtWidgets.QLabel("OTA包：")
         self.verticalLayout.addWidget(self.ota_info)
 
         layout1 = QHBoxLayout()
-        self.file_path = QtWidgets.QLineEdit()
-        layout1.addWidget(self.file_path)
+        self.ota_file_path = QtWidgets.QLineEdit()
+        self.ota_file_path.setText(self.data["MDMTestData"]["ota_packages_info"]["package_name"])
+        layout1.addWidget(self.ota_file_path)
 
         # 上传按钮
-        self.upload_button = QtWidgets.QPushButton("上传ota包")
-        self.upload_button.clicked.connect(self.upload_file)
+        self.upload_button = QtWidgets.QPushButton("点击上传")
+        self.upload_button.clicked.connect(self.ota_upload_file)
         layout1.addWidget(self.upload_button)
         self.verticalLayout.addLayout(layout1)
 
@@ -160,17 +203,35 @@ class Ui_MainWindow(object):
         self.submit_button = QtWidgets.QPushButton("提交")
         self.verticalLayout.addWidget(self.submit_button)
 
-    def upload_file(self):
-        options = QtWidgets.QFileDialog.Options()
-        options |= QtWidgets.QFileDialog.ReadOnly
-
+    def ota_upload_file(self):
         # 打开文件选择对话框
-        file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, "选择文件", "", "All Files (*);;Text Files (*.txt)",
-                                                             options=options)
-        if file_name:
-            self.file_path.setText(file_name)
+        ota_file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, "选择文件", "", "All Files (*);;Text Files (*.txt)",
+                                                                 options=self.options)
+        if ota_file_name:
+            self.ota_file_path.setText(ota_file_name)
 
-    #
+    def aimdm_upload_file(self):
+        # 打开文件选择对话框
+        aimdm_file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, "选择文件", "",
+                                                                   "All Files (*);;Text Files (*.txt)",
+                                                                   options=self.options)
+        if aimdm_file_name:
+            self.aimdm_file_path.setText(aimdm_file_name)
+
+    def tpui_upload_file(self):
+        # 打开文件选择对话框
+        tpui_file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, "选择文件", "",
+                                                                   "All Files (*);;Text Files (*.txt)",
+                                                                   options=self.options)
+        if tpui_file_name:
+            self.tpui_info_file_path.setText(tpui_file_name)
+
+    def onCheckboxStateChanged(self, state):
+        if state == 2:  # 选中状态
+            self.aimdm_upload_button.setEnabled(True)
+        else:
+            self.aimdm_upload_button.setEnabled(False)
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
