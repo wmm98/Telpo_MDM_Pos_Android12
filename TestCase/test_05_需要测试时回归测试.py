@@ -517,7 +517,7 @@ class TestRegressionTesting:
 
     @allure.feature('RegressionTesting')
     @allure.story('MDM-Show')
-    @allure.title("需要测试时回归测试- 断网重连压静默升级app")
+    @allure.title("需要测试时回归测试- 断网重连静默升级app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_reconnect_silent_upgrade_regression(self, recover_and_login_mdm, connect_wifi_adb_USB, del_app_install_uninstall_release_log,

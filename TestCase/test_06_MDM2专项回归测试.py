@@ -51,7 +51,7 @@ class TestMDM2SpecialPage:
         self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
         self.android_mdm_page.del_all_content_file()
         self.app_page.refresh_page()
-        self.android_mdm_page.reboot_device(self.wifi_ip)
+        # self.android_mdm_page.reboot_device(self.wifi_ip)
 
     @allure.feature('MDM2_test')
     @allure.title("public case-添加 content 种类--辅助测试用例")
@@ -209,11 +209,11 @@ class TestMDM2SpecialPage:
     @allure.story('MDM-Show')
     @allure.title("public case-应用满屏推送--请在附件查看满屏截图效果")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    # @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=100, reruns_delay=3)
     def test_release_app_full_screen_MDM2(self, recover_and_login_mdm, del_all_app_release_log,
                                           del_all_app_uninstall_release_log, go_to_app_page,
                                           uninstall_multi_apps):
-        release_info = {"package_name": test_yml['app_info']['other_app'], "sn": self.device_sn,
+        release_info = {"package_name": test_yml['app_info']['other_app_limit_network_A'], "sn": self.device_sn,
                         "silent": "Yes", "download_network": "NO Limit"}
         while True:
             try:
@@ -224,8 +224,8 @@ class TestMDM2SpecialPage:
                 release_info["package"] = package
                 version = self.app_page.get_apk_package_version(file_path)
                 release_info["version"] = version
-
-                # self.android_mdm_page.uninstall_app(release_info["package"])
+                # 压测添加的方法
+                # self.app_page.delete_and_upload(release_info["package_name"], file_path)
                 self.android_mdm_page.reboot_device(self.wifi_ip)
                 # check if device is online
                 self.app_page.go_to_new_address("devices")
@@ -272,9 +272,10 @@ class TestMDM2SpecialPage:
                     if original_hash_value == shell_hash_value:
                         log.info("终端检测到ota包下载完成")
                         break
-                    if self.app_page.get_current_time() > self.app_page.return_end_time(now_time, 1800):
+                    if self.app_page.get_current_time() > self.app_page.return_end_time(now_time, 180):
                         log.error("@@@@应用推送中超过30分钟还没有完成%s的下载" % release_info["package_name"])
-                        assert False, "@@@@应用推送中超过30分钟还没有完成%s的下载" % release_info["package_name"]
+                        raise Exception("@@@@应用推送中超过30分钟还没有完成%s的下载" % release_info["package_name"])
+                        # assert False, "@@@@应用推送中超过30分钟还没有完成%s的下载" % release_info["package_name"]
                     self.app_page.time_sleep(20)
                 log.info("**********************终端下载完成检测完毕*************************************")
 
@@ -284,7 +285,8 @@ class TestMDM2SpecialPage:
                         break
                     # wait upgrade 3 min at most
                     if self.app_page.get_current_time() > self.app_page.return_end_time(now_time, 180):
-                        assert False, "@@@@3分钟还没有终端或者平台还没显示安装完相应的app， 请检查！！！"
+                        raise Exception("@@@@3分钟还没有终端或者平台还没显示安装完相应的app， 请检查！！！")
+                        # assert False, "@@@@3分钟还没有终端或者平台还没显示安装完相应的app， 请检查！！！"
                     self.app_page.time_sleep(1)
                 log.info("**********************终端安装完毕*************************************")
 
@@ -335,7 +337,7 @@ class TestMDM2SpecialPage:
                                                        "app_full_screen_after_reboot")
                 self.android_mdm_page.stop_app(release_info["package"])
                 log.info("*******************应用满屏推送用例结束***************************")
-                break
+                assert False
             except Exception as e:
                 if self.app_page.service_is_normal("apps/logs", case_pack.user_info):
                     assert False, e
@@ -628,7 +630,7 @@ class TestMDM2SpecialPage:
                     self.android_mdm_page.del_all_downloaded_zip()
                     self.android_mdm_page.del_updated_zip()
 
-    @allure.feature('MDM2_test-retest')
+    @allure.feature('MDM2_test-retest-later')
     @allure.title("Apps-普通应用静默升级")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     # @pytest.mark.flaky(reruns=3, reruns_delay=1)
@@ -1233,7 +1235,7 @@ class TestMDM2SpecialPage:
     @allure.title("stability case-文件文件推送成功率-请在报告右侧log文件查看文件文件推送成功率")
     def test_multi_release_content_MDM2(self, del_all_content_release_logs, del_all_content_file):
         # 设置断店续传重启得次数
-        reboot_times = 2
+        reboot_times = 5
         while True:
             try:
                 log.info("**********文件文件推送成功率用例开始****************")
@@ -1375,7 +1377,7 @@ class TestMDM2SpecialPage:
     @allure.feature('MDM2_test-no test now')
     @allure.title("public case-文件推送-网络恢复断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    # @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_release_normal_files_MDM2(self, recover_and_login_mdm, del_all_content_release_logs, del_all_content_file):
         # "All Files" "Normal Files" "Boot Animations" "Wallpaper" "LOGO"
         times = 1

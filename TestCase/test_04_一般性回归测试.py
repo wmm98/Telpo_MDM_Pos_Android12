@@ -37,7 +37,7 @@ class TestGeneralRegressionTesting:
         self.android_mdm_page.reboot_device(self.wifi_ip)
 
     @allure.feature('GeneralRegressionTesting')
-    @allure.title("OTA-OTA断网重连5次断点续传")
+    @allure.title("OTA-OTA断网重连次断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_OTA_package_general_regression_01(self, recover_and_login_mdm, fake_ota_package_operation,
@@ -235,7 +235,7 @@ class TestGeneralRegressionTesting:
 
     @allure.feature('GeneralRegressionTesting')
     @allure.story('MDM-Show')
-    @allure.title("一般性回归测试-OTA重启5次断点续传")
+    @allure.title("一般性回归测试-OTA重启断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_OTA_package_general_regression_02(self, recover_and_login_mdm, fake_ota_package_operation,
@@ -1105,7 +1105,7 @@ class TestGeneralRegressionTesting:
 
     @allure.feature('GeneralRegressionTesting')
     @allure.story('MDM-Show')
-    @allure.title("一般性回归测试-静默卸载正在运行中的app： 静默卸载/卸载正在运行的app")
+    @allure.title("一般性回归测试-静默卸载正在运行中的app：静默卸载/卸载正在运行的app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_silent_uninstall_app_general_regression(self, recover_and_login_mdm, del_all_app_release_log,
@@ -1187,7 +1187,7 @@ class TestGeneralRegressionTesting:
 
     @allure.feature('GeneralRegressionTesting')
     @allure.story('MDM-Show')
-    @allure.title("一般性回归测试- AIMDM 切换正式测试服服务api ")
+    @allure.title("一般性回归测试- AIMDM切换正式测试服服务api ")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_transfer_api_server_general_regression(self, recover_and_login_mdm, push_test_api_to_device):

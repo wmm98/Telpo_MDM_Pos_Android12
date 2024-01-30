@@ -53,7 +53,7 @@ class TestPublicPage:
         self.app_page.refresh_page()
         self.android_mdm_page.reboot_device(self.wifi_ip)
 
-    @allure.feature('MDM_public')
+    @allure.feature('MDM_public--跟下面得用例一起合并了')
     @allure.title("public case-添加 content 种类--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -88,6 +88,19 @@ class TestPublicPage:
     def test_add_content_file(self, recover_and_login_mdm, go_to_content_page):
         while True:
             try:
+
+                log.info("===================添加 content 种类--辅助测试用例开始==================")
+                now_time = self.content_page.get_current_time()
+                while True:
+                    self.content_page.refresh_page()
+                    if len(self.content_page.get_content_categories_list()) != 0:
+                        break
+                    self.content_page.new_content_category("test-debug")
+                    if self.content_page.get_current_time() > self.content_page.return_end_time(now_time, 300):
+                        assert False, "@@@@无法创建新的分类， 请检查！！！"
+                    self.content_page.time_sleep(3)
+                log.info("===================添加 content 种类--辅助测试用例结束==================")
+
                 log.info("public case-添加 content 文件--辅助测试用例开始")
                 self.content_page.refresh_page()
                 file_path = conf.project_path + "\\Param\\Content\\"
@@ -1629,8 +1642,8 @@ class TestPublicPage:
                     self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
                     self.device_page.go_to_new_address("devices")
 
-    @allure.feature('MDM_public--no  test now')
-    @allure.title("Devices- 关机 -- test in the last")
+    @allure.feature('MDM_public')
+    @allure.title("Devices- 关机")
     @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_device_shutdown(self, recover_and_login_mdm):
         while True:
@@ -1642,23 +1655,38 @@ class TestPublicPage:
                 self.device_page.click_dropdown_btn()
                 self.device_page.click_shutdown_btn()
                 # check if shutdown command works in 3 sec
-                self.device_page.time_sleep(3)
-                assert "%sdevice" % self.android_mdm_page.get_device_name() not in self.device_page.remove_space(
-                    self.android_mdm_page.devices_list()), "@@@@3s内还没触发关机， 请检查！！！"
-                self.device_page.refresh_page()
+
                 now_time = self.device_page.get_current_time()
                 while True:
-                    if "Off" in opt_case.get_single_device_list(sn)[0]["Status"]:
-                        break
-                    if self.device_page.get_current_time() > self.device_page.return_end_time(now_time, 60):
-                        assert False, "@@@@已发送关机命令， 设备还显示在线状态"
                     self.device_page.refresh_page()
+                    if "Off" in opt_case.get_single_device_list(sn)[0]["Status"]:
+                        log.info("平台显示设备已经不在线")
+                        break
+                    if self.device_page.get_current_time() > self.device_page.return_end_time(now_time, 90):
+                        assert False, "@@@@已发送关机命令， 平台显示设备1分钟内还显示在线状态"
+                # check if device is offline
+                now_time = self.device_page.get_current_time()
+                while True:
+                    try:
+                        self.android_mdm_page.device_not_existed(self.wifi_ip)
+                        log.info("检测到设备已经下线")
+                        break
+                    except AssertionError:
+                        pass
+                    self.device_page.refresh_page()
+                    if self.device_page.get_current_time() > self.device_page.return_end_time(now_time, 60):
+                        assert False, "@@@@关机指令下发1分钟内设备还没下线， 请检查！！！！"
+
+                log.info("**********设备关机用例结束*************")
                 break
             except Exception as e:
                 if self.device_page.service_is_normal("devices", case_pack.user_info):
                     assert False, e
                 else:
                     log.info("**********************检测到服务器503***********************")
-                    self.app_page.recovery_after_service_unavailable("devices", case_pack.user_info)
+                    self.device_page.recovery_after_service_unavailable("devices", case_pack.user_info)
                     log.info("**********************服务器恢复正常*************************")
                     self.device_page.go_to_new_address("devices")
+
+
+
