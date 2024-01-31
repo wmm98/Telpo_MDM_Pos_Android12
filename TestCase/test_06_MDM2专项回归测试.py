@@ -995,15 +995,9 @@ class TestMDM2SpecialPage:
                 self.app_page.time_sleep(3)
                 log.info("打开流量数据")
                 self.android_mdm_page.open_mobile_data()
-                while True:
-                    try:
-                        if self.android_mdm_page.ping_network(timeout=300):
-                            break
-                    except AssertionError:
-                        pass
-                    self.android_mdm_page.open_mobile_data()
-                    if now_time > self.device_page.return_end_time(now_time, 90):
-                        assert False, "@@@@@无法开启移动网络， 请检查！！！！"
+
+                self.android_mdm_page.ping_network(timeout=300)
+
                 log.info("成功过打开流量数据")
                 # check if app download in 4G environment
 
