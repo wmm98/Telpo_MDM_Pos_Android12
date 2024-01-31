@@ -161,8 +161,6 @@ DictCommandInfo = {
     "推送开机logo/动画 ": AllCertCaseValue.ROOT_PROTOCON_STA_TM_B15,
     "关机 ": AllCertCaseValue.ROOT_PROTOCON_STA_TM_B16,
 
-
-
     # CCO test case
     "一般性测试": AllCertCaseValue.ROOT_PROTOCON_CCO_CHILD,
     "登录连网-辅助测试用例 ": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0_0,
@@ -330,8 +328,6 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
         print(self.checkbox_serial.isChecked())
 
         # 获取文本框中的文本内容
-        text = self.edit_device_name.text()
-        print("提交的姓名是: %s" % text)
         tree_status = []
         for i in range(self.treeWidget.topLevelItemCount()):
             item = self.treeWidget.topLevelItem(i)
@@ -392,22 +388,44 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
             print(ota_name.split("/")[-1])
             self.copy_file(ota_name, package_path + ota_name.split("/")[-1])
         elif "/" in aimdm_name:
-            self.copy_file(aimdm_name, work_path + aimdm_name.split("/")[-1])
+            if self.checkbox_mdm.isChecked():
+                self.copy_file(aimdm_name, work_path + aimdm_name.split("/")[-1])
         elif "/" in tpui_name:
             self.copy_file(tpui_name, work_path + tpui_name.split("/")[-1])
 
-        # 保存修改后的内容回 YAML 文件
-        with open(self.yaml_file_path, 'w') as file:
-            yaml.safe_dump(self.data, file)
-
         # 检查文本内容是否为空
-        if len(text) == 0:
-            # 显示错误消息框
-            QMessageBox.warning(self, "错误提示", "设备名称不能为空!")
+        if len(self.test_url_edit.text()) == 0:
+            self.get_message_box("测试地址不能为空!")
             return
+        elif len(self.test_api_edit.text()) == 0:
+            self.get_message_box("测试服务api不能为空!")
+            return
+        elif len(self.test_user_edit.text()) == 0:
+            self.get_message_box("测试账号不能为空!")
+            return
+        elif len(self.test_psw_edit.text()) == 0:
+            self.get_message_box("测试密码不能为空!")
+            return
+        elif len(self.edit_device_name.text()) == 0:
+            # 显示错误消息框
+            self.get_message_box("设备名称不能为空!")
+            return
+        elif len(self.ota_file_path.text()) == 0:
+            self.get_message_box("请上传OTA包!")
+            return
+        elif len(self.aimdm_file_path.text()) == 0:
+            if self.checkbox_mdm.isChecked():
+                self.get_message_box("请上传aimdm软件!")
+                return
         else:
-            self.close()
+            # 保存修改后的内容回 YAML 文件
+            with open(self.yaml_file_path, 'w') as file:
+                yaml.safe_dump(self.data, file)
             subprocess.run(["python", "UI_issue.py"])
+            self.close()
+
+    def get_message_box(self, text):
+        QMessageBox.warning(self, "错误提示", text)
 
     # 获取所有节点的状态
     def get_tree_item_status(self, tree_item):
