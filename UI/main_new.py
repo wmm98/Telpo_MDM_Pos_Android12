@@ -324,9 +324,6 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def handle_submit(self):
 
-        print("==================")
-        print(self.checkbox_serial.isChecked())
-
         # 获取文本框中的文本内容
         tree_status = []
         for i in range(self.treeWidget.topLevelItemCount()):
@@ -375,25 +372,26 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
                     self.data["TestCase"]["Stability_Test"]["Stability_Test-case%d" % i] = int(child["status"])
                     i += 1
 
-        # # 拷贝上传的 ota文件
+        # # 拷贝上传的文件并且改变yaml 里字段的值
         package_path = self.project_path + "\\Param\\Package\\"
         work_path = self.project_path + "\\Param\\Work_APP\\"
-        # print(self.ota_file_path.text())
-        # print(self.aimdm_file_path.text())
-        # print(self.tpui_info_file_path.text())
         ota_name = self.ota_file_path.text()
         aimdm_name = self.aimdm_file_path.text()
         tpui_name = self.tpui_info_file_path.text()
         if "/" in ota_name:
-            print(ota_name.split("/")[-1])
-            self.copy_file(ota_name, package_path + ota_name.split("/")[-1])
+            ota_real_name = ota_name.split("/")[-1]
+            # 修改字段值
+            self.data["MDMTestData"]["ota_packages_info"]["package_name"] = ota_real_name
+            self.copy_file(ota_name, package_path + ota_real_name)
         elif "/" in aimdm_name:
+            aimdm_name_real_name = aimdm_name.split("/")[-1]
             if self.checkbox_mdm.isChecked():
-                self.copy_file(aimdm_name, work_path + aimdm_name.split("/")[-1])
+                self.copy_file(aimdm_name, work_path + aimdm_name_real_name)
         elif "/" in tpui_name:
-            self.copy_file(tpui_name, work_path + tpui_name.split("/")[-1])
+            tpui_real_name = tpui_name.split("/")[-1]
+            self.copy_file(tpui_name, work_path + tpui_real_name)
 
-        # 检查文本内容是否为空
+        # 文本框非空检查
         if len(self.test_url_edit.text()) == 0:
             self.get_message_box("测试地址不能为空!")
             return
@@ -417,12 +415,18 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
             if self.checkbox_mdm.isChecked():
                 self.get_message_box("请上传aimdm软件!")
                 return
-        else:
-            # 保存修改后的内容回 YAML 文件
-            with open(self.yaml_file_path, 'w') as file:
-                yaml.safe_dump(self.data, file)
-            subprocess.run(["python", "UI_issue.py"])
-            self.close()
+
+        # 检设备名字，检查check box 属性
+        self.data["MDMTestData"]["android_device_info"]["device_name"] = self.edit_device_name.text()
+        self.data["MDMTestData"]["android_device_info"]["is_serial"] = self.checkbox_serial.isChecked()
+        self.data["MDMTestData"]["android_device_info"]["install_aimdm"] = self.checkbox_mdm.isChecked()
+        self.data["MDMTestData"]["android_device_info"]["is_landscape"] = self.checkbox_screen.isChecked()
+
+        # 保存修改后的内容回 YAML 文件
+        with open(self.yaml_file_path, 'w') as file:
+            yaml.safe_dump(self.data, file)
+        subprocess.run(["python", "UI_issue.py"])
+        self.close()
 
     def get_message_box(self, text):
         QMessageBox.warning(self, "错误提示", text)
