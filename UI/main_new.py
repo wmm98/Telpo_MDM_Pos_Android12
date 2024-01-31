@@ -7,6 +7,7 @@ from PyQt5.QtCore import Qt
 from treewidget import Ui_MainWindow
 import yaml
 import os
+import shutil
 
 
 class AllCertCaseValue:
@@ -336,7 +337,7 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
             item = self.treeWidget.topLevelItem(i)
             tree_status.append(self.get_tree_item_status(item))
 
-        # 修改属性值
+        # 修改yaml 数据的属性值
         if 'TestCase' not in self.data:
             self.data["TestCase"] = {}
 
@@ -377,6 +378,23 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
                 for child in slave['children']:
                     self.data["TestCase"]["Stability_Test"]["Stability_Test-case%d" % i] = int(child["status"])
                     i += 1
+
+        # # 拷贝上传的 ota文件
+        package_path = self.project_path + "\\Param\\Package\\"
+        work_path = self.project_path + "\\Param\\Work_APP\\"
+        # print(self.ota_file_path.text())
+        # print(self.aimdm_file_path.text())
+        # print(self.tpui_info_file_path.text())
+        ota_name = self.ota_file_path.text()
+        aimdm_name = self.aimdm_file_path.text()
+        tpui_name = self.tpui_info_file_path.text()
+        if "/" in ota_name:
+            print(ota_name.split("/")[-1])
+            self.copy_file(ota_name, package_path + ota_name.split("/")[-1])
+        elif "/" in aimdm_name:
+            self.copy_file(aimdm_name, work_path + aimdm_name.split("/")[-1])
+        elif "/" in tpui_name:
+            self.copy_file(tpui_name, work_path + tpui_name.split("/")[-1])
 
         # 保存修改后的内容回 YAML 文件
         with open(self.yaml_file_path, 'w') as file:
@@ -428,6 +446,23 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
             for f in range(count):
                 if item.child(f).checkState != Qt.Unchecked:
                     item.child(f).setCheckState(0, Qt.Unchecked)
+
+    def copy_file(self, origin, des):
+        if self.path_is_existed(origin):
+            while True:
+                if not self.path_is_existed(des):
+                    shutil.copy(origin, des)
+                else:
+                    break
+                self.time_sleep(1)
+        else:
+            raise Exception("此路径不存在: %s, 请检查！！！" % origin)
+
+    def path_is_existed(self, path):
+        if os.path.exists(path):
+            return True
+        else:
+            return False
 
 
 if __name__ == '__main__':
