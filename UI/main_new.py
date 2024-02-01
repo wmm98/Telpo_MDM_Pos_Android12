@@ -317,8 +317,10 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
         self.treeWidget.itemChanged.connect(self.handlechanged)
 
         # 使能aimdm 上传按钮
-        self.checkbox_mdm.stateChanged.connect(self.onCheckboxStateChanged)
-
+        self.checkbox_mdm.stateChanged.connect(self.onAimdmCheckboxStateChanged)
+        # 使能COM口输入框
+        self.checkbox_serial.stateChanged.connect(self.onSerialCheckboxStateChanged)
+        self.COM_name.textChanged.connect(self.CheckCOMBoxTextChange)
         # 连接信号和槽
         self.submit_button.clicked.connect(self.handle_submit)
 

@@ -14,14 +14,15 @@
 
 """
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QModelIndex, QDir
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QCheckBox, QTreeView, QFileSystemModel
-import yaml
 import os
+import yaml
+from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtWidgets import QHBoxLayout, QCheckBox
+import UI_Serial
 
 
 class Ui_MainWindow(object):
+    serial = UI_Serial.Serial()
     options = QtWidgets.QFileDialog.Options()
     options |= QtWidgets.QFileDialog.ReadOnly
     project_path = str(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
@@ -106,10 +107,37 @@ class Ui_MainWindow(object):
         layout_test.addWidget(self.release_psw_edit)
         self.verticalLayout.addLayout(layout_test)
 
-        layout0 = QHBoxLayout()
-        # 我添加的
         self.device_info = QtWidgets.QLabel("\n设备信息：")
         self.verticalLayout.addWidget(self.device_info)
+        # 将标签添加到水平布局中
+        # 添加checkbox
+        layout = QHBoxLayout()
+        # 创建两个标签
+        self.checkbox_screen = QCheckBox("横屏")
+        self.checkbox_mdm = QCheckBox("安装mdm软件")
+        self.checkbox_financial = QCheckBox("金融版本")
+        self.checkbox_serial = QCheckBox("串口")
+        self.COM_label = QtWidgets.QLabel("当前COM口:")
+        # COM相关信息处理
+        self.COM_name = QtWidgets.QLineEdit()
+        self.COM_name.setDisabled(True)
+        self.err_COM_Tips = QtWidgets.QLabel()
+        self.err_COM_Tips.setStyleSheet("color: red;")
+        self.err_COM_Tips.setVisible(False)
+
+        layout.addWidget(self.checkbox_screen)
+        layout.addWidget(self.checkbox_mdm)
+        layout.addWidget(self.checkbox_financial)
+        layout.addWidget(self.checkbox_serial)
+        layout.addWidget(self.COM_label)
+        layout.addWidget(self.COM_name)
+        layout.addWidget(self.err_COM_Tips)
+        # 添加一个拉伸因子以将水平布局放在窗口底部
+        layout.addStretch(1)
+        # 将水平布局放入垂直布局
+        self.verticalLayout.addLayout(layout)
+        # 添加设备文本框
+        layout0 = QHBoxLayout()
         self.label_device_name = QtWidgets.QLabel("设备名称:")
         self.edit_device_name = QtWidgets.QLineEdit()
         self.label_tips = QtWidgets.QLabel("(adb devices可查看)")
@@ -119,23 +147,6 @@ class Ui_MainWindow(object):
         layout0.addStretch(1)
         # 将水平布局放入垂直布局
         self.verticalLayout.addLayout(layout0)
-
-        # 创建两个标签
-        self.checkbox_serial = QCheckBox("串口")
-        self.checkbox_screen = QCheckBox("横屏")
-        self.checkbox_mdm = QCheckBox("安装mdm软件")
-        self.checkbox_financial = QCheckBox("金融版本")
-
-        # 将标签添加到水平布局中
-        layout = QHBoxLayout()
-        layout.addWidget(self.checkbox_serial)
-        layout.addWidget(self.checkbox_screen)
-        layout.addWidget(self.checkbox_mdm)
-        layout.addWidget(self.checkbox_financial)
-        # 添加一个拉伸因子以将水平布局放在窗口底部
-        layout.addStretch(1)
-        # 将水平布局放入垂直布局
-        self.verticalLayout.addLayout(layout)
 
         # aimdm软件上传
         self.aimdm_info = QtWidgets.QLabel("\nAIMDM软件：")
@@ -221,12 +232,38 @@ class Ui_MainWindow(object):
     def tpui_upload_file(self):
         # 打开文件选择对话框
         tpui_file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, "选择文件", "",
-                                                                   "All Files (*);;Text Files (*.txt)",
-                                                                   options=self.options)
+                                                                  "All Files (*);;Text Files (*.txt)",
+                                                                  options=self.options)
         if tpui_file_name:
             self.tpui_info_file_path.setText(tpui_file_name)
 
-    def onCheckboxStateChanged(self, state):
+    def onSerialCheckboxStateChanged(self, state):
+        if state == 2:  # 选中状态
+            self.COM_name.setDisabled(False)
+            COMs = self.serial.get_current_COM()
+            print(COMs)
+            if len(COMs) == 0:
+                self.COM_name.setText("")
+                self.COM_name.setDisabled(True)
+                self.err_COM_Tips.setText("没有可用的COM口, 请检查！！！")
+                self.err_COM_Tips.setVisible(True)
+            elif len(COMs) == 1:
+                self.err_COM_Tips.setVisible(False)
+                self.COM_name.setText(COMs[0])
+            else:
+                self.err_COM_Tips.setText("当前多个COM可用, 请输入需测试COM口！！！")
+                self.err_COM_Tips.setVisible(True)
+        else:
+            self.COM_name.setText("")
+            self.err_COM_Tips.setVisible(False)
+            self.COM_name.setDisabled(True)
+
+    def CheckCOMBoxTextChange(self, text):
+        if self.checkbox_serial.isChecked():
+            if len(text) == 0:
+                self.err_COM_Tips.setVisible(False)
+
+    def onAimdmCheckboxStateChanged(self, state):
         if state == 2:  # 选中状态
             self.aimdm_upload_button.setEnabled(True)
         else:
