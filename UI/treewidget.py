@@ -260,8 +260,14 @@ class Ui_MainWindow(object):
 
     def CheckCOMBoxTextChange(self, text):
         if self.checkbox_serial.isChecked():
-            if len(text) == 0:
+            if len(text) != 0:
                 self.err_COM_Tips.setVisible(False)
+                if text.strip() not in self.serial.get_current_COM():
+                    self.err_COM_Tips.setText("当前COM口不可用，请重新输入！！！")
+                    self.err_COM_Tips.setVisible(True)
+            else:
+                self.err_COM_Tips.setText("请输入可用COM口！！！")
+                self.err_COM_Tips.setVisible(True)
 
     def onAimdmCheckboxStateChanged(self, state):
         if state == 2:  # 选中状态
