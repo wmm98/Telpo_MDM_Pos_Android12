@@ -198,6 +198,44 @@ class AndroidBasePageWiFi(interface):
         # self.wifi_adb_root(wlan0_ip)
         self.screen_keep_on()
         # self.screen_keep_on_no_back()
+        self.confirm_wifi_status_open_wifi()
+        self.ping_network_wifi()
+
+    def get_cur_wifi_status_wifi(self):
+        return self.u2_send_command("settings get global wifi_on")
+
+    def open_wifi_btn_wifi(self):
+        if "0" in self.get_cur_wifi_status_wifi():
+            self.u2_send_command("svc wifi enable")
+            self.time_sleep(3)
+            return self.wifi_open_status_wifi()
+        else:
+            return True
+
+    def close_wifi_btn_wifi(self):
+        if "1" in self.get_cur_wifi_status_wifi():
+            self.u2_send_command("svc wifi disable")
+            self.time_sleep(3)
+            return self.wifi_close_status_wifi()
+        else:
+            return True
+
+    def wifi_open_status_wifi(self):
+        return self.text_is_existed("1", self.get_cur_wifi_status_wifi())
+
+    def wifi_close_status_wifi(self):
+        return self.text_is_existed("0", self.get_cur_wifi_status_wifi())
+
+    def confirm_wifi_status_open_wifi(self, timeout=120):
+        now_time = self.get_current_time()
+        while True:
+            # if self.wifi_open_status_wifi():
+            if "1" in self.get_cur_wifi_status_wifi():
+                break
+            self.open_wifi_btn_wifi()
+            if self.get_current_time() > self.return_end_time(now_time, timeout):
+                assert False, "@@@@超过2分钟打开wifi按钮， 请检查！！！"
+            self.time_sleep(3)
 
     def reboot_device_root(self, wlan0_ip):
         self.send_adb_command("reboot")
@@ -408,6 +446,20 @@ class AndroidBasePageWiFi(interface):
         print(result)
         return result
 
+    def calculate_updated_sha256_in_device(self, file_name="update.zip"):
+        # sha256sum sdcard/aimdm/data/2023-10-12.txt
+        # 9fb5de71a794b9cb8b8197e6ebfbbc9168176116f7f88aca62b22bbc67c2925a  2023-10-12.txt
+        res = self.u2_send_command(
+            "ls /%s/ |grep %s" % (self.get_internal_storage_directory(), file_name))
+        print(res.split("\n")[0])
+        download_file_name = res.split("\n")[0]
+        cmd = "md5sum /%s/%s" % (self.get_internal_storage_directory(), download_file_name)
+        print(self.u2_send_command(cmd))
+        print(self.u2_send_command(cmd).split(" "))
+        result = self.u2_send_command(cmd).split(" ")[0]
+        print(result)
+        return result
+
     def get_internal_storage_directory(self):
         if "aimdm" in self.u2_send_command("ls sdcard/"):
             return "sdcard"
@@ -418,8 +470,9 @@ class AndroidBasePageWiFi(interface):
 
     def text_is_existed(self, text1, text2):
         sub = self.remove_space(text1)
-        string = self.remove_space(text2)
-        if sub in string:
+        string1 = self.remove_space(text2)
+        if sub in string1:
+            print("字符串对比")
             return True
         else:
             return True

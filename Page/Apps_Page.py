@@ -386,8 +386,31 @@ class APPSPage(TelpoMDMPage):
         self.click(self.loc_app_delete_btn)
         self.confirm_alert_existed(self.loc_app_delete_btn)
         self.click(self.loc_app_confirm_del_btn)
-        self.confirm_tips_alert_show(self.loc_app_confirm_del_btn)
+        # self.confirm_tips_alert_show(self.loc_app_confirm_del_btn)
         self.confirm_alert_not_existed(self.loc_app_confirm_del_btn)
+        self.refresh_page()
+
+    def delete_and_upload(self, apk_name, file_path):
+        # delete
+        while True:
+            self.search_app_by_name(apk_name)
+            if len(self.get_apps_text_list()) == 0:
+                break
+            else:
+                self.click_delete_app_btn()
+                self.refresh_page()
+            self.time_sleep(1)
+
+        # upload
+        while True:
+            self.search_app_by_name(apk_name)
+            if len(self.get_apps_text_list()) == 0:
+                self.click_add_btn()
+                self.input_app_info(file_path)
+                self.refresh_page()
+            else:
+                break
+            self.time_sleep(1)
 
     def get_apps_text_list(self):
         if self.ele_is_existed(self.loc_single_app_box):

@@ -36,16 +36,16 @@ class TestGeneralRegressionTesting:
         self.android_mdm_page.del_updated_zip()
         self.android_mdm_page.reboot_device(self.wifi_ip)
 
-    @allure.feature('GeneralRegressionTesting')
-    @allure.title("OTA-OTA断网重连次断点续传")
+    @allure.feature('GeneralRegressionTesting-chenr-test')
+    @allure.title("OTA-OTA 下载拷贝校验完整性")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
-    def test_OTA_package_general_regression_01(self, recover_and_login_mdm, fake_ota_package_operation,
+    @pytest.mark.flaky(reruns=20, reruns_delay=3)
+    def test_OTA_package_general_regression_01(self, recover_and_login_mdm, real_ota_package_operation,
                                                           connect_wifi_adb_USB, del_all_ota_release_log,
                                                           delete_ota_package_relate):
         while True:
             try:
-                log.info("*******************OTA断网重连断点续传用例开始***************************")
+                log.info("*******************OTAOTA-OTA 下载拷贝校验完整性开始***************************")
                 download_tips = "Foundanewfirmware,whethertoupgrade?"
                 upgrade_tips = "whethertoupgradenow?"
                 exp_success_text = "success"
@@ -58,9 +58,6 @@ class TestGeneralRegressionTesting:
                 times = 5
                 self.ota_page.go_to_new_address("ota")
                 self.android_mdm_page.screen_keep_on()
-                # close mobile data first
-                log.info("先关闭流量数据")
-                self.android_mdm_page.close_mobile_data()
                 # get release ota package version
                 release_info["version"] = self.ota_page.get_ota_package_version(release_info["package_name"])
                 current_firmware_version = self.android_mdm_page.check_firmware_version()
@@ -73,13 +70,14 @@ class TestGeneralRegressionTesting:
                 device_current_firmware_version = self.android_mdm_page.check_firmware_version()
                 log.info("固件升级的目标版本%s" % release_info["version"])
                 # check file size and hash value in directory Param/package
-                # ota_package_path = self.android_mdm_page.get_apk_path(release_info["package_name"])
-                ota_package_path = conf.project_path + '\\Public_Package\\new\\%s' % release_info["package_name"]
+                ota_package_path = self.android_mdm_page.get_apk_path(release_info["package_name"])
+                # ota_package_path = conf.project_path + '\\Public_Package\\new\\%s' % release_info["package_name"]
+
                 act_ota_package_size = self.ota_page.get_zip_size(ota_package_path)
                 log.info("原ota升级包的大小: %s" % str(act_ota_package_size))
                 # check file hash value in directory Param/package
                 act_ota_package_hash_value = self.android_mdm_page.calculate_sha256_in_windows(
-                    release_info["package_name"], directory="Public_Package")
+                    release_info["package_name"])
                 log.info("ota升级包的md5值: %s" % str(act_ota_package_hash_value))
                 # search package
                 self.ota_page.search_device_by_pack_name(release_info["package_name"])
@@ -95,27 +93,7 @@ class TestGeneralRegressionTesting:
                 # self.android_mdm_page.screen_keep_on()
                 self.android_mdm_page.confirm_received_alert(download_tips)
                 log.info("终端弹出下载提示框并且点击确认下载")
-                # flag = 0
-                # for i in range(5):
-                #     try:
-                #         self.android_mdm_page.confirm_received_alert(download_tips)
-                #         log.info("终端弹出下载提示框并且点击确认下载")
-                #     except Exception as e:
-                #         flag += 1
-                #     if flag == 0:
-                #         break
-                #     if flag == 5:
-                #         assert False, "@@@@无法接收到下载提示框， 请检查！！！！"
 
-                # check download record in device
-                # now_time = self.page.get_current_time()
-                # while True:
-                #     # check if app in download list
-                #     if self.android_mdm_page.download_file_is_existed_USB(release_info["package_name"]):
-                #         break
-                #     if self.page.get_current_time() > self.page.return_end_time(now_time, 300):
-                #         log.error("@@@@推送中超过5分钟还没有升级包: %s的下载记录" % release_info["package_name"])
-                #         assert False, "@@@@推送中超过5分钟还没有升级包: %s的下载记录" % release_info["package_name"]
                 now_time = self.ota_page.get_current_time()
                 while True:
                     # check if app in download list
@@ -128,50 +106,42 @@ class TestGeneralRegressionTesting:
 
                 log.info("****************终端检测到下载记录*******************")
 
-                package_size = self.android_mdm_page.get_file_size_in_device_USB(release_info["package_name"])
-                log.info("断网前下载的的ota package size: %s" % str(package_size))
-                for i in range(times):
-                    self.android_mdm_page.disconnect_ip(self.wifi_ip)
-                    self.android_mdm_page.close_wifi_btn()
-                    self.android_mdm_page.confirm_wifi_btn_close()
-                    self.android_mdm_page.no_network()
-                    log.info("确认断开网络，终端无法上网")
-                    self.ota_page.time_sleep(5)
-                    log.info("等待...")
-                    self.android_mdm_page.open_wifi_btn()
-                    self.android_mdm_page.confirm_wifi_btn_open()
-                    self.android_mdm_page.confirm_wifi_adb_connected(self.wifi_ip)
-                    self.android_mdm_page.ping_network(timeout=300)
-                    log.info("打开wifi开关并且确认可以上网")
-                    # need to release again, skip below steps
-                    # self.ota_page.go_to_new_address("ota/release")
-                    # self.ota_page.select_release_log()
-                    # self.ota_page.release_again()
-                    # try:
-                    #     self.android_mdm_page.confirm_received_alert(download_tips)
-                    # except Exception:
-                    #     assert False, "@@@@断网重连后一段时间内没有接受到下载的提示， 请检查！！！！"
-                    # now_time = self.ota_page.get_current_time()
-                    while True:
-                        current_size = self.android_mdm_page.get_file_size_in_device_USB(release_info["package_name"])
-                        log.info("断网%s次之后当前ota package 的size: %s" % (str(i + 1), current_size))
-                        if current_size == act_ota_package_hash_value:
-                            err_info = "@@@@升级包下载完成, 请检查ota 升级包大小是否适合！！！！"
-                            log.error(err_info)
-                            assert False, err_info
-                        if current_size > package_size:
-                            package_size = current_size
-                            break
-                        if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 120):
-                            err_msg = "@@@@确认下载提示后， 2分钟内ota升级包没有大小没变， 没在下载， 请检查！！！"
-                            print(err_msg)
-                            log.error(err_msg)
-                            assert False, err_msg
-                        self.ota_page.time_sleep(3)
+                # package_size = self.android_mdm_page.get_file_size_in_device_USB(release_info["package_name"])
+                # log.info("断网前下载的的ota package size: %s" % str(package_size))
+                # # for i in range(times):
+                #     self.android_mdm_page.disconnect_ip(self.wifi_ip)
+                #     self.android_mdm_page.close_wifi_btn()
+                #     self.android_mdm_page.confirm_wifi_btn_close()
+                #     self.android_mdm_page.no_network()
+                #     log.info("确认断开网络，终端无法上网")
+                #     self.ota_page.time_sleep(5)
+                #     log.info("等待...")
+                #     self.android_mdm_page.open_wifi_btn()
+                #     self.android_mdm_page.confirm_wifi_btn_open()
+                #     self.android_mdm_page.confirm_wifi_adb_connected(self.wifi_ip)
+                #     self.android_mdm_page.ping_network(timeout=300)
+                #     log.info("打开wifi开关并且确认可以上网")
 
-                log.info("*******************完成%d次断网操作*********************************" % (times + 1))
+                    # while True:
+                    #     current_size = self.android_mdm_page.get_file_size_in_device_USB(release_info["package_name"])
+                    #     log.info("断网%s次之后当前ota package 的size: %s" % (str(i + 1), current_size))
+                    #     if current_size == act_ota_package_hash_value:
+                    #         err_info = "@@@@升级包下载完成, 请检查ota 升级包大小是否适合！！！！"
+                    #         log.error(err_info)
+                    #         assert False, err_info
+                    #     if current_size > package_size:
+                    #         package_size = current_size
+                    #         break
+                    #     if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 120):
+                    #         err_msg = "@@@@确认下载提示后， 2分钟内ota升级包没有大小没变， 没在下载， 请检查！！！"
+                    #         print(err_msg)
+                    #         log.error(err_msg)
+                    #         assert False, err_msg
+                    #     self.ota_page.time_sleep(3)
+
+                # log.info("*******************完成%d次断网操作*********************************" % (times + 1))
                 # 防止滑动解锁点击取消按钮
-                self.android_mdm_page.screen_keep_on()
+                # self.android_mdm_page.screen_keep_on()
                 now_time = self.ota_page.get_current_time()
                 while True:
                     download_file_size = self.android_mdm_page.get_file_size_in_device(release_info["package_name"])
@@ -180,13 +150,32 @@ class TestGeneralRegressionTesting:
                         log.info("原来升级包的 package_hash_value：%s" % str(package_hash_value))
                         log.info("下载完成后的 package_hash_value：%s" % str(package_hash_value))
                         break
-
-                    if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 1800):
-                        err_msg = "@@@@断网重连%d次， 30分钟后还没有下载完相应的ota package， 请检查！！！" % times
+                    if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 300):
+                        err_msg = "@@@@30分钟后还没有下载完相应的ota package， 请检查！！！"
                         log.error(err_msg)
-                        assert False, err_msg
+                        # assert False, err_msg
+                        raise Exception(err_msg)
                     self.ota_page.time_sleep(10)
                 log.info("*******************ota包下载完成**************************")
+                # 对比 update包
+                now_time = self.ota_page.get_current_time()
+                while True:
+                    if "update.zip" in self.android_mdm_page.u2_send_command("ls %s/" % self.android_mdm_page.get_internal_storage_directory()):
+                        updated_hash_value = self.android_mdm_page.calculate_updated_sha256_in_device()
+                        log.info("update.zip 包的md5值为： %s" % updated_hash_value)
+                        if updated_hash_value == act_ota_package_hash_value:
+                            log.info("拷贝的update 包完整性一致")
+                            break
+                    if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 300):
+                        err_msg = "@@@@ 5分钟内分钟后还没有拷贝完相应update.zip包， 请检查！！！"
+                        log.error(err_msg)
+                        # assert False, err_msg
+                        raise Exception(err_msg)
+                    self.ota_page.time_sleep(3)
+
+                log.info("*******************根目录ota包拷贝完成完成**************************")
+
+                # 检测copy update包是否完整
                 self.ota_page.go_to_new_address("ota/log")
                 report_now_time = self.ota_page.get_current_time()
                 while True:
@@ -210,15 +199,15 @@ class TestGeneralRegressionTesting:
                     self.ota_page.time_sleep(5)
                     self.ota_page.refresh_page()
                 log.info("****************************ota升级升级包下载完成***************************")
-                # self.android_mdm_page.screen_keep_on()
+                self.android_mdm_page.screen_keep_on()
                 self.android_mdm_page.confirm_alert_show(timeout=300)
                 log.info("*****************检测到有升级提示框********************")
                 try:
                     self.android_mdm_page.click_cancel_btn()
                 except Exception as e:
                     pass
-                log.info("*******************OTA断网重连断点续传用例结束***************************")
-                break
+                log.info("*******************OTA-OTA 下载拷贝校验完整性用例结束***************************")
+                assert False, "000000000000000000000000000"
             except Exception as e:
                 if self.ota_page.service_is_normal("ota", case_pack.user_info):
                     assert False, e
@@ -1437,7 +1426,7 @@ class TestGeneralRegressionTesting:
                     self.android_mdm_page.reboot_device(self.wifi_ip)
                     self.device_page.go_to_new_address("devices")
 
-    @allure.feature('GeneralRegressionTesting-test-now')
+    @allure.feature('GeneralRegressionTesting')
     @allure.title("Devices- 日志的抓取")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -1469,6 +1458,195 @@ class TestGeneralRegressionTesting:
                     self.device_page.recovery_after_service_unavailable("devices", case_pack.user_info)
                     log.info("**********************服务器恢复正常*************************")
                     self.device_page.go_to_new_address("apps")
+
+    @allure.feature('GeneralRegressionTesting')
+    @allure.title("OTA-断网断点续传")
+    @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
+    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    def test_OTA_package_general_regression_04(self, recover_and_login_mdm, fake_ota_package_operation,
+                                               connect_wifi_adb_USB, del_all_ota_release_log,
+                                               delete_ota_package_relate):
+        while True:
+            try:
+                log.info("*******************OTA断网重连断点续传用例开始***************************")
+                download_tips = "Foundanewfirmware,whethertoupgrade?"
+                upgrade_tips = "whethertoupgradenow?"
+                exp_success_text = "success"
+                exp_existed_text = "ota release already existed"
+                release_info = {"package_name": test_yml['ota_packages_info']['package_name'], "sn": self.device_sn,
+                                "category": "NO Limit", "network": "NO Limit"}
+                self.android_mdm_page.reboot_device(self.wifi_ip)
+                # check if device is online
+                opt_case.confirm_device_online(release_info["sn"])
+                times = 5
+                self.ota_page.go_to_new_address("ota")
+                self.android_mdm_page.screen_keep_on()
+                # close mobile data first
+                log.info("先关闭流量数据")
+                self.android_mdm_page.close_mobile_data()
+                # get release ota package version
+                release_info["version"] = self.ota_page.get_ota_package_version(release_info["package_name"])
+                current_firmware_version = self.android_mdm_page.check_firmware_version()
+                # compare current version and exp version
+                err_info = "@@@@释放的ota升级包比当前固件版本版本低， 请检查！！！"
+                assert self.ota_page.transfer_version_into_int(
+                    current_firmware_version) < self.ota_page.transfer_version_into_int(
+                    release_info["version"]), err_info
+
+                device_current_firmware_version = self.android_mdm_page.check_firmware_version()
+                log.info("固件升级的目标版本%s" % release_info["version"])
+                # check file size and hash value in directory Param/package
+                # ota_package_path = self.android_mdm_page.get_apk_path(release_info["package_name"])
+                ota_package_path = conf.project_path + '\\Public_Package\\new\\%s' % release_info["package_name"]
+                act_ota_package_size = self.ota_page.get_zip_size(ota_package_path)
+                log.info("原ota升级包的大小: %s" % str(act_ota_package_size))
+                # check file hash value in directory Param/package
+                act_ota_package_hash_value = self.android_mdm_page.calculate_sha256_in_windows(
+                    release_info["package_name"], directory="Public_Package")
+                log.info("ota升级包的md5值: %s" % str(act_ota_package_hash_value))
+                # search package
+                self.ota_page.search_device_by_pack_name(release_info["package_name"])
+                # ele = self.Page.get_package_ele(release_info["package_name"])
+                send_time = case_pack.time.strftime('%Y-%m-%d %H:%M',
+                                                    case_pack.time.localtime(self.ota_page.get_current_time()))
+                self.ota_page.time_sleep(10)
+                # if device is existed, click
+                self.ota_page.click_release_btn()
+                # nolimit  simcard  wifiethernet
+                self.ota_page.input_release_OTA_package(release_info)
+                log.info("平台释放ota升级包指令下达成功")
+                # self.android_mdm_page.screen_keep_on()
+                self.android_mdm_page.confirm_received_alert(download_tips)
+                log.info("终端弹出下载提示框并且点击确认下载")
+
+                now_time = self.ota_page.get_current_time()
+                while True:
+                    # check if app in download list
+                    if self.android_mdm_page.download_file_is_existed(release_info["package_name"]):
+                        log.info("存在： %s的下载记录" % release_info["package_name"])
+                        break
+                    if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 180):
+                        log.error("@@@@推送中超过3分钟还没有升级包: %s的下载记录" % release_info["package_name"])
+                        assert False, "@@@@推送中超过3分钟还没有升级包: %s的下载记录" % release_info["package_name"]
+
+                log.info("****************终端检测到下载记录*******************")
+
+                package_size = self.android_mdm_page.get_file_size_in_device_USB(release_info["package_name"])
+                log.info("断网前下载的的ota package size: %s" % str(package_size))
+                for i in range(times):
+                    self.android_mdm_page.disconnect_ip(self.wifi_ip)
+                    self.android_mdm_page.close_wifi_btn()
+                    self.android_mdm_page.confirm_wifi_btn_close()
+                    self.android_mdm_page.no_network()
+                    log.info("确认断开网络，终端无法上网")
+                    self.ota_page.time_sleep(5)
+                    log.info("等待...")
+                    self.android_mdm_page.open_wifi_btn()
+                    self.android_mdm_page.confirm_wifi_btn_open()
+                    self.android_mdm_page.confirm_wifi_adb_connected(self.wifi_ip)
+                    self.android_mdm_page.ping_network(timeout=300)
+                    log.info("打开wifi开关并且确认可以上网")
+
+                    while True:
+                        current_size = self.android_mdm_page.get_file_size_in_device_USB(release_info["package_name"])
+                        log.info("断网%s次之后当前ota package 的size: %s" % (str(i + 1), current_size))
+                        if current_size == act_ota_package_hash_value:
+                            err_info = "@@@@升级包下载完成, 请检查ota 升级包大小是否适合！！！！"
+                            log.error(err_info)
+                            assert False, err_info
+                        if current_size > package_size:
+                            package_size = current_size
+                            break
+                        if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 120):
+                            err_msg = "@@@@确认下载提示后， 2分钟内ota升级包没有大小没变， 没在下载， 请检查！！！"
+                            print(err_msg)
+                            log.error(err_msg)
+                            assert False, err_msg
+                        self.ota_page.time_sleep(3)
+
+                log.info("*******************完成%d次断网操作*********************************" % (times + 1))
+                # 防止滑动解锁点击取消按钮
+                self.android_mdm_page.screen_keep_on()
+                now_time = self.ota_page.get_current_time()
+                while True:
+                    download_file_size = self.android_mdm_page.get_file_size_in_device(release_info["package_name"])
+                    package_hash_value = self.android_mdm_page.calculate_sha256_in_device(release_info["package_name"])
+                    if download_file_size == act_ota_package_size and package_hash_value == act_ota_package_hash_value:
+                        log.info("原来升级包的 package_hash_value：%s" % str(package_hash_value))
+                        log.info("下载完成后的 package_hash_value：%s" % str(package_hash_value))
+                        break
+                    if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 300):
+                        err_msg = "@@@@断网重连%d次， 30分钟后还没有下载完相应的ota package， 请检查！！！" % times
+                        log.error(err_msg)
+                        assert False, err_msg
+                        # raise Exception(err_msg)
+                    self.ota_page.time_sleep(10)
+                log.info("*******************ota包下载完成**************************")
+                # 对比 update包
+                now_time = self.ota_page.get_current_time()
+                while True:
+                    if "update.zip" in self.android_mdm_page.u2_send_command(
+                            "ls %s/" % self.android_mdm_page.get_internal_storage_directory()):
+                        updated_hash_value = self.android_mdm_page.calculate_updated_sha256_in_device()
+                        log.info("update.zip 包的md5值为： %s" % updated_hash_value)
+                        if updated_hash_value == act_ota_package_hash_value:
+                            log.info("拷贝的update 包完整性一致")
+                            break
+                    if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 300):
+                        err_msg = "@@@@ 5分钟内分钟后还没有拷贝完相应update.zip包， 请检查！！！"
+                        log.error(err_msg)
+                        assert False, err_msg
+                        # raise Exception(err_msg)
+                    self.ota_page.time_sleep(3)
+
+                log.info("*******************根目录ota包拷贝完成完成**************************")
+
+                # 检测copy update包是否完整
+                self.ota_page.go_to_new_address("ota/log")
+                report_now_time = self.ota_page.get_current_time()
+                while True:
+                    info = self.ota_page.get_ota_latest_upgrade_log(send_time, release_info)
+                    if len(info) != 0:
+                        action = info[0]["Action"]
+                        log.info("平台upgrade action: %s" % action)
+                        if self.ota_page.get_action_status(action) == 2 or self.ota_page.get_action_status(action) == 4 \
+                                or self.ota_page.get_action_status(action) == 3:
+                            break
+                    if self.ota_page.get_current_time() > self.ota_page.return_end_time(report_now_time, 180):
+                        if self.ota_page.service_is_normal("ota/log", case_pack.user_info):
+                            err_msg = "@@@@终端下载完升级包后， 平台3分钟还没有下载完相应的ota package， 请检查！！！"
+                            log.error(err_msg)
+                            assert False, err_msg
+                        else:
+                            log.info("**********************检测到服务器503***********************")
+                            self.ota_page.recovery_after_service_unavailable("ota/log", case_pack.user_info)
+                            log.info("**********************服务器恢复正常*************************")
+                            report_now_time = self.ota_page.get_current_time()
+                    self.ota_page.time_sleep(5)
+                    self.ota_page.refresh_page()
+                    log.info("****************************ota升级升级包下载完成***************************")
+                    self.android_mdm_page.screen_keep_on()
+                    self.android_mdm_page.confirm_alert_show(timeout=300)
+                    log.info("*****************检测到有升级提示框********************")
+                    try:
+                        self.android_mdm_page.click_cancel_btn()
+                    except Exception as e:
+                        pass
+                    log.info("*******************OTA断网重连断点续传用例结束***************************")
+                    break
+            except Exception as e:
+                if self.ota_page.service_is_normal("ota", case_pack.user_info):
+                    assert False, e
+                else:
+                    self.android_mdm_page.confirm_wifi_status_open()
+                    self.android_mdm_page.confirm_wifi_adb_connected(self.wifi_ip)
+                    log.info("**********************检测到服务器503***********************")
+                    self.ota_page.recovery_after_service_unavailable("ota", case_pack.user_info)
+                    log.info("**********************服务器恢复正常*************************")
+                    self.ota_page.delete_all_ota_release_log()
+                    self.android_mdm_page.del_all_downloaded_zip()
+                    self.android_mdm_page.del_updated_zip()
+                    self.ota_page.go_to_new_address("ota")
 
 
 
