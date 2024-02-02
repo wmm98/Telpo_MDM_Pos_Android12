@@ -3,7 +3,7 @@ import subprocess
 import sys
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer, QRunnable, QThreadPool
 from treewidget import Ui_MainWindow
 import yaml
 import os
@@ -220,7 +220,6 @@ DictCommandInfo = {
     "待定": AllCertCaseValue.ROOT_OTHER_RATE,
 }
 
-
 class tree(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def __init__(self):
@@ -316,13 +315,51 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
         # 链接槽函数
         self.treeWidget.itemChanged.connect(self.handlechanged)
 
+        self.aimdm_upload_button.clicked.connect(self.aimdm_upload_file)
+        self.tpui_info_upload_button.clicked.connect(self.tpui_upload_file)
+        self.upload_button.clicked.connect(self.ota_upload_file)
+
         # 使能aimdm 上传按钮
         self.checkbox_mdm.stateChanged.connect(self.onAimdmCheckboxStateChanged)
         # 使能COM口输入框
         self.checkbox_serial.stateChanged.connect(self.onSerialCheckboxStateChanged)
-        self.COM_name.textChanged.connect(self.CheckCOMBoxTextChange)
+        # 测试设备状态：
+        self.devic_online_btn.clicked.connect(self.checkDeviceOnline)
         # 连接信号和槽
         self.submit_button.clicked.connect(self.handle_submit)
+
+    def get_message_box(self, text):
+        QMessageBox.warning(self, "错误提示", text)
+
+    def checkDeviceOnline(self):
+        device_name = self.edit_device_name.text()
+        if len(device_name) == 0:
+            self.get_message_box("设备名称为空，输入设备名称")
+            return
+        # 需要串口的情况
+        if self.checkbox_serial.isChecked():
+            # pass
+            COM_name = self.COM_name.currentText()
+            if COM_name.strip() in self.serial.get_current_COM():
+                self.serial.loginSer(COM_name)
+                if self.serial.check_usb_adb_connect_serial(device_name):
+                    self.device_state_tips.setText("设备%s在线！" % device_name)
+                    self.device_state_tips.setVisible(True)
+                else:
+                    self.device_state_tips.setText("设备%s不在线， 请再次测试！！！" % device_name)
+                    self.device_state_tips.setVisible(True)
+                self.serial.confirm_relay_closed()
+                self.serial.logoutSer()
+            else:
+                self.get_message_box("没有可用的串口，请检查！！！")
+        else:
+            # 不需要串口的情况下
+            if self.serial.check_usb_adb_connect_no_serial(device_name):
+                self.device_state_tips.setText("设备%s在线！" % device_name)
+                self.device_state_tips.setVisible(True)
+            else:
+                self.device_state_tips.setText("设备%s不在线， 请再次测试！！！" % device_name)
+                self.device_state_tips.setVisible(True)
 
     def handle_submit(self):
 
@@ -423,15 +460,21 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
         self.data["MDMTestData"]["android_device_info"]["is_serial"] = self.checkbox_serial.isChecked()
         self.data["MDMTestData"]["android_device_info"]["install_aimdm"] = self.checkbox_mdm.isChecked()
         self.data["MDMTestData"]["android_device_info"]["is_landscape"] = self.checkbox_screen.isChecked()
+        if self.checkbox_serial.isChecked():
+            self.data["MDMTestData"]["android_device_info"]["COM"] = self.COM_name.text()
+
+        testcases = []
+        for case in self.data["TestCase"]["General_Test"]:
+            print(case)
+            if self.data["TestCase"]["General_Test"][case] == 2:
+                testcases.append(case)
+        print(",".join(testcases))
 
         # 保存修改后的内容回 YAML 文件
         with open(self.yaml_file_path, 'w') as file:
             yaml.safe_dump(self.data, file)
         subprocess.run(["python", "UI_issue.py"])
         self.close()
-
-    def get_message_box(self, text):
-        QMessageBox.warning(self, "错误提示", text)
 
     # 获取所有节点的状态
     def get_tree_item_status(self, tree_item):
@@ -487,6 +530,66 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
             return True
         else:
             return False
+
+    def ota_upload_file(self):
+        # 打开文件选择对话框
+        ota_file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, "选择文件", "", "All Files (*);;Text Files (*.txt)",
+                                                                 options=self.options)
+        if ota_file_name:
+            self.ota_file_path.setText(ota_file_name)
+
+    def aimdm_upload_file(self):
+        # 打开文件选择对话框
+        aimdm_file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, "选择文件", "",
+                                                                   "All Files (*);;Text Files (*.txt)",
+                                                                   options=self.options)
+        if aimdm_file_name:
+            self.aimdm_file_path.setText(aimdm_file_name)
+
+    def tpui_upload_file(self):
+        # 打开文件选择对话框
+        tpui_file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, "选择文件", "",
+                                                                  "All Files (*);;Text Files (*.txt)",
+                                                                  options=self.options)
+        if tpui_file_name:
+            self.tpui_info_file_path.setText(tpui_file_name)
+
+    def onSerialCheckboxStateChanged(self, state):
+        if state == 2:  # 选中状态
+            self.COM_name.setEnabled(True)
+            ports = self.serial.get_current_COM()
+            for port in ports:
+                self.COM_name.addItem(port)
+            if len(ports) == 0:
+                self.err_COM_Tips.setText("没有可用的COM口, 请检查！！！")
+                self.err_COM_Tips.setVisible(True)
+                self.COM_name.setEnabled(True)
+            elif len(ports) == 1:
+                pass
+            else:
+                self.err_COM_Tips.setText("当前多个COM可用, 请需要需测试COM口！！！")
+                self.err_COM_Tips.setVisible(True)
+        else:
+            self.err_COM_Tips.setVisible(False)
+            self.COM_name.setDisabled(True)
+
+    def CheckCOMBoxTextChange(self, text):
+        if self.COM_name.isEnabled():
+            if len(text) != 0:
+                if text.strip() not in self.serial.get_current_COM():
+                    self.err_COM_Tips.setText("当前COM口不可用，请重新输入！！！")
+                    self.err_COM_Tips.setVisible(True)
+                else:
+                    self.err_COM_Tips.setVisible(False)
+            else:
+                self.err_COM_Tips.setText("请输入可用COM口！！！")
+                self.err_COM_Tips.setVisible(True)
+
+    def onAimdmCheckboxStateChanged(self, state):
+        if state == 2:  # 选中状态
+            self.aimdm_upload_button.setEnabled(True)
+        else:
+            self.aimdm_upload_button.setEnabled(False)
 
 
 if __name__ == '__main__':

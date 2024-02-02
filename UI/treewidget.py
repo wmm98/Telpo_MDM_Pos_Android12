@@ -17,7 +17,8 @@
 import os
 import yaml
 from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QHBoxLayout, QCheckBox
+from PyQt5.QtCore import QStringListModel
+from PyQt5.QtWidgets import QHBoxLayout, QCheckBox, QLineEdit, QCompleter, QComboBox
 import UI_Serial
 
 
@@ -39,6 +40,21 @@ class Ui_MainWindow(object):
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
         self.treeWidget = QtWidgets.QTreeWidget(self.centralwidget)
+
+        # # 创建一个组合框
+        # self.combo_box = QComboBox(self)
+        # self.combo_box.addItem('选项1')
+        # self.combo_box.addItem('选项2')
+        # self.combo_box.addItem('选项3')
+        #
+        # # 创建一个文本框
+        # self.line_edit = QLineEdit(self)
+        # self.line_edit.setPlaceholderText('请选择一个选项')
+        #
+        # # 将信号与槽连接
+        # # self.combo_box.currentIndexChanged.connect(self.update_text)
+        # # layout.addWidget(self.line_edit)
+        # self.verticalLayout.addWidget(self.line_edit)
 
         # 创建水平布局
         # 测试信息
@@ -109,18 +125,39 @@ class Ui_MainWindow(object):
 
         self.device_info = QtWidgets.QLabel("\n设备信息：")
         self.verticalLayout.addWidget(self.device_info)
+
         # 将标签添加到水平布局中
         # 添加checkbox
         layout = QHBoxLayout()
-        # 创建两个标签
+
         self.checkbox_screen = QCheckBox("横屏")
         self.checkbox_mdm = QCheckBox("安装mdm软件")
         self.checkbox_financial = QCheckBox("金融版本")
         self.checkbox_serial = QCheckBox("串口")
-        self.COM_label = QtWidgets.QLabel("当前COM口:")
-        # COM相关信息处理
-        self.COM_name = QtWidgets.QLineEdit()
+        self.COM_label = QtWidgets.QLabel("当前可用COM口:")
+
+        # 创建一个组合框
+        # 创建一个水平布局
+        # 创建一个标签
+        # label = QtWidgets.QLabel('选择选项:')
+
+        # 创建一个下拉列表
+        self.COM_name = QComboBox(self)
+            # self.COM_name.addItem('选项2')
+            # self.COM_name.addItem('选项3')
+        # print(self.COM_name.currentText())
         self.COM_name.setDisabled(True)
+
+        # 将标签和下拉列表添加到水平布局中
+
+        # 将信号与槽连接
+        # self.combo_box.currentIndexChanged.connect(self.update_text)
+
+        # self.verticalLayout.addWidget(self.line_edit)
+
+        # COM相关信息处理, 暂时不用
+        # self.COM_name = QtWidgets.QLineEdit()
+        # self.COM_name.setDisabled(True)
         self.err_COM_Tips = QtWidgets.QLabel()
         self.err_COM_Tips.setStyleSheet("color: red;")
         self.err_COM_Tips.setVisible(False)
@@ -158,7 +195,7 @@ class Ui_MainWindow(object):
         layout_aimdm.addWidget(self.aimdm_file_path)
 
         self.aimdm_upload_button = QtWidgets.QPushButton("点击上传")
-        self.aimdm_upload_button.clicked.connect(self.aimdm_upload_file)
+
         self.aimdm_upload_button.setEnabled(False)  # 默认禁用上传按钮
         layout_aimdm.addWidget(self.aimdm_upload_button)
         self.verticalLayout.addLayout(layout_aimdm)
@@ -173,7 +210,7 @@ class Ui_MainWindow(object):
         layout_tpui_info.addWidget(self.tpui_info_file_path)
 
         self.tpui_info_upload_button = QtWidgets.QPushButton("点击上传")
-        self.tpui_info_upload_button.clicked.connect(self.tpui_upload_file)
+
         layout_tpui_info.addWidget(self.tpui_info_upload_button)
         self.verticalLayout.addLayout(layout_tpui_info)
 
@@ -189,7 +226,7 @@ class Ui_MainWindow(object):
 
         # 上传按钮
         self.upload_button = QtWidgets.QPushButton("点击上传")
-        self.upload_button.clicked.connect(self.ota_upload_file)
+
         layout1.addWidget(self.upload_button)
         self.verticalLayout.addLayout(layout1)
 
@@ -210,70 +247,20 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        # 我添加的
+        # 底部
+        # 设备状态在线测试
+        layout_online_test = QHBoxLayout()
+        self.devic_online_btn = QtWidgets.QPushButton("点击测试设备在线状态")
+        self.device_state_tips = QtWidgets.QLabel()
+        self.device_state_tips.setStyleSheet("color: red;")
+        self.device_state_tips.setVisible(False)
+        layout_online_test.addWidget(self.devic_online_btn)
+        layout_online_test.addWidget(self.device_state_tips)
+        self.verticalLayout.addLayout(layout_online_test)
+
+        # 提交按钮
         self.submit_button = QtWidgets.QPushButton("提交")
         self.verticalLayout.addWidget(self.submit_button)
-
-    def ota_upload_file(self):
-        # 打开文件选择对话框
-        ota_file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, "选择文件", "", "All Files (*);;Text Files (*.txt)",
-                                                                 options=self.options)
-        if ota_file_name:
-            self.ota_file_path.setText(ota_file_name)
-
-    def aimdm_upload_file(self):
-        # 打开文件选择对话框
-        aimdm_file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, "选择文件", "",
-                                                                   "All Files (*);;Text Files (*.txt)",
-                                                                   options=self.options)
-        if aimdm_file_name:
-            self.aimdm_file_path.setText(aimdm_file_name)
-
-    def tpui_upload_file(self):
-        # 打开文件选择对话框
-        tpui_file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, "选择文件", "",
-                                                                  "All Files (*);;Text Files (*.txt)",
-                                                                  options=self.options)
-        if tpui_file_name:
-            self.tpui_info_file_path.setText(tpui_file_name)
-
-    def onSerialCheckboxStateChanged(self, state):
-        if state == 2:  # 选中状态
-            self.COM_name.setDisabled(False)
-            COMs = self.serial.get_current_COM()
-            print(COMs)
-            if len(COMs) == 0:
-                self.COM_name.setText("")
-                self.COM_name.setDisabled(True)
-                self.err_COM_Tips.setText("没有可用的COM口, 请检查！！！")
-                self.err_COM_Tips.setVisible(True)
-            elif len(COMs) == 1:
-                self.err_COM_Tips.setVisible(False)
-                self.COM_name.setText(COMs[0])
-            else:
-                self.err_COM_Tips.setText("当前多个COM可用, 请输入需测试COM口！！！")
-                self.err_COM_Tips.setVisible(True)
-        else:
-            self.COM_name.setText("")
-            self.err_COM_Tips.setVisible(False)
-            self.COM_name.setDisabled(True)
-
-    def CheckCOMBoxTextChange(self, text):
-        if self.checkbox_serial.isChecked():
-            if len(text) != 0:
-                self.err_COM_Tips.setVisible(False)
-                if text.strip() not in self.serial.get_current_COM():
-                    self.err_COM_Tips.setText("当前COM口不可用，请重新输入！！！")
-                    self.err_COM_Tips.setVisible(True)
-            else:
-                self.err_COM_Tips.setText("请输入可用COM口！！！")
-                self.err_COM_Tips.setVisible(True)
-
-    def onAimdmCheckboxStateChanged(self, state):
-        if state == 2:  # 选中状态
-            self.aimdm_upload_button.setEnabled(True)
-        else:
-            self.aimdm_upload_button.setEnabled(False)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
