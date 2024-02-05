@@ -73,7 +73,7 @@ if __name__ == '__main__':
     shutil.copy(env_path, xml_report_path)
 
     # # 定义测试集
-    allure_list = '--allure-features=MDM_test02_login,RegressionTesting-test'
+    allure_list = '--allure-features=MDM_test02_login,GeneralRegressionTesting-chenr-test'
     # allure_list = '--allure-features=MDM_test02_login11'
     # allure_list = '--allure-stories=MDM_test02_login,MDM-Show'
     # pytest -s --allure-features pytest_debug
