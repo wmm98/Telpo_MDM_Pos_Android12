@@ -1,5 +1,5 @@
 import uiautomator2 as u2
-# # from Common.Shell import Shell
+from Common.Shell import Shell
 # # import time
 # # # from PIL import Image
 # import time
@@ -44,14 +44,21 @@ import uiautomator2 as u2
 #
 
 device = u2.Device()
-# device.screen_off()
-# device.press("power")
-# device.swipe(0.1, 0.9, 0.9, 0.1)
-# device.swipe(0.1, 0.9, 0.9, 0.1)
-# device.unlock()
-print(device.current_app())
-# print(device.current_app())
+
+print(Shell.invoke("adb -s d shell rm /data/update.zip"))
+
+# res = device.shell("rm data/update.zip")
+# print(res)
 #
+# print(device.shell("adb -s d shell ls data"))
+# # device.screen_off()
+# # device.press("power")
+# # device.swipe(0.1, 0.9, 0.9, 0.1)
+# # device.swipe(0.1, 0.9, 0.9, 0.1)
+# # device.unlock()
+# print(device.current_app())
+
+# print(device.current_app())
 # # cmd_send = Shell()
 # # # # #
 # usb_device = u2.connect("d")

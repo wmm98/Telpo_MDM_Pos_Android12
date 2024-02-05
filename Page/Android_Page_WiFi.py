@@ -375,7 +375,8 @@ class AndroidBasePageWiFi(interface):
         return files
 
     def rm_file(self, file_name):
-        self.u2_send_command("rm %s" % file_name)
+        self.send_shell_command("rm %s" % file_name)
+        # self.u2_send_command("rm %s" % file_name)
 
     def del_all_downloaded_apk(self):
         file_list = self.get_download_list()
@@ -405,8 +406,16 @@ class AndroidBasePageWiFi(interface):
 
     def del_updated_zip(self):
         if "update.zip" in self.u2_send_command("ls /sdcard"):
-            print("================存在update文件========================")
+            log.info("*************根目录存在update文件***************")
             self.rm_file("/%s/%s" % (self.get_internal_storage_directory(), "update.zip"))
+            log.info("删除根目录update包")
+
+    def del_data_zip(self):
+        if "update.zip" in self.send_shell_command("ls data"):
+            # self.open_root_auth()
+            log.info("*************data分区存在update文件***************")
+            self.rm_file("/%s/%s" % ("data", "update.zip"))
+            log.info("删除分区update包")
 
     def del_all_downloaded_zip(self):
         file_list = self.get_download_list()
@@ -414,6 +423,7 @@ class AndroidBasePageWiFi(interface):
             for zip_package in self.get_download_list():
                 if "zip" in zip_package:
                     self.rm_file("/%s/aimdm/download/%s" % (self.get_internal_storage_directory(), zip_package))
+                    log.info("删除下载的包：%s" % zip_package)
 
     def download_file_is_existed(self, file_name):
         res = self.u2_send_command(
@@ -460,6 +470,20 @@ class AndroidBasePageWiFi(interface):
         print(result)
         return result
 
+    def calculate_data_updated_sha256_in_device(self, file_name="update.zip"):
+        # sha256sum sdcard/aimdm/data/2023-10-12.txt
+        # 9fb5de71a794b9cb8b8197e6ebfbbc9168176116f7f88aca62b22bbc67c2925a  2023-10-12.txt
+        # res = self.u2_send_command(
+        #     "ls /%s/ |grep %s" % ("data", file_name))
+        res = self.send_shell_command("ls data \"|grep update\"")
+        print(res.split("\n")[0])
+        download_file_name = res.split("\n")[0]
+        cmd = "md5sum /%s/%s" % ("data", download_file_name)
+        print(cmd)
+        result = self.send_shell_command(cmd).split(" ")[0]
+        print(result)
+        return result
+
     def get_internal_storage_directory(self):
         if "aimdm" in self.u2_send_command("ls sdcard/"):
             return "sdcard"
@@ -472,7 +496,6 @@ class AndroidBasePageWiFi(interface):
         sub = self.remove_space(text1)
         string1 = self.remove_space(text2)
         if sub in string1:
-            print("字符串对比")
             return True
         else:
             return True

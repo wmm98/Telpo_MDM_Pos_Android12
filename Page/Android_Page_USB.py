@@ -419,6 +419,7 @@ class AndroidBasePageUSB(interface):
     def open_root_usb(self):
         try:
             res = self.send_adb_command_USB("root")
+            log.info(res)
             if len(res) == 0:
                 return True
             else:
@@ -429,6 +430,7 @@ class AndroidBasePageUSB(interface):
     def open_remount_usb(self):
         try:
             act = self.send_adb_command_USB("remount")
+            log.info(act)
             if self.remove_space("remount succeeded") in self.remove_space(act):
                 return True
             else:
@@ -469,9 +471,9 @@ class AndroidBasePageUSB(interface):
             act = self.open_root_usb()
             if not act:
                 assert False, "@@@@无法root, 请检查！！！"
-            # ret = self.open_remount_usb()
-            # if not ret:
-            #     assert False, "@@@@无法remount, 请检查！！！"
+            ret = self.open_remount_usb()
+            if not ret:
+                assert False, "@@@@无法remount, 请检查！！！"
             self.time_sleep(3)
 
     def get_device_info(self):

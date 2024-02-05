@@ -220,6 +220,7 @@ DictCommandInfo = {
     "待定": AllCertCaseValue.ROOT_OTHER_RATE,
 }
 
+
 class tree(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def __init__(self):
@@ -461,19 +462,26 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
         self.data["MDMTestData"]["android_device_info"]["install_aimdm"] = self.checkbox_mdm.isChecked()
         self.data["MDMTestData"]["android_device_info"]["is_landscape"] = self.checkbox_screen.isChecked()
         if self.checkbox_serial.isChecked():
-            self.data["MDMTestData"]["android_device_info"]["COM"] = self.COM_name.text()
+            self.data["MDMTestData"]["android_device_info"]["COM"] = self.COM_name.currentText()
 
         testcases = []
-        for case in self.data["TestCase"]["General_Test"]:
-            print(case)
-            if self.data["TestCase"]["General_Test"][case] == 2:
-                testcases.append(case)
-        print(",".join(testcases))
+        # for case in self.data["TestCase"]["General_Test"]:
+        #     print(case)
+        #     if self.data["TestCase"]["General_Test"][case] == 2:
+        #         testcases.append(case)
+        for cases in self.data["TestCase"]:
+            print(cases)
+            for case in self.data["TestCase"][cases]:
+                print(case)
+                if self.data["TestCase"][cases][case] == 2:
+                    testcases.append(case)
+        # 保存要跑得用例
+        self.data["run_case"] = ",".join(testcases)
 
         # 保存修改后的内容回 YAML 文件
         with open(self.yaml_file_path, 'w') as file:
             yaml.safe_dump(self.data, file)
-        subprocess.run(["python", "UI_issue.py"])
+        subprocess.run(["python", self.project_path + "\\run.py"])
         self.close()
 
     # 获取所有节点的状态

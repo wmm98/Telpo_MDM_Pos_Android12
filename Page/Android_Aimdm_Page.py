@@ -430,8 +430,8 @@ class AndroidAimdmPage(AndroidBasePageUSB, AndroidBasePageWiFi):
         while True:
             exp_text = self.upper_transfer(self.remove_space(exp))
             act_text = self.upper_transfer(self.remove_space(self.get_msg_tips_text()))
-            print(exp_text)
-            print(act_text)
+            log.info("实际上弹出来的提示：%s" % act_text)
+            log.info("预期弹出来的提示：%s" % exp_text)
             if exp_text == act_text:
                 break
             if self.get_current_time() > self.return_end_time(now_time, timeout):
