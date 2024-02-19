@@ -37,7 +37,7 @@ class TestNetworkCases:
         self.android_mdm_page.del_updated_zip()
         self.android_mdm_page.reboot_device(self.wifi_ip)
 
-    @allure.feature('MDM_usb-test-no-test-now')
+    @allure.feature('LiXiang_Test-case1')
     @allure.story('MDM-Show')
     @allure.title("Apps- 断网重连获取aimdm消耗的流量")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -142,7 +142,7 @@ class TestNetworkCases:
                     self.android_mdm_page.confirm_wifi_status_open()
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('MDM_usb-test')
+    @allure.feature('LiXiang_Test-case2')
     @allure.story('MDM-Show111')
     @allure.title("Apps-限定4G网络推送app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -303,7 +303,7 @@ class TestNetworkCases:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.page.go_to_new_address("apps")
 
-    @allure.feature('MDM_usb-test')
+    @allure.feature('LiXiang_Test-case3')
     @allure.title("Apps-限定WIFI网络推送app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -453,7 +453,7 @@ class TestNetworkCases:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.page.go_to_new_address("apps")
 
-    @allure.feature('MDM_usb-test')
+    @allure.feature('LiXiang_Test-case4')
     @allure.title("OTA-OTA断网重连5次断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -700,7 +700,7 @@ class TestNetworkCases:
                     self.android_mdm_page.reboot_device(self.wifi_ip)
                     self.ota_page.go_to_new_address("devices")
 
-    @allure.feature('MDM_usb-test')
+    @allure.feature('LiXiang_Test-case5')
     @allure.title("Apps-推送低版本的APP/卸载后重新安装")
     @pytest.mark.dependency(name="test_release_app_ok", scope='package')
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -864,7 +864,7 @@ class TestNetworkCases:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.page.go_to_new_address("apps")
 
-    @allure.feature('MDM_usb-test')
+    @allure.feature('LiXiang_Test-case6')
     @allure.title("Apps-推送高版本APP覆盖安装/卸载后检测重新下载/卸载重启检查安装/同版本覆盖安装/低版本覆盖安装")
     @pytest.mark.dependency(depends=["test_release_app_ok"], scope='package')
     # @pytest.mark.flaky(reruns=1, reruns_delay=3)

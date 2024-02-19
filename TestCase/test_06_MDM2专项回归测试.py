@@ -53,7 +53,7 @@ class TestMDM2SpecialPage:
         self.app_page.refresh_page()
         # self.android_mdm_page.reboot_device(self.wifi_ip)
 
-    @allure.feature('MDM2_test')
+    @allure.feature('Special_Test-case0')
     @allure.title("public case-添加 content 种类--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -81,7 +81,7 @@ class TestMDM2SpecialPage:
                     log.info("**********************服务器恢复正常*************************")
                     self.content_page.go_to_new_address("content")
 
-    @allure.feature('MDM2_test')
+    @allure.feature('Special_Test-case0')
     @allure.title("public case-添加 content 文件--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -172,7 +172,7 @@ class TestMDM2SpecialPage:
                     log.info("**********************服务器恢复正常*************************")
                     self.content_page.go_to_new_address("content")
 
-    @allure.feature('MDM2_test')
+    @allure.feature('Special_Test-case1')
     @allure.title("需要测试时回归测试- 系统/应用日志的抓取")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -205,7 +205,7 @@ class TestMDM2SpecialPage:
                     log.info("**********************服务器恢复正常*************************")
                     self.device_page.go_to_new_address("apps")
 
-    @allure.feature('MDM2_test-retest')
+    @allure.feature('Special_Test-case2')
     @allure.story('MDM-Show')
     @allure.title("public case-应用满屏推送--请在附件查看满屏截图效果")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -351,7 +351,7 @@ class TestMDM2SpecialPage:
                     self.android_mdm_page.reboot_device(self.wifi_ip)
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('MDM2_test-test-now')
+    @allure.feature('Special_Test-case3')
     @allure.story('MDM-Show')
     @allure.title("public case-推送壁纸--请在附件查看壁纸截图效果")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -484,7 +484,7 @@ class TestMDM2SpecialPage:
                     self.android_mdm_page.del_all_content_file()
                     self.android_mdm_page.screen_keep_on()
 
-    @allure.feature('MDM2_test')
+    @allure.feature('Special_Test-case4')
     @allure.title("public case- 静默ota升级")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=1)
@@ -630,7 +630,7 @@ class TestMDM2SpecialPage:
                     self.android_mdm_page.del_all_downloaded_zip()
                     self.android_mdm_page.del_updated_zip()
 
-    @allure.feature('MDM2_test-retest-later')
+    @allure.feature('Special_Test-case5')
     @allure.title("Apps-普通应用静默升级")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     # @pytest.mark.flaky(reruns=3, reruns_delay=1)
@@ -752,7 +752,7 @@ class TestMDM2SpecialPage:
                         conf.project_path + "\\Param\\Package\\%s" % test_yml['app_info']['low_version_app'])
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('MDM2_test')
+    @allure.feature('Special_Test-case6')
     @allure.title("public case- 系统应用静默升级/推送安装成功后自动运行app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -921,7 +921,7 @@ class TestMDM2SpecialPage:
                     self.android_mdm_page.confirm_system_app_uninstalled()
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('MDM2_test')
+    @allure.feature('Special_Test-case7')
     @allure.story('MDM-Show111')
     @allure.title("Apps-限定4G网络推送app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -1076,7 +1076,7 @@ class TestMDM2SpecialPage:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('MDM2_test')
+    @allure.feature('Special_Test-case8')
     @allure.title("Apps-限定WIFI网络推送app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -1225,7 +1225,7 @@ class TestMDM2SpecialPage:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('MDM2_test')
+    @allure.feature('Special_Test-case9')
     @allure.title("stability case-文件文件推送成功率-请在报告右侧log文件查看文件文件推送成功率")
     def test_multi_release_content_MDM2(self, del_all_content_release_logs, del_all_content_file):
         # 设置断店续传重启得次数
@@ -1368,7 +1368,7 @@ class TestMDM2SpecialPage:
                 else:
                     self.app_page.recovery_after_service_unavailable("content", case_pack.user_info)
 
-    @allure.feature('MDM2_test-no test now')
+    @allure.feature('Special_Test-case10')
     @allure.title("public case-文件推送-网络恢复断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)

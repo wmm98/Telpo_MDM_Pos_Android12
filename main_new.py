@@ -134,9 +134,9 @@ DictCommandInfo = {
     "A": AllCertCaseValue.ROOT_PROTOCON,
     # STA test case
     "立项测试": AllCertCaseValue.ROOT_PROTOCON_STA_CHILD,
-    "登录连网-辅助测试用例": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0_0,
-    "添加ota升级包--辅助测试用例": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0_1,
-    "添加APK包--辅助测试用例": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0_2,
+    # "登录连网-辅助测试用例": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0_0,
+    # "添加ota升级包--辅助测试用例": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0_1,
+    # "添加APK包--辅助测试用例": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0_2,
     "添加content文件--辅助测试用例": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0_3,
     "断网重连获取aimdm消耗的流量": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0,
     "限定4G网络推送app ": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B1,
@@ -178,9 +178,9 @@ DictCommandInfo = {
 
     # communication performance
     "专项测试": AllCertCaseValue.ROOT_PERFORMANCE_CHILD,
-    "登录连网-辅助测试用例  ": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD_0,
-    "添加ota升级包--辅助测试用例  ": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD_1,
-    "添加APK包--辅助测试用例  ": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD_2,
+    # "登录连网-辅助测试用例  ": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD_0,
+    # "添加ota升级包--辅助测试用例  ": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD_1,
+    # "添加APK包--辅助测试用例  ": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD_2,
     "添加content文件--辅助测试用例  ": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD_3,
     "系统/应用日志的抓取": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD,
     "应用满屏推送": AllCertCaseValue.ROOT_PERFORMANCE_STA_WN_B1,
@@ -199,7 +199,7 @@ DictCommandInfo = {
     # "i": AllCertCaseValue.ROOT_PERFORMANCE_STA_RATE_B2,
 
     "回归测试": AllCertCaseValue.ROOT_PERFORMANCE_CCO_CHILD,
-    "登录连网 - 辅助测试用例": AllCertCaseValue.ROOT_PERFORMANCE_CCO_WN_B0,
+    # "登录连网 - 辅助测试用例": AllCertCaseValue.ROOT_PERFORMANCE_CCO_WN_B0,
     "锁机和解锁  ": AllCertCaseValue.ROOT_PERFORMANCE_CCO_WN_B1,
     "发送设备重启指令：设备重启5次压测": AllCertCaseValue.ROOT_PERFORMANCE_CCO_WN_B2,
     "重置设备TPUI密码": AllCertCaseValue.ROOT_PERFORMANCE_CCO_ANTIPPM_B1,

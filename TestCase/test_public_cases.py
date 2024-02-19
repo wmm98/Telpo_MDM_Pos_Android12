@@ -81,7 +81,7 @@ class TestPublicPage:
                     log.info("**********************服务器恢复正常*************************")
                     self.content_page.go_to_new_address("content")
 
-    @allure.feature('MDM_public')
+    @allure.feature('LiXiang_Test-case0')
     @allure.title("public case-添加 content 文件--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -185,7 +185,7 @@ class TestPublicPage:
                     log.info("**********************服务器恢复正常*************************")
                     self.content_page.go_to_new_address("content")
 
-    @allure.feature('MDM_public')
+    @allure.feature('LiXiang_Test-case14')
     @allure.story('MDM-Show')
     @allure.title("public case-推送壁纸--请在附件查看壁纸截图效果")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -318,7 +318,7 @@ class TestPublicPage:
                     self.android_mdm_page.del_all_content_file()
                     self.android_mdm_page.screen_keep_on()
 
-    @allure.feature('MDM_public')
+    @allure.feature('LiXiang_Test-case15')
     @allure.story('MDM-Show')
     @allure.title("OTA-OTA重启5次断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -472,7 +472,7 @@ class TestPublicPage:
                     self.android_mdm_page.del_updated_zip()
                     self.ota_page.go_to_new_address("ota")
 
-    @allure.feature('MDM_public')
+    @allure.feature('LiXiang_Test-case16')
     @allure.story('MDM-Show')
     @allure.title("public case-应用满屏推送--请在附件查看满屏截图效果")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -615,7 +615,7 @@ class TestPublicPage:
                     self.android_mdm_page.reboot_device(self.wifi_ip)
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('MDM_public')
+    @allure.feature('LiXiang_Test-case17')
     @allure.title("public case-推送text.zip文件")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -710,7 +710,7 @@ class TestPublicPage:
                     self.android_mdm_page.del_all_content_file()
                     self.android_mdm_page.screen_keep_on()
 
-    @allure.feature('MDM_public')
+    @allure.feature('LiXiang_Test-case18')
     @allure.title("public case-多应用推送")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -872,7 +872,7 @@ class TestPublicPage:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('MDM_public')
+    @allure.feature('LiXiang_Test-case19')
     @allure.story('MDM-Show')
     @allure.title("public case-静默卸载正在运行中的app： 静默卸载/卸载正在运行的app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -953,7 +953,7 @@ class TestPublicPage:
                     self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('MDM_public')
+    @allure.feature('LiXiang_Test-case20')
     @allure.title("public case- 静默ota升级")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=1)
@@ -1099,7 +1099,7 @@ class TestPublicPage:
                     self.android_mdm_page.del_all_downloaded_zip()
                     self.android_mdm_page.del_updated_zip()
 
-    @allure.feature('MDM_public')
+    @allure.feature('LiXiang_Test-case21')
     @allure.title("public case- 静默升级系统app/推送安装成功后自动运行app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -1268,7 +1268,7 @@ class TestPublicPage:
                     self.android_mdm_page.confirm_system_app_uninstalled()
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('MDM_public')
+    @allure.feature('LiXiang_Test-case22')
     @allure.title("public case-推送开机logo/动画")
     @allure.story('MDM-Show')
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -1642,7 +1642,7 @@ class TestPublicPage:
                     self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
                     self.device_page.go_to_new_address("devices")
 
-    @allure.feature('MDM_public')
+    @allure.feature('LiXiang_Test-case23')
     @allure.title("Devices- 关机")
     @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_device_shutdown(self, recover_and_login_mdm):

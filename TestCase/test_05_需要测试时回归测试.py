@@ -29,7 +29,7 @@ class TestRegressionTesting:
     def teardown_class(self):
         self.page.refresh_page()
 
-    @allure.feature('RegressionTesting')
+    @allure.feature('Regression_Test-case0')
     @allure.story('MDM-Show')
     @allure.title("需要测试时回归测试- 锁机和解锁")
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -100,7 +100,7 @@ class TestRegressionTesting:
                     log.info("**********************服务器恢复正常*************************")
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('RegressionTesting')
+    @allure.feature('Regression_Test-case1')
     @allure.title("需要测试时回归测试- 发送设备重启指令：设备重启5次")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -162,7 +162,7 @@ class TestRegressionTesting:
                     log.info("**********************服务器恢复正常*************************")
                     self.page.go_to_new_address("apps")
 
-    @allure.feature('RegressionTesting')
+    @allure.feature('Regression_Test-case2')
     @allure.title("需要测试时回归测试- 重置设备TPUI密码")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -209,7 +209,7 @@ class TestRegressionTesting:
                     log.info("**********************服务器恢复正常*************************")
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('RegressionTesting')
+    @allure.feature('Regression_Test-case3')
     @allure.title("需要测试时回归测试- 重置设备密码")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -265,7 +265,7 @@ class TestRegressionTesting:
                     log.info("**********************服务器恢复正常*************************")
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('RegressionTesting')
+    @allure.feature('Regression_Test-case4')
     @allure.title("需要测试时回归测试- AIMDM发消息压力测试")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -375,7 +375,7 @@ class TestRegressionTesting:
         # self.android_mdm_page.device_existed(self.wifi_ip)
         # self.android_mdm_page.device_boot_complete()
 
-    @allure.feature('RegressionTesting')
+    @allure.feature('Regression_Test-case5')
     @allure.title("需要测试时回归测试- 日志的抓取")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -408,7 +408,7 @@ class TestRegressionTesting:
                     log.info("**********************服务器恢复正常*************************")
                     self.page.go_to_new_address("apps")
 
-    @allure.feature('RegressionTesting')
+    @allure.feature('Regression_Test-case6')
     @allure.story('MDM-Show')
     @allure.title("需要测试时回归测试- 断网重连压测消耗流量情况")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -515,7 +515,7 @@ class TestRegressionTesting:
                     self.android_mdm_page.confirm_wifi_status_open()
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('RegressionTesting')
+    @allure.feature('Regression_Test-case7')
     @allure.story('MDM-Show')
     @allure.title("需要测试时回归测试- 断网重连静默升级app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -677,7 +677,7 @@ class TestRegressionTesting:
                     self.android_mdm_page.confirm_wifi_status_open()
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('RegressionTesting')
+    @allure.feature('Regression_Test-case8')
     @allure.title("Devices- 关机")
     @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_device_shutdown_regression(self, recover_and_login_mdm):

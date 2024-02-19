@@ -32,7 +32,7 @@ class TestDevicesPage:
     def teardown_class(self):
         self.page.refresh_page()
 
-    @allure.feature('MDM_device_test')
+    @allure.feature('LiXiang_Test-case7')
     @allure.story('MDM-Show')
     @allure.title("Devices- 锁机和解锁")
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -103,7 +103,7 @@ class TestDevicesPage:
                     log.info("**********************服务器恢复正常*************************")
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('MDM_device_test')
+    @allure.feature('LiXiang_Test-case8')
     @allure.title("Devices- 发送设备重启指令：设备重启5次")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -164,7 +164,7 @@ class TestDevicesPage:
                     log.info("**********************服务器恢复正常*************************")
                     self.page.go_to_new_address("apps")
 
-    @allure.feature('MDM_device_test')
+    @allure.feature('LiXiang_Test-case9')
     @allure.title("Devices- 重置设备TPUI密码")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -211,7 +211,7 @@ class TestDevicesPage:
                     log.info("**********************服务器恢复正常*************************")
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('MDM_device_test')
+    @allure.feature('LiXiang_Test-case10')
     @allure.title("Devices- 重置设备密码")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -267,7 +267,7 @@ class TestDevicesPage:
                     log.info("**********************服务器恢复正常*************************")
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('MDM_device_test')
+    @allure.feature('LiXiang_Test-case11')
     @allure.title("Devices- AIMDM发消息压力测试")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -376,7 +376,7 @@ class TestDevicesPage:
         # self.android_mdm_page.device_existed(self.wifi_ip)
         # self.android_mdm_page.device_boot_complete()
 
-    @allure.feature('MDM_device_test')
+    @allure.feature('LiXiang_Test-case12')
     @allure.story('MDM-Show')
     @allure.title("Devices- AIMDM 切换正式测试服服务api ")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -628,7 +628,7 @@ class TestDevicesPage:
                     self.android_mdm_page.reboot_device(self.wifi_ip)
                     self.page.go_to_new_address("devices")
 
-    @allure.feature('MDM_device_test')
+    @allure.feature('LiXiang_Test-case13')
     @allure.title("Devices- 日志的抓取")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
