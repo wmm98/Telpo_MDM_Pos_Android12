@@ -46,13 +46,13 @@ if __name__ == '__main__':
     # connect adb first
     device = ClientConnect()
     device.connect_device(test_info['android_device_info']['device_name'])
-    # device.screen_keep_alive(test_info['android_device_info']['never_sleep_command'])
+
     # check current firmware version
-    destination_version = test_info['ota_packages_info']['package_name'].split("-")[-1][:-4]
-    current_firmware_version = shell.invoke("adb -s %s shell getprop ro.product.version" % test_info['android_device_info']['device_name'])
-    alert_value = AlertData().get_yes_or_no("当前设备的固件为：%s,目标升级固件为：%s, 是否继续？" % (current_firmware_version, destination_version))
-    if "否" in alert_value:
-        sys.exit()
+    # destination_version = test_info['ota_packages_info']['package_name'].split("-")[-1][:-4]
+    # current_firmware_version = shell.invoke("adb -s %s shell getprop ro.product.version" % test_info['android_device_info']['device_name'])
+    # alert_value = AlertData().get_yes_or_no("当前设备的固件为：%s,目标升级固件为：%s, 是否继续？" % (current_firmware_version, destination_version))
+    # if "否" in alert_value:
+    #     sys.exit()
         # raise Exception("用户终止执行")
     # AlertData().getAlert("请插上流量卡，请打开同一网段的wifi，茶上流量卡后请关掉弹框")
 
@@ -73,7 +73,8 @@ if __name__ == '__main__':
     shutil.copy(env_path, xml_report_path)
 
     # # 定义测试集
-    allure_list = '--allure-features=MDM_test02_login,GeneralRegressionTesting-chenr-test'
+    allure_list = '--allure-features=MDM_test02_login,%s' % conf.get_yaml_data()["Run_Cases"]
+    log.info("测试集为%s" % allure_list)
     # allure_list = '--allure-features=MDM_test02_login11'
     # allure_list = '--allure-stories=MDM_test02_login,MDM-Show'
     # pytest -s --allure-features pytest_debug

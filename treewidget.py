@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
     options = QtWidgets.QFileDialog.Options()
     options |= QtWidgets.QFileDialog.ReadOnly
     project_path = os.getcwd()
-    print(project_path)
+    # print(project_path)
 
     yaml_file_path = project_path + "\\Conf\\test_data.yaml"
     # 加载 YAML 文件

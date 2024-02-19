@@ -163,9 +163,9 @@ DictCommandInfo = {
 
     # CCO test case
     "一般性测试": AllCertCaseValue.ROOT_PROTOCON_CCO_CHILD,
-    "登录连网-辅助测试用例 ": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0_0,
-    "添加ota升级包--辅助测试用例 ": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0_1,
-    "添加APK包--辅助测试用例 ": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0_2,
+    # "登录连网-辅助测试用例 ": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0_0,
+    # "添加ota升级包--辅助测试用例 ": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0_1,
+    # "添加APK包--辅助测试用例 ": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0_2,
     "OTA断网重连次断点续传": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0,
     "OTA重启断点续传": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B1,
     "OTA升级": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B2,
@@ -216,8 +216,8 @@ DictCommandInfo = {
     # "x": AllCertCaseValue.ROOT_PERFORMANCE_CCO_RATE_B2,
 
     # other test case
-    "稳定性测试": AllCertCaseValue.ROOT_OTHER_CHILD,
-    "待定": AllCertCaseValue.ROOT_OTHER_RATE,
+    "压测": AllCertCaseValue.ROOT_OTHER_CHILD,
+    "OTA下载拷贝校验完整性压测": AllCertCaseValue.ROOT_OTHER_RATE,
 }
 
 
@@ -344,7 +344,12 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
             if COM_name.strip() in self.serial.get_current_COM():
                 self.serial.loginSer(COM_name)
                 if self.serial.check_usb_adb_connect_serial(device_name):
-                    self.device_state_tips.setText("设备%s在线！" % device_name)
+                    current_firmware_version = self.serial.invoke(
+                        "adb -s %s shell getprop ro.product.version" % self.data["MDMTestData"]['android_device_info'][
+                            'device_name'])
+                    destination_version = self.ota_file_path.text().split("-")[-1][:-4]
+                    self.device_state_tips.setText("设备当前的版本：%s, 目标版本为：%s" % (
+                    self.serial.remove_space(current_firmware_version), destination_version))
                     self.device_state_tips.setVisible(True)
                 else:
                     self.device_state_tips.setText("设备%s不在线， 请再次测试！！！" % device_name)
@@ -356,7 +361,12 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             # 不需要串口的情况下
             if self.serial.check_usb_adb_connect_no_serial(device_name):
-                self.device_state_tips.setText("设备%s在线！" % device_name)
+                current_firmware_version = self.serial.invoke(
+                    "adb -s %s shell getprop ro.product.version" % self.data["MDMTestData"]['android_device_info'][
+                        'device_name'])
+                destination_version = self.ota_file_path.text().split("-")[-1][:-4]
+                self.device_state_tips.setText(
+                    "设备当前的版本：%s, 目标版本为：%s" % (self.serial.remove_space(current_firmware_version), destination_version))
                 self.device_state_tips.setVisible(True)
             else:
                 self.device_state_tips.setText("设备%s不在线， 请再次测试！！！" % device_name)
@@ -410,6 +420,13 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
                 i = 0
                 for child in slave['children']:
                     self.data["TestCase"]["Stability_Test"]["Stability_Test-case%d" % i] = int(child["status"])
+                    i += 1
+            elif slave["text"] == '压测':
+                if "Pressure_Test" not in self.data["TestCase"]:
+                    self.data["TestCase"]["Pressure_Test"] = {}
+                i = 0
+                for child in slave['children']:
+                    self.data["TestCase"]["Pressure_Test"]["Pressure_Test-case%d" % i] = int(child["status"])
                     i += 1
 
         # # 拷贝上传的文件并且改变yaml 里字段的值
@@ -469,9 +486,13 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
             for case in self.data["TestCase"][cases]:
                 if self.data["TestCase"][cases][case] == 2:
                     testcases.append(case)
+        # 检测用例为非空
+        if len(testcases) == 0:
+            self.get_message_box("请勾选需要测试的用例！！！")
+            return
         # 保存要跑得用例
-        self.data["run_case"] = ",".join(testcases)
-
+        self.data["Run_Cases"] = ",".join(testcases)
+        # 需要测试的数据：General_Test - case0, General_Test - case4, General_Test - case5, General_Test - case6
         # 保存修改后的内容回 YAML 文件
         with open(self.yaml_file_path, 'w') as file:
             yaml.safe_dump(self.data, file)

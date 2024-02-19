@@ -36,8 +36,8 @@ class TestGeneralRegressionTesting:
         self.android_mdm_page.del_updated_zip()
         self.android_mdm_page.reboot_device(self.wifi_ip)
 
-    @allure.feature('GeneralRegressionTesting-chenr-test')
-    @allure.title("OTA-OTA 下载拷贝校验完整性")
+    @allure.feature('Pressure_Test-case0')
+    @allure.title("OTA - OTA下载拷贝校验完整性压测")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     # @pytest.mark.flaky(reruns=2, reruns_delay=3)
     # @pytest.mark.repeat(200)
@@ -292,8 +292,8 @@ class TestGeneralRegressionTesting:
                 self.android_mdm_page.del_all_downloaded_zip()
                 self.android_mdm_page.confirm_wifi_btn_open()
 
-    @allure.feature('GeneralRegressionTesting')
-    @allure.title("OTA-断网断点续传")
+    @allure.feature('General_Test-case0')
+    @allure.title("OTA-断网重连断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
     def test_OTA_package_general_regression_04(self, recover_and_login_mdm, fake_ota_package_operation,
@@ -479,7 +479,7 @@ class TestGeneralRegressionTesting:
                     self.android_mdm_page.del_updated_zip()
                     self.ota_page.go_to_new_address("ota")
 
-    @allure.feature('GeneralRegressionTesting')
+    @allure.feature('General_Test-case1')
     @allure.story('MDM-Show')
     @allure.title("一般性回归测试-OTA重启断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -634,7 +634,7 @@ class TestGeneralRegressionTesting:
                     self.android_mdm_page.del_updated_zip()
                     self.ota_page.go_to_new_address("ota")
 
-    @allure.feature('GeneralRegressionTesting')
+    @allure.feature('General_Test-case2')
     @allure.story('MDM-Show')
     @allure.title("一般性回归测试-OTA升级")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -786,7 +786,7 @@ class TestGeneralRegressionTesting:
                     self.android_mdm_page.del_updated_zip()
                     self.ota_page.go_to_new_address("ota")
 
-    @allure.feature('GeneralRegressionTesting')
+    @allure.feature('General_Test-case3')
     @allure.title("一般性回归测试-推送低版本的APP/卸载后重新安装")
     @pytest.mark.dependency(name="test_release_app_ok", scope='package')
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -952,7 +952,7 @@ class TestGeneralRegressionTesting:
                     self.android_mdm_page.uninstall_multi_apps(test_yml["app_info"])
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('GeneralRegressionTesting')
+    @allure.feature('General_Test-case4')
     @allure.title("一般性回归测试-推送高版本APP覆盖安装/卸载后检测重新下载/卸载重启检查安装/同版本覆盖安装/低版本覆盖安装")
     # @pytest.mark.dependency(depends=["test_release_app_ok"], scope='package')
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -1182,7 +1182,7 @@ class TestGeneralRegressionTesting:
                         conf.project_path + "\\Param\\Package\\%s" % test_yml['app_info']['low_version_app'])
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('GeneralRegressionTesting')
+    @allure.feature('General_Test-case5')
     @allure.title("一般性回归测试 - 静默升级系统app/推送安装成功后自动运行app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
@@ -1353,7 +1353,7 @@ class TestGeneralRegressionTesting:
                     self.android_mdm_page.confirm_system_app_uninstalled()
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('GeneralRegressionTesting')
+    @allure.feature('General_Test-case6')
     @allure.story('MDM-Show')
     @allure.title("一般性回归测试-静默卸载正在运行中的app：静默卸载/卸载正在运行的app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -1435,7 +1435,7 @@ class TestGeneralRegressionTesting:
                     self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
                     self.app_page.go_to_new_address("apps")
 
-    @allure.feature('GeneralRegressionTesting')
+    @allure.feature('General_Test-case7')
     @allure.story('MDM-Show')
     @allure.title("一般性回归测试- AIMDM切换正式测试服服务api ")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -1689,7 +1689,7 @@ class TestGeneralRegressionTesting:
                     self.android_mdm_page.reboot_device(self.wifi_ip)
                     self.device_page.go_to_new_address("devices")
 
-    @allure.feature('GeneralRegressionTesting')
+    @allure.feature('General_Test-case8')
     @allure.title("Devices- 日志的抓取")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=3, reruns_delay=3)
