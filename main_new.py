@@ -345,11 +345,10 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.serial.loginSer(COM_name)
                 if self.serial.check_usb_adb_connect_serial(device_name):
                     current_firmware_version = self.serial.invoke(
-                        "adb -s %s shell getprop ro.product.version" % self.data["MDMTestData"]['android_device_info'][
-                            'device_name'])
+                        "adb -s %s shell getprop ro.product.version" % self.edit_device_name.text())
                     destination_version = self.ota_file_path.text().split("-")[-1][:-4]
                     self.device_state_tips.setText("设备当前的版本：%s, 目标版本为：%s" % (
-                    self.serial.remove_space(current_firmware_version), destination_version))
+                        self.serial.remove_space(current_firmware_version), destination_version))
                     self.device_state_tips.setVisible(True)
                 else:
                     self.device_state_tips.setText("设备%s不在线， 请再次测试！！！" % device_name)
@@ -362,8 +361,7 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
             # 不需要串口的情况下
             if self.serial.check_usb_adb_connect_no_serial(device_name):
                 current_firmware_version = self.serial.invoke(
-                    "adb -s %s shell getprop ro.product.version" % self.data["MDMTestData"]['android_device_info'][
-                        'device_name'])
+                    "adb -s %s shell getprop ro.product.version" % self.edit_device_name.text())
                 destination_version = self.ota_file_path.text().split("-")[-1][:-4]
                 self.device_state_tips.setText(
                     "设备当前的版本：%s, 目标版本为：%s" % (self.serial.remove_space(current_firmware_version), destination_version))
@@ -472,6 +470,16 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
             if self.checkbox_mdm.isChecked():
                 self.get_message_box("请上传aimdm软件!")
                 return
+
+        # 修改用户信息
+        self.data["MDMTestData"]["website_info"]["test_url"] = self.test_url_edit.text()
+        self.data["MDMTestData"]["website_info"]["test_api"] = self.test_api_edit.text()
+        self.data["MDMTestData"]["website_info"]["test_user"] = self.test_user_edit.text()
+        self.data["MDMTestData"]["website_info"]["test_password"] = self.test_psw_edit.text()
+        self.data["MDMTestData"]["website_info"]["release_url"] = self.release_url_edit.text()
+        self.data["MDMTestData"]["website_info"]["release_api"] = self.release_api_edit.text()
+        self.data["MDMTestData"]["website_info"]["release_user"] = self.release_edit.text()
+        self.data["MDMTestData"]["website_info"]["release_password"] = self.release_psw_edit.text()
 
         # 检设备名字，检查check box 属性
         self.data["MDMTestData"]["android_device_info"]["device_name"] = self.edit_device_name.text()
