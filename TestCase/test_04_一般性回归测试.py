@@ -225,23 +225,25 @@ class TestGeneralRegressionTesting:
 
                 # 检测data 分区的update包
                 # 对比 update包
-                now_time = self.ota_page.get_current_time()
-                self.android_mdm_page.open_root_auth_usb()
-                while True:
-                    if "update.zip" in self.android_mdm_page.send_shell_command("ls data"):
-                        data_updated_hash_value = self.android_mdm_page.calculate_data_updated_sha256_in_device()
-                        log.info("检测到data 分区 有update包")
-                        log.info("update.zip 包的md5值为： %s" % data_updated_hash_value)
-                        if data_updated_hash_value == act_ota_package_hash_value:
-                            log.info("分区拷贝的update 包完整性一致")
-                            break
-                    if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 60):
-                        err_msg = "@@@@ 5分钟内分钟后还没有拷贝完相应update.zip包到data分区， 请检查！！！"
-                        log.error(err_msg)
-                        # assert False, err_msg
-                        raise Exception("stop3")
-                    self.ota_page.time_sleep(3)
-                log.info("**********data 分区update 包拷贝完成**************************")
+                # 如果是金融或者user版本， 不检测data分区
+                if self.android_mdm_page.get_device_info()['model'] not in ['P8']:
+                    now_time = self.ota_page.get_current_time()
+                    self.android_mdm_page.open_root_auth_usb()
+                    while True:
+                        if "update.zip" in self.android_mdm_page.send_shell_command("ls data"):
+                            data_updated_hash_value = self.android_mdm_page.calculate_data_updated_sha256_in_device()
+                            log.info("检测到data 分区 有update包")
+                            log.info("update.zip 包的md5值为： %s" % data_updated_hash_value)
+                            if data_updated_hash_value == act_ota_package_hash_value:
+                                log.info("分区拷贝的update 包完整性一致")
+                                break
+                        if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 60):
+                            err_msg = "@@@@ 5分钟内分钟后还没有拷贝完相应update.zip包到data分区， 请检查！！！"
+                            log.error(err_msg)
+                            # assert False, err_msg
+                            raise Exception("stop3")
+                        self.ota_page.time_sleep(3)
+                    log.info("**********data 分区update 包拷贝完成**************************")
 
                 pass_flag += 1
                 log.info("************900P: md5值检测通过%d次*****************" % pass_flag)

@@ -26,8 +26,10 @@ class Ui_MainWindow(object):
     serial = UI_Serial.Serial()
     options = QtWidgets.QFileDialog.Options()
     options |= QtWidgets.QFileDialog.ReadOnly
-    project_path = str(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
-    yaml_file_path = project_path + "\\Conf\\test_ui.yaml"
+    project_path = os.getcwd()
+    # print(project_path)
+
+    yaml_file_path = project_path + "\\Conf\\test_data.yaml"
     # 加载 YAML 文件
     with open(yaml_file_path, 'r') as file:
         data = yaml.safe_load(file)

@@ -458,6 +458,8 @@ class AndroidBasePageUSB(interface):
                 if not ret1:
                     assert False, "@@@@无法remount, 请检查！！！"
                 self.time_sleep(3)
+            if self.get_device_info()['model'] in ['P8']:
+                pass
             else:
                 act = self.open_root_usb()
                 if not act:
@@ -468,12 +470,15 @@ class AndroidBasePageUSB(interface):
                     assert False, "@@@@无法remount, 请检查！！！"
                 self.time_sleep(3)
         else:
-            act = self.open_root_usb()
-            if not act:
-                assert False, "@@@@无法root, 请检查！！！"
-            ret = self.open_remount_usb()
-            if not ret:
-                assert False, "@@@@无法remount, 请检查！！！"
+            if self.get_device_info()['model'] in ['P8']:
+                pass
+            else:
+                act = self.open_root_usb()
+                if not act:
+                    assert False, "@@@@无法root, 请检查！！！"
+                ret = self.open_remount_usb()
+                if not ret:
+                    assert False, "@@@@无法remount, 请检查！！！"
             self.time_sleep(3)
 
     def get_device_info(self):

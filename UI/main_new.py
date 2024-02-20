@@ -134,9 +134,9 @@ DictCommandInfo = {
     "A": AllCertCaseValue.ROOT_PROTOCON,
     # STA test case
     "立项测试": AllCertCaseValue.ROOT_PROTOCON_STA_CHILD,
-    "登录连网-辅助测试用例": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0_0,
-    "添加ota升级包--辅助测试用例": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0_1,
-    "添加APK包--辅助测试用例": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0_2,
+    # "登录连网-辅助测试用例": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0_0,
+    # "添加ota升级包--辅助测试用例": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0_1,
+    # "添加APK包--辅助测试用例": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0_2,
     "添加content文件--辅助测试用例": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0_3,
     "断网重连获取aimdm消耗的流量": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B0,
     "限定4G网络推送app ": AllCertCaseValue.ROOT_PROTOCON_STA_TMISCAN_B1,
@@ -163,9 +163,9 @@ DictCommandInfo = {
 
     # CCO test case
     "一般性测试": AllCertCaseValue.ROOT_PROTOCON_CCO_CHILD,
-    "登录连网-辅助测试用例 ": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0_0,
-    "添加ota升级包--辅助测试用例 ": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0_1,
-    "添加APK包--辅助测试用例 ": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0_2,
+    # "登录连网-辅助测试用例 ": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0_0,
+    # "添加ota升级包--辅助测试用例 ": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0_1,
+    # "添加APK包--辅助测试用例 ": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0_2,
     "OTA断网重连次断点续传": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B0,
     "OTA重启断点续传": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B1,
     "OTA升级": AllCertCaseValue.ROOT_PROTOCON_CCO_TMISCAN_B2,
@@ -178,9 +178,9 @@ DictCommandInfo = {
 
     # communication performance
     "专项测试": AllCertCaseValue.ROOT_PERFORMANCE_CHILD,
-    "登录连网-辅助测试用例  ": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD_0,
-    "添加ota升级包--辅助测试用例  ": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD_1,
-    "添加APK包--辅助测试用例  ": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD_2,
+    # "登录连网-辅助测试用例  ": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD_0,
+    # "添加ota升级包--辅助测试用例  ": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD_1,
+    # "添加APK包--辅助测试用例  ": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD_2,
     "添加content文件--辅助测试用例  ": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD_3,
     "系统/应用日志的抓取": AllCertCaseValue.ROOT_PERFORMANCE_STA_CHILD,
     "应用满屏推送": AllCertCaseValue.ROOT_PERFORMANCE_STA_WN_B1,
@@ -199,7 +199,7 @@ DictCommandInfo = {
     # "i": AllCertCaseValue.ROOT_PERFORMANCE_STA_RATE_B2,
 
     "回归测试": AllCertCaseValue.ROOT_PERFORMANCE_CCO_CHILD,
-    "登录连网 - 辅助测试用例": AllCertCaseValue.ROOT_PERFORMANCE_CCO_WN_B0,
+    # "登录连网 - 辅助测试用例": AllCertCaseValue.ROOT_PERFORMANCE_CCO_WN_B0,
     "锁机和解锁  ": AllCertCaseValue.ROOT_PERFORMANCE_CCO_WN_B1,
     "发送设备重启指令：设备重启5次压测": AllCertCaseValue.ROOT_PERFORMANCE_CCO_WN_B2,
     "重置设备TPUI密码": AllCertCaseValue.ROOT_PERFORMANCE_CCO_ANTIPPM_B1,
@@ -216,8 +216,8 @@ DictCommandInfo = {
     # "x": AllCertCaseValue.ROOT_PERFORMANCE_CCO_RATE_B2,
 
     # other test case
-    "稳定性测试": AllCertCaseValue.ROOT_OTHER_CHILD,
-    "待定": AllCertCaseValue.ROOT_OTHER_RATE,
+    "压测": AllCertCaseValue.ROOT_OTHER_CHILD,
+    "OTA下载拷贝校验完整性压测": AllCertCaseValue.ROOT_OTHER_RATE,
 }
 
 
@@ -344,7 +344,11 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
             if COM_name.strip() in self.serial.get_current_COM():
                 self.serial.loginSer(COM_name)
                 if self.serial.check_usb_adb_connect_serial(device_name):
-                    self.device_state_tips.setText("设备%s在线！" % device_name)
+                    current_firmware_version = self.serial.invoke(
+                        "adb -s %s shell getprop ro.product.version" % self.edit_device_name.text())
+                    destination_version = self.ota_file_path.text().split("-")[-1][:-4]
+                    self.device_state_tips.setText("设备当前的版本：%s, 目标版本为：%s" % (
+                        self.serial.remove_space(current_firmware_version), destination_version))
                     self.device_state_tips.setVisible(True)
                 else:
                     self.device_state_tips.setText("设备%s不在线， 请再次测试！！！" % device_name)
@@ -356,7 +360,11 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             # 不需要串口的情况下
             if self.serial.check_usb_adb_connect_no_serial(device_name):
-                self.device_state_tips.setText("设备%s在线！" % device_name)
+                current_firmware_version = self.serial.invoke(
+                    "adb -s %s shell getprop ro.product.version" % self.edit_device_name.text())
+                destination_version = self.ota_file_path.text().split("-")[-1][:-4]
+                self.device_state_tips.setText(
+                    "设备当前的版本：%s, 目标版本为：%s" % (self.serial.remove_space(current_firmware_version), destination_version))
                 self.device_state_tips.setVisible(True)
             else:
                 self.device_state_tips.setText("设备%s不在线， 请再次测试！！！" % device_name)
@@ -411,6 +419,13 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
                 for child in slave['children']:
                     self.data["TestCase"]["Stability_Test"]["Stability_Test-case%d" % i] = int(child["status"])
                     i += 1
+            elif slave["text"] == '压测':
+                if "Pressure_Test" not in self.data["TestCase"]:
+                    self.data["TestCase"]["Pressure_Test"] = {}
+                i = 0
+                for child in slave['children']:
+                    self.data["TestCase"]["Pressure_Test"]["Pressure_Test-case%d" % i] = int(child["status"])
+                    i += 1
 
         # # 拷贝上传的文件并且改变yaml 里字段的值
         package_path = self.project_path + "\\Param\\Package\\"
@@ -456,6 +471,16 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.get_message_box("请上传aimdm软件!")
                 return
 
+        # 修改用户信息
+        self.data["MDMTestData"]["website_info"]["test_url"] = self.test_url_edit.text()
+        self.data["MDMTestData"]["website_info"]["test_api"] = self.test_api_edit.text()
+        self.data["MDMTestData"]["website_info"]["test_user"] = self.test_user_edit.text()
+        self.data["MDMTestData"]["website_info"]["test_password"] = self.test_psw_edit.text()
+        self.data["MDMTestData"]["website_info"]["release_url"] = self.release_url_edit.text()
+        self.data["MDMTestData"]["website_info"]["release_api"] = self.release_api_edit.text()
+        self.data["MDMTestData"]["website_info"]["release_user"] = self.release_edit.text()
+        self.data["MDMTestData"]["website_info"]["release_password"] = self.release_psw_edit.text()
+
         # 检设备名字，检查check box 属性
         self.data["MDMTestData"]["android_device_info"]["device_name"] = self.edit_device_name.text()
         self.data["MDMTestData"]["android_device_info"]["is_serial"] = self.checkbox_serial.isChecked()
@@ -465,24 +490,22 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
             self.data["MDMTestData"]["android_device_info"]["COM"] = self.COM_name.currentText()
 
         testcases = []
-        # for case in self.data["TestCase"]["General_Test"]:
-        #     print(case)
-        #     if self.data["TestCase"]["General_Test"][case] == 2:
-        #         testcases.append(case)
         for cases in self.data["TestCase"]:
-            print(cases)
             for case in self.data["TestCase"][cases]:
-                print(case)
                 if self.data["TestCase"][cases][case] == 2:
                     testcases.append(case)
+        # 检测用例为非空
+        if len(testcases) == 0:
+            self.get_message_box("请勾选需要测试的用例！！！")
+            return
         # 保存要跑得用例
-        self.data["run_case"] = ",".join(testcases)
-
+        self.data["Run_Cases"] = ",".join(testcases)
+        # 需要测试的数据：General_Test - case0, General_Test - case4, General_Test - case5, General_Test - case6
         # 保存修改后的内容回 YAML 文件
         with open(self.yaml_file_path, 'w') as file:
             yaml.safe_dump(self.data, file)
-        subprocess.run(["python", self.project_path + "\\run.py"])
         self.close()
+        subprocess.run(["python", self.project_path + "\\run.py"])
 
     # 获取所有节点的状态
     def get_tree_item_status(self, tree_item):
