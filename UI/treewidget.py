@@ -20,13 +20,15 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import QStringListModel
 from PyQt5.QtWidgets import QHBoxLayout, QCheckBox, QLineEdit, QCompleter, QComboBox
 import UI_Serial
-
+# from Conf.Config import Config
 
 class Ui_MainWindow(object):
     serial = UI_Serial.Serial()
     options = QtWidgets.QFileDialog.Options()
     options |= QtWidgets.QFileDialog.ReadOnly
-    project_path = os.getcwd()
+    # project_path = os.getcwd()
+    project_path = path_dir = str(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
+    print("当前的测试路劲：%s" % project_path)
     # print(project_path)
 
     yaml_file_path = project_path + "\\Conf\\test_data.yaml"

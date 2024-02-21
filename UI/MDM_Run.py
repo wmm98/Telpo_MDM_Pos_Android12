@@ -505,7 +505,7 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
         with open(self.yaml_file_path, 'w') as file:
             yaml.safe_dump(self.data, file)
         self.close()
-        subprocess.run(["python", self.project_path + "\\run.py"])
+        subprocess.run([self.project_path + "\\run.bat"])
 
     # 获取所有节点的状态
     def get_tree_item_status(self, tree_item):

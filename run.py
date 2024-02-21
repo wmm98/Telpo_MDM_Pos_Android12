@@ -29,7 +29,7 @@ if __name__ == '__main__':
     # update venv
     shell = Shell.Shell()
     conf = Config.Config()
-    shell.invoke(conf.conf_path + "\\update_venv.bat")
+    # shell.invoke(conf.conf_path + "\\update_venv.bat")
     # init config file
 
     conf.load_yaml_data()
