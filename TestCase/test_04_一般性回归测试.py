@@ -27,6 +27,7 @@ class TestGeneralRegressionTesting:
         self.android_mdm_page.uninstall_multi_apps(test_yml['app_info'])
         self.android_mdm_page.del_updated_zip()
         self.device_sn = self.android_mdm_page.get_device_sn()
+        self.pass_flag = 0
 
     def teardown_class(self):
         # pass
@@ -39,15 +40,15 @@ class TestGeneralRegressionTesting:
     @allure.feature('Pressure_Test-case0')
     @allure.title("OTA - OTA下载拷贝校验完整性压测")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    # @pytest.mark.flaky(reruns=2, reruns_delay=3)
-    # @pytest.mark.repeat(200)
+    @pytest.mark.flaky(reruns=300, reruns_delay=3)
     def test_OTA_package_general_regression_01(self, recover_and_login_mdm, real_ota_package_operation,
                                                connect_wifi_adb_USB, del_all_ota_release_log,
                                                delete_ota_package_relate):
-        pass_flag = 0
+
         while True:
             try:
                 self.ota_page.delete_all_ota_release_log()
+                self.android_mdm_page.confirm_usb_adb_connect(self.wifi_ip)
                 self.android_mdm_page.open_root_auth_usb()
                 self.android_mdm_page.del_data_zip()
                 self.android_mdm_page.del_updated_zip()
@@ -245,13 +246,12 @@ class TestGeneralRegressionTesting:
                         self.ota_page.time_sleep(3)
                     log.info("**********data 分区update 包拷贝完成**************************")
 
-                pass_flag += 1
-                log.info("************900P: md5值检测通过%d次*****************" % pass_flag)
+                self.pass_flag += 1
+                log.info("************900P: md5值检测通过%d次*****************" % self.pass_flag)
                 log.info("*******************OTA-OTA 下载拷贝校验完整性用例结束***************************")
                 log.info("****************************ota升级升级包下载完成***************************")
-                # break
-                # assert False, "************只是重跑的标志*****************"
             except Exception as e:
+                log.info("捕捉到的异常：%s" % str(e))
                 if self.ota_page.service_is_normal("ota", case_pack.user_info):
                     if self.android_mdm_page.mdm_msg_alert_show():
                         text = self.android_mdm_page.get_msg_tips_text()
@@ -270,6 +270,7 @@ class TestGeneralRegressionTesting:
                         raise Exception("900P data分区update包MD5值有问题，请检查！！！")
                     else:
                         self.ota_page.delete_all_ota_release_log()
+                        self.android_mdm_page.confirm_usb_adb_connect(self.wifi_ip)
                         self.android_mdm_page.open_root_auth_usb()
                         self.android_mdm_page.del_data_zip()
                         self.android_mdm_page.del_updated_zip()
@@ -277,6 +278,7 @@ class TestGeneralRegressionTesting:
                         self.android_mdm_page.confirm_wifi_btn_open()
                         # assert False, e
                 else:
+                    self.android_mdm_page.confirm_usb_adb_connect(self.wifi_ip)
                     self.android_mdm_page.confirm_wifi_status_open()
                     self.android_mdm_page.confirm_wifi_adb_connected(self.wifi_ip)
                     log.info("**********************检测到服务器503***********************")
@@ -286,13 +288,6 @@ class TestGeneralRegressionTesting:
                     self.android_mdm_page.del_all_downloaded_zip()
                     self.android_mdm_page.del_updated_zip()
                     self.ota_page.go_to_new_address("ota")
-
-                self.ota_page.delete_all_ota_release_log()
-                self.android_mdm_page.open_root_auth_usb()
-                self.android_mdm_page.del_data_zip()
-                self.android_mdm_page.del_updated_zip()
-                self.android_mdm_page.del_all_downloaded_zip()
-                self.android_mdm_page.confirm_wifi_btn_open()
 
     @allure.feature('General_Test-case0')
     @allure.title("OTA-断网重连断点续传")

@@ -249,12 +249,14 @@ class AndroidBasePageUSB(interface):
 
     def u2_send_command_USB(self, cmd):
         try:
-            print(cmd)
+            log.info(cmd)
             res = self.USB_client.shell(cmd, timeout=120).output
-            print(res)
+            log.info(res)
             return res
+        except RuntimeError as e:
+            log.error(e)
         except Exception as e:
-            print(e)
+            log.error(str(e))
         # except TypeError:
         #     raise Exception("@@@@传入的指令无效！！！")
         # except RuntimeError:

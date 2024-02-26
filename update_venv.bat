@@ -1,27 +1,17 @@
 cd /d %~dp0
 
-set VENV_DIR=myvenv
+::安装poetry
+pip install poetry -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
 
-:: 检查虚拟环境是否已存在
-IF EXIST "%VENV_DIR%" (
-  echo 虚拟环境已存在，跳过创建步骤
-) ELSE (
-  echo 创建虚拟环境...
-  python -m venv %VENV_DIR%
-)
+set VENV_NAME=poetry_venv
 
-:: 激活虚拟环境
-call %VENV_DIR%\Scripts\activate.bat
+echo Creating virtual environment...
+if not exist "%VENV_NAME%" poetry config virtualenvs.path %CD%\%VENV_NAME%
+poetry env use python
+echo Virtual environment created at %CD%\%VENV_NAME%
 
-:: 继续执行其他操作，例如安装依赖、运行 Python 脚本等
-:: 安装依赖
-pip install -r requirements.txt
-
-:: 执行 Python 脚本
-:: python myscript.py
-
-:: 退出虚拟环境
-deactivate
+:: 安装依赖库
+poetry install
 
 pause
 

@@ -1,24 +1,24 @@
 @echo off
 cd /d %~dp0
 
-set VENV_DIR=myvenv
+REM set VENV_DIR=myvenv
 ::rem 设置 需要打包 脚本路径
 set PYTHON_SCRIPT=UI\MDM_Run.py
 
 :: 检查虚拟环境是否已存在
-IF EXIST "%VENV_DIR%" (
-  echo 虚拟环境已存在，跳过创建步骤
-) ELSE (
-  echo 创建虚拟环境...
-  python -m venv %VENV_DIR%
-)
+REM IF EXIST "%VENV_DIR%" (
+REM   echo 虚拟环境已存在，跳过创建步骤
+REM ) ELSE (
+REM   echo 创建虚拟环境...
+REM   python -m venv %VENV_DIR%
+REM )
 
 :: 激活虚拟环境
-call %VENV_DIR%\Scripts\activate.bat
+REM call %VENV_DIR%\Scripts\activate.bat
 
 :: 继续执行其他操作，例如安装依赖、运行 Python 脚本等
 :: 安装依赖
-pip install -r requirements.txt
+REM pip install -r requirements.txt
 
 ::设置目标文件夹路径
 set DEST_FOLDER_DIST=dist\MDM_Run
@@ -35,7 +35,7 @@ if exist "%FILE_NAME%" del /q "%FILE_NAME%"
 if exist "%EXE_NAME%" del /q "%EXE_NAME%"
 
 ::打包exe文件
-pyinstaller %PYTHON_SCRIPT%
+poetry run pyinstaller %PYTHON_SCRIPT%
 
 echo copy file operation！！！
 ::拷贝文件夹，文件到当前目录下
@@ -50,6 +50,6 @@ if exist "%SOURCE_DICT_INTERNAL%" xcopy "%SOURCE_DICT_INTERNAL%" "%DEST_INTERNAL
 echo success to copy file !!!
 
 :: 退出虚拟环境
-deactivate
+::deactivate
 
 pause

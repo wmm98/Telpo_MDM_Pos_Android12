@@ -25,6 +25,7 @@ from Common.check_yaml_file import CheckYaml
 from Common.Serial import Serial
 from Common.DealAlert import AlertData
 
+
 if __name__ == '__main__':
     # update venv
     shell = Shell.Shell()

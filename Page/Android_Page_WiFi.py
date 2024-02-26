@@ -12,6 +12,7 @@ class AndroidBasePageWiFi(interface):
         self.client = client
         self.times = times
         self.device_ip = ip
+        self.get_internal_storage_directory()
 
     def get_android_version(self):
         return self.client.device_info["version"]

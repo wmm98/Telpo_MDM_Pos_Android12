@@ -346,7 +346,7 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
                 if self.serial.check_usb_adb_connect_serial(device_name):
                     current_firmware_version = self.serial.invoke(
                         "adb -s %s shell getprop ro.product.version" % self.edit_device_name.text())
-                    destination_version = self.ota_file_path.text().split("-")[-1][:-4]
+                    destination_version = str(self.ota_file_path.text()).split("-")[-1][:-4]
                     self.device_state_tips.setText("设备当前的版本：%s, 目标版本为：%s" % (
                         self.serial.remove_space(current_firmware_version), destination_version))
                     self.device_state_tips.setVisible(True)
@@ -362,7 +362,7 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
             if self.serial.check_usb_adb_connect_no_serial(device_name):
                 current_firmware_version = self.serial.invoke(
                     "adb -s %s shell getprop ro.product.version" % self.edit_device_name.text())
-                destination_version = self.ota_file_path.text().split("-")[-1][:-4]
+                destination_version = str(self.ota_file_path.text()).split("-")[-1][:-4]
                 self.device_state_tips.setText(
                     "设备当前的版本：%s, 目标版本为：%s" % (self.serial.remove_space(current_firmware_version), destination_version))
                 self.device_state_tips.setVisible(True)
@@ -430,9 +430,9 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
         # # 拷贝上传的文件并且改变yaml 里字段的值
         package_path = self.project_path + "\\Param\\Package\\"
         work_path = self.project_path + "\\Param\\Work_APP\\"
-        ota_name = self.ota_file_path.text()
-        aimdm_name = self.aimdm_file_path.text()
-        tpui_name = self.tpui_info_file_path.text()
+        ota_name = str(self.ota_file_path.text())
+        aimdm_name = str(self.aimdm_file_path.text())
+        tpui_name = str(self.tpui_info_file_path.text())
         if "/" in ota_name:
             ota_real_name = ota_name.split("/")[-1]
             # 修改字段值

@@ -33,7 +33,7 @@ class Ui_MainWindow(object):
 
     yaml_file_path = project_path + "\\Conf\\test_data.yaml"
     # 加载 YAML 文件
-    with open(yaml_file_path, 'r') as file:
+    with open(yaml_file_path, 'r',  encoding="utf-8") as file:
         data = yaml.safe_load(file)
 
     def setupUi(self, MainWindow):
@@ -120,7 +120,7 @@ class Ui_MainWindow(object):
         self.release_edit.setText(self.data["MDMTestData"]["website_info"]["release_user"])
         self.release_psw_tips = QtWidgets.QLabel("密码:")
         self.release_psw_edit = QtWidgets.QLineEdit()
-        self.release_psw_edit.setText(self.data["MDMTestData"]["website_info"]["release_password"])
+        self.release_psw_edit.setText(str(self.data["MDMTestData"]["website_info"]["release_password"]))
         layout_test.addWidget(self.release_tips)
         layout_test.addWidget(self.release_edit)
         layout_test.addWidget(self.release_psw_tips)
