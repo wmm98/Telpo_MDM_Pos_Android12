@@ -1,7 +1,12 @@
 cd /d %~dp0
-
 setlocal EnableDelayedExpansion
 
+:: 删除原来的虚拟环境，使用公共的虚拟换
+set ORIGN_VENV=poetry_venv
+if exist "%ORIGN_VENV%" rmdir /s /q %CD%\%ORIGN_VENV%
+
+
+::获取公共的虚拟环境的名称
 set "keyword=telpo-android-automation"
 set "current_dir=%cd%"
 for %%G in ("%current_dir%\..\poetry_venv") do set "parent_dir=%%~fG"

@@ -1,10 +1,10 @@
 @echo off
 cd /d %~dp0
 
-REM set VENV_DIR=myvenv
 ::rem 设置 需要打包 脚本路径
 set PYTHON_SCRIPT=UI\MDM_Run.py
 
+:: 获取上一级目录虚拟路径名称
 REM @echo off
 setlocal EnableDelayedExpansion
 
