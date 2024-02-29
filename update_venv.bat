@@ -1,7 +1,8 @@
 cd /d %~dp0
 
+
 ::安装poetry
-pip install poetry -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
+pip install poetry==1.8.0 -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
 
 set VENV_NAME=poetry_venv
 

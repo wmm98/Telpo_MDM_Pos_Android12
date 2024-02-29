@@ -1,29 +1,27 @@
 cd /d %~dp0
 
-::poetry shell
-::set VENV_DIR=myvenv
+setlocal EnableDelayedExpansion
 
-:: 检查虚拟环境是否已存在
-::IF EXIST "%VENV_DIR%" (
-::  echo 虚拟环境已存在，跳过创建步骤
-::) ELSE (
-::  echo 创建虚拟环境...
-:: python -m venv %VENV_DIR%
-::)
+set "keyword=telpo-android-automation"
+set "current_dir=%cd%"
+for %%G in ("%current_dir%\..\poetry_venv") do set "parent_dir=%%~fG"
+
+for /d %%a in ("%parent_dir%\*%keyword%*") do (
+    set "ENV_FOLDER_NAME=%%~nxa"
+    echo Folder in parent directory containing keyword "%keyword%": !ENV_FOLDER_NAME!
+)
 
 :: 激活虚拟环境
-::call %VENV_DIR%\Scripts\activate.bat
+set "PUBLIC_ENV=..\poetry_venv\!ENV_FOLDER_NAME!"
+echo Folder NAME: %PUBLIC_ENV%
 
-:: 继续执行其他操作，例如安装依赖、运行 Python 脚本等
-:: 安装依赖
-::pip install -r requirements.txt
+call %PUBLIC_ENV%\Scripts\activate
+
 
 :: 执行 Python 脚本
 ::python run.py
-poetry run python run.py
+poetry run python -u run.py
 
-::poetry shell
-::python run.py
 :: 退出虚拟环境
 ::deactivate
 

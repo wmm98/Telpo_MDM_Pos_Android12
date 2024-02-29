@@ -124,11 +124,6 @@ pyparsing = "^3.0.9"
 pyperclip = "^1.8.2"
 pypiwin32 = "^223"
 Pypubsub = "^4.0.3"
-#PyQt5-Qt5 = { version = ">=5.15", source = "ustc" }
-#PyQt5-sip = "^12.12.1"
-#PyQt6 = "^6.5.0"
-#PyQt6-Qt6 = "^6.5.1"
-#PyQt6-sip = "^13.5.1"
 PyRect = "^0.2.0"
 PyScreeze = "^0.1.28"
 pyserial = "^3.5"
@@ -183,6 +178,7 @@ xmltodict = "^0.13.0"
 yarg = "^0.1.9"
 zipp = "^3.15.0"
 pyinstaller = "<=6.4.0"
+pure-python-adb = "^0.3.0.dev0"
 
 
 [build-system]

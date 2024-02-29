@@ -21,13 +21,10 @@ class Optimize_Case:
         self.page.go_to_new_address("devices")
         now_time = self.page.get_current_time()
         while True:
-            try:
-                self.page.search_device_by_sn(sn)
-                devices_list = self.page.get_dev_info_list()
-                if self.page.upper_transfer("On") in self.page.upper_transfer(devices_list[0]["Status"]):
-                    break
-            except Exception as e:
-                log.error(e)
+            self.page.search_device_by_sn(sn)
+            devices_list = self.page.get_dev_info_list()
+            if self.page.upper_transfer("On") in self.page.upper_transfer(devices_list[0]["Status"]):
+                break
             if self.page.get_current_time() > self.page.return_end_time(now_time, timeout):
                 log.error("@@@@@设备不在线，请检查！！！！")
                 assert False, "@@@@@设备不在线，请检查！！！！"
@@ -37,13 +34,10 @@ class Optimize_Case:
         self.page.go_to_new_address("devices")
         now_time = self.page.get_current_time()
         while True:
-            try:
-                self.page.search_device_by_sn(sn)
-                devices_list = self.page.get_dev_info_list()
-                if self.page.upper_transfer("off") in self.page.upper_transfer(devices_list[0]["Status"]):
-                    break
-            except Exception as e:
-                log.error(e)
+            self.page.search_device_by_sn(sn)
+            devices_list = self.page.get_dev_info_list()
+            if self.page.upper_transfer("off") in self.page.upper_transfer(devices_list[0]["Status"]):
+                break
             if self.page.get_current_time() > self.page.return_end_time(now_time, timeout):
                 log.error("@@@@@设备在线，请检查！！！！")
                 assert False, "@@@@@设备在线，请检查！！！！"

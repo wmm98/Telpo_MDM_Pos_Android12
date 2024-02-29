@@ -25,7 +25,6 @@ from Common.check_yaml_file import CheckYaml
 from Common.Serial import Serial
 from Common.DealAlert import AlertData
 
-
 if __name__ == '__main__':
     # update venv
     shell = Shell.Shell()
@@ -54,7 +53,7 @@ if __name__ == '__main__':
     # alert_value = AlertData().get_yes_or_no("当前设备的固件为：%s,目标升级固件为：%s, 是否继续？" % (current_firmware_version, destination_version))
     # if "否" in alert_value:
     #     sys.exit()
-        # raise Exception("用户终止执行")
+    # raise Exception("用户终止执行")
     # AlertData().getAlert("请插上流量卡，请打开同一网段的wifi，茶上流量卡后请关掉弹框")
 
     log.info('initialize Config, path=' + conf.conf_path)
@@ -75,6 +74,7 @@ if __name__ == '__main__':
 
     # # 定义测试集
     allure_list = '--allure-features=MDM_test02_login,%s' % conf.get_yaml_data()["Run_Cases"]
+    print('--allure-features=MDM_test02_login,%s' % conf.get_yaml_data()["Run_Cases"])
     log.info("测试集为%s" % allure_list)
     # allure_list = '--allure-features=MDM_test02_login11'
     # allure_list = '--allure-stories=MDM_test02_login,MDM-Show'
@@ -109,8 +109,7 @@ if __name__ == '__main__':
     testpreiod = end_time - curr_time
     usb_serial.confirm_relay_closed()
     usb_serial.logoutSer()
+    print('Execution Testcases End time: %s' % end_time)
+    print('Execution Testcases total time: %s' % testpreiod)
     log.info('Execution Testcases End time: %s' % end_time)
     log.info('Execution Testcases total time: %s' % testpreiod)
-
-
-

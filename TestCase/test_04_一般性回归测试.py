@@ -56,6 +56,7 @@ class TestGeneralRegressionTesting:
                 self.android_mdm_page.confirm_wifi_btn_open()
 
                 log.info("*******************OTAOTA-OTA 下载拷贝校验完整性开始***************************")
+                print("*******************OTAOTA-OTA 下载拷贝校验完整性开始***************************")
                 download_tips = "Foundanewfirmware,whethertoupgrade?"
                 upgrade_tips = "whethertoupgradenow?"
                 exp_success_text = "success"
@@ -78,9 +79,9 @@ class TestGeneralRegressionTesting:
                 assert self.ota_page.transfer_version_into_int(
                     current_firmware_version) < self.ota_page.transfer_version_into_int(
                     release_info["version"]), err_info
-
                 device_current_firmware_version = self.android_mdm_page.check_firmware_version()
                 log.info("固件升级的目标版本%s" % release_info["version"])
+                print("固件升级的目标版本%s" % release_info["version"])
                 # check file size and hash value in directory Param/package
                 ota_package_path = self.android_mdm_page.get_apk_path(release_info["package_name"])
                 # ota_package_path = conf.project_path + '\\Public_Package\\new\\%s' % release_info["package_name"]
@@ -250,6 +251,7 @@ class TestGeneralRegressionTesting:
                 log.info("************900P: md5值检测通过%d次*****************" % self.pass_flag)
                 log.info("*******************OTA-OTA 下载拷贝校验完整性用例结束***************************")
                 log.info("****************************ota升级升级包下载完成***************************")
+                print("************900P: md5值检测通过%d次*****************" % self.pass_flag)
             except Exception as e:
                 log.info("捕捉到的异常：%s" % str(e))
                 if self.ota_page.service_is_normal("ota", case_pack.user_info):

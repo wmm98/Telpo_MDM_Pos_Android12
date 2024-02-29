@@ -439,8 +439,11 @@ class AndroidBasePageWiFi(interface):
         res = self.u2_send_command(
             "ls -l /%s/aimdm/download/ |grep %s" % (self.get_internal_storage_directory(), file_name))
         # get integer list in res
-        integer_list = self.extract_integers(res)
-        size = int(integer_list[1])
+        # integer_list = self.extract_integers(res)
+        # size = int(integer_list[1])
+        info = res.split(" ")
+        print(info)
+        size = int(info[4])
         return size
 
     def calculate_sha256_in_device(self, file_name):
@@ -448,13 +451,10 @@ class AndroidBasePageWiFi(interface):
         # 9fb5de71a794b9cb8b8197e6ebfbbc9168176116f7f88aca62b22bbc67c2925a  2023-10-12.txt
         res = self.u2_send_command(
             "ls /%s/aimdm/download/ |grep %s" % (self.get_internal_storage_directory(), file_name))
-        print(res.split("\n")[0])
         download_file_name = res.split("\n")[0]
         cmd = "md5sum /%s/aimdm/download/%s" % (self.get_internal_storage_directory(), download_file_name)
-        print(self.u2_send_command(cmd))
         print(self.u2_send_command(cmd).split(" "))
         result = self.u2_send_command(cmd).split(" ")[0]
-        print(result)
         return result
 
     def calculate_updated_sha256_in_device(self, file_name="update.zip"):
@@ -462,13 +462,10 @@ class AndroidBasePageWiFi(interface):
         # 9fb5de71a794b9cb8b8197e6ebfbbc9168176116f7f88aca62b22bbc67c2925a  2023-10-12.txt
         res = self.u2_send_command(
             "ls /%s/ |grep %s" % (self.get_internal_storage_directory(), file_name))
-        print(res.split("\n")[0])
         download_file_name = res.split("\n")[0]
         cmd = "md5sum /%s/%s" % (self.get_internal_storage_directory(), download_file_name)
-        print(self.u2_send_command(cmd))
         print(self.u2_send_command(cmd).split(" "))
         result = self.u2_send_command(cmd).split(" ")[0]
-        print(result)
         return result
 
     def calculate_data_updated_sha256_in_device(self, file_name="update.zip"):
@@ -477,12 +474,9 @@ class AndroidBasePageWiFi(interface):
         # res = self.u2_send_command(
         #     "ls /%s/ |grep %s" % ("data", file_name))
         res = self.send_shell_command("ls data \"|grep update\"")
-        print(res.split("\n")[0])
         download_file_name = res.split("\n")[0]
         cmd = "md5sum /%s/%s" % ("data", download_file_name)
-        print(cmd)
         result = self.send_shell_command(cmd).split(" ")[0]
-        print(result)
         return result
 
     def get_internal_storage_directory(self):
