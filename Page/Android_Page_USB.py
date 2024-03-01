@@ -180,16 +180,15 @@ class AndroidBasePageUSB(interface):
                 assert False, "@@@@超过2分钟关闭wifi按钮， 请检查！！！"
             self.time_sleep(3)
 
-    def ping_network(self, times=5, timeout=120):
+    def ping_network(self, times=5, timeout=300):
         # 每隔0.6秒ping一次，一共ping5次
         # ping - c 5 - i 0.6 qq.com
         cmd = " ping -c %s %s" % (times, "www.baidu.com")
         exp = self.remove_space("ping: unknown host %s" % "www.baidu.com")
         now_time = self.get_current_time()
         while True:
-            print(cmd)
             res = self.remove_space(self.u2_send_command_USB(cmd))
-            print(res)
+            log.info(res)
             if exp not in res:
                 return True
             if self.get_current_time() > self.return_end_time(now_time, timeout=timeout):
@@ -197,16 +196,15 @@ class AndroidBasePageUSB(interface):
                 assert False, "@@@@超过%d s无法上网,请检查网络" % timeout
             public_pack.t_time.sleep(2)
 
-    def no_network(self, times=5, timeout=60):
+    def no_network(self, times=5, timeout=300):
         # 每隔0.6秒ping一次，一共ping5次
         # ping - c 5 - i 0.6 qq.com
         cmd = "ping -c %s %s" % (times, "www.baidu.com")
         exp = self.remove_space("ping: unknown host %s" % "www.baidu.com")
         now_time = self.get_current_time()
         while True:
-            print(cmd)
             res = self.remove_space(self.u2_send_command_USB(cmd))
-            print(res)
+            log.info(res)
             if exp in res:
                 return True
             if self.get_current_time() > self.return_end_time(now_time, timeout):

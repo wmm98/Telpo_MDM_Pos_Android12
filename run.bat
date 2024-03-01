@@ -28,7 +28,7 @@ call %PUBLIC_ENV%\Scripts\activate
 poetry run python -u run.py
 
 :: 退出虚拟环境
-::deactivate
+deactivate
 
 pause
 

@@ -103,7 +103,6 @@ class TestMDM2SpecialPage:
                                 self.content_page.time_sleep(5)
                                 if len(self.content_page.get_content_list()) == 1:
                                     self.content_page.refresh_page()
-                                    # print("11111111111111111111111111111")
                                     break
                                 self.content_page.refresh_page()
                                 self.content_page.time_sleep(3)
