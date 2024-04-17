@@ -33,7 +33,7 @@ class TestLogin:
     @allure.feature('MDM_test02_login')
     @allure.title("连接上wifi/登录--辅助测试用例")  # 设置case的名字
     @pytest.mark.dependency(name="test_login_ok", scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=2, reruns_delay=3)
     def test_connect_wifi_and_login_ok(self):
         while True:
             try:
@@ -130,11 +130,12 @@ class TestLogin:
                     log.info("**********************服务器恢复正常*************************")
                     self.ota_page.go_to_new_address("devices")
 
-    @allure.feature('MDM_test02_login')
+    @allure.feature('MDM_test02_login1')
     @allure.title("OTA-添加ota升级包--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_add_OTA_package_and_cate(self, recover_and_login_mdm, go_to_ota_page):
+        log.info("******************OTA-添加ota升级包--辅助测试用例**********************")
         exp_existed_text = "ota already existed"
         exp_success_text = "success"
         package_info = {"package_name": test_yaml['ota_packages_info']['package_name'], "file_category": "test",
@@ -148,7 +149,7 @@ class TestLogin:
                 now_time = self.ota_page.get_current_time()
                 while True:
                     if len(self.ota_page.get_ota_categories_list()) == 0:
-                        self.ota_page.add_ota_category("test")
+                        self.ota_page.add_ota_category("test-debug")
                         self.ota_page.refresh_page()
                     else:
                         break
@@ -182,12 +183,13 @@ class TestLogin:
                     log.info("**********************服务器恢复正常*************************")
                     self.ota_page.go_to_new_address("ota")
 
-    @allure.feature('MDM_test02_login')
+    @allure.feature('MDM_test02_login1')
     @allure.title("Apps-添加APK包--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     # @pytest.mark.parametrize('package_info', package_infos)
     def test_add_cate_and_apps(self, recover_and_login_mdm, go_to_app_page):
+        log.info("*********************Apps-添加APK包--辅助测试用例****************************")
         exp_success_text = "Success"
         # package_info = {"package_name": "Bus_Recharge_System_1.0.1_20220615.apk", "file_category": "test",
         #                 "developer": "engineer", "description": "test"}

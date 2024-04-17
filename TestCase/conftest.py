@@ -27,6 +27,39 @@ conf = TestCase.Config()
 
 
 @pytest.fixture()
+def uninstall_big_size_app():
+    apk_path = conf.project_path + '\\Public_Package\\APK\\APK_test_pressure.apk'
+    apk_package_name = app_page.get_apk_package_name(apk_path)
+    if android_page.app_is_installed(apk_package_name):
+        android_page.uninstall_app(apk_package_name)
+    yield
+    if android_page.app_is_installed(apk_package_name):
+        android_page.uninstall_app(apk_package_name)
+
+
+@pytest.fixture()
+def Big_APk_operation():
+    apk_name = 'APK_test_pressure.apk'
+    apk_path = conf.project_path + '\\Public_Package\\APK\\APK_test_pressure.apk'
+    ota_page.go_to_new_address("apps")
+    now_time = app_page.get_current_time()
+    while True:
+        try:
+            app_page.search_app_by_name(apk_name)
+            if len(app_page.get_apps_text_list()) == 0:
+                app_page.click_add_btn()
+                app_page.input_app_info(apk_path, timeout=600)
+            else:
+                break
+        except:
+            pass
+        if ota_page.get_current_time() > ota_page.return_end_time(now_time, 1800):
+            assert False, "@@@@无法上传apk包：%s, 请检查！！！！" % apk_name
+        ota_page.refresh_page()
+        ota_page.time_sleep(3)
+
+
+@pytest.fixture()
 def fake_ota_package_operation():
     ota_name = TestCase.yaml_data["ota_packages_info"]["package_name"]
     src = conf.project_path + '\\Public_Package\\origin\\test.zip'

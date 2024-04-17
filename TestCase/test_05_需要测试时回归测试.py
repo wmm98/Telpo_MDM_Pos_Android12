@@ -32,7 +32,7 @@ class TestRegressionTesting:
     @allure.feature('Regression_Test-case0')
     @allure.story('MDM-Show')
     @allure.title("需要测试时回归测试- 锁机和解锁")
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     def test_lock_and_unlock_single_device_regression(self, recover_and_login_mdm, go_to_and_return_device_page):
         while True:
@@ -103,7 +103,7 @@ class TestRegressionTesting:
     @allure.feature('Regression_Test-case1')
     @allure.title("需要测试时回归测试- 发送设备重启指令：设备重启5次")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_reboot_single_device_pressure_testing_regression(self, recover_and_login_mdm, connected_wifi_adb,
                                                               go_to_and_return_device_page):
         while True:
@@ -165,7 +165,7 @@ class TestRegressionTesting:
     @allure.feature('Regression_Test-case2')
     @allure.title("需要测试时回归测试- 重置设备TPUI密码")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_reset_TPUI_password_regression(self, recover_and_login_mdm, go_to_and_return_device_page):
         while True:
             tpui_apk = case_pack.yaml_data["work_app"]["tpui_apk"]
@@ -212,7 +212,7 @@ class TestRegressionTesting:
     @allure.feature('Regression_Test-case3')
     @allure.title("需要测试时回归测试- 重置设备密码")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_reset_device_password_regression(self, recover_and_login_mdm, go_to_and_return_device_page):
         while True:
             try:
@@ -268,7 +268,7 @@ class TestRegressionTesting:
     @allure.feature('Regression_Test-case4')
     @allure.title("需要测试时回归测试- AIMDM发消息压力测试")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_pressure_send_message_to_single_device_regression(self, recover_and_login_mdm, unlock_screen,
                                                                go_to_and_return_device_page):
         while True:
@@ -359,7 +359,7 @@ class TestRegressionTesting:
     @allure.feature('MDM_device_test--no test -now')
     @allure.title("需要测试时回归测试- 恢复出厂设置压测10次， 计算准备率")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_factory_recovery_pressure_testing_regression(self, recover_and_login_mdm, go_to_and_return_device_page):
         self.page.factory_reset()
         now_time = self.page.get_current_time()
@@ -378,7 +378,7 @@ class TestRegressionTesting:
     @allure.feature('Regression_Test-case5')
     @allure.title("需要测试时回归测试- 日志的抓取")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_cat_logs_regression(self, recover_and_login_mdm, go_to_and_return_device_page):
         durations = [5, 10, 30]
         # durations = [5]
@@ -412,7 +412,7 @@ class TestRegressionTesting:
     @allure.story('MDM-Show')
     @allure.title("需要测试时回归测试- 断网重连压测消耗流量情况")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_reconnect_get_mobile_data_regression(self, recover_and_login_mdm, connect_wifi_adb_USB):
         while True:
             try:
@@ -519,7 +519,7 @@ class TestRegressionTesting:
     @allure.story('MDM-Show')
     @allure.title("需要测试时回归测试- 断网重连静默升级app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_reconnect_silent_upgrade_regression(self, recover_and_login_mdm, connect_wifi_adb_USB, del_app_install_uninstall_release_log,
                                                  del_download_apk, uninstall_multi_apps):
         while True:

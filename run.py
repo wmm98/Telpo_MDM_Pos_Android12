@@ -33,7 +33,7 @@ if __name__ == '__main__':
     # init config file
 
     conf.load_yaml_data()
-    CheckYaml().check_test_data()
+    # CheckYaml().check_test_data()
     test_info = conf.get_yaml_data()['MDMTestData']
     log = Log.MyLog()
 

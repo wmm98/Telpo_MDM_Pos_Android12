@@ -20,6 +20,8 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import QStringListModel
 from PyQt5.QtWidgets import QHBoxLayout, QCheckBox, QLineEdit, QCompleter, QComboBox
 import UI_Serial
+
+
 # from Conf.Config import Config
 
 class Ui_MainWindow(object):
@@ -33,7 +35,7 @@ class Ui_MainWindow(object):
 
     yaml_file_path = project_path + "\\Conf\\test_data.yaml"
     # 加载 YAML 文件
-    with open(yaml_file_path, 'r',  encoding="utf-8") as file:
+    with open(yaml_file_path, 'r', encoding="utf-8") as file:
         data = yaml.safe_load(file)
 
     def setupUi(self, MainWindow):
@@ -136,7 +138,7 @@ class Ui_MainWindow(object):
 
         self.checkbox_screen = QCheckBox("横屏")
         self.checkbox_mdm = QCheckBox("安装mdm软件")
-        self.checkbox_financial = QCheckBox("金融版本")
+        self.checkbox_user = QCheckBox("User版本")
         self.checkbox_serial = QCheckBox("串口")
         self.COM_label = QtWidgets.QLabel("当前可用COM口:")
 
@@ -147,8 +149,8 @@ class Ui_MainWindow(object):
 
         # 创建一个下拉列表
         self.COM_name = QComboBox(self)
-            # self.COM_name.addItem('选项2')
-            # self.COM_name.addItem('选项3')
+        # self.COM_name.addItem('选项2')
+        # self.COM_name.addItem('选项3')
         # print(self.COM_name.currentText())
         self.COM_name.setDisabled(True)
 
@@ -168,7 +170,7 @@ class Ui_MainWindow(object):
 
         layout.addWidget(self.checkbox_screen)
         layout.addWidget(self.checkbox_mdm)
-        layout.addWidget(self.checkbox_financial)
+        layout.addWidget(self.checkbox_user)
         layout.addWidget(self.checkbox_serial)
         layout.addWidget(self.COM_label)
         layout.addWidget(self.COM_name)

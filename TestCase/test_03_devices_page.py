@@ -35,7 +35,7 @@ class TestDevicesPage:
     @allure.feature('LiXiang_Test-case7')
     @allure.story('MDM-Show')
     @allure.title("Devices- 锁机和解锁")
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     def test_lock_and_unlock_single_device(self, recover_and_login_mdm, go_to_and_return_device_page):
         while True:
@@ -106,7 +106,7 @@ class TestDevicesPage:
     @allure.feature('LiXiang_Test-case8')
     @allure.title("Devices- 发送设备重启指令：设备重启5次")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_reboot_single_device_pressure_testing(self, recover_and_login_mdm, connected_wifi_adb, go_to_and_return_device_page):
         while True:
             try:
@@ -167,7 +167,7 @@ class TestDevicesPage:
     @allure.feature('LiXiang_Test-case9')
     @allure.title("Devices- 重置设备TPUI密码")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_reset_TPUI_password(self, recover_and_login_mdm, go_to_and_return_device_page):
         while True:
             tpui_apk = case_pack.yaml_data["work_app"]["tpui_apk"]
@@ -214,7 +214,7 @@ class TestDevicesPage:
     @allure.feature('LiXiang_Test-case10')
     @allure.title("Devices- 重置设备密码")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_reset_device_password(self, recover_and_login_mdm, go_to_and_return_device_page):
         while True:
             try:
@@ -270,7 +270,7 @@ class TestDevicesPage:
     @allure.feature('LiXiang_Test-case11')
     @allure.title("Devices- AIMDM发消息压力测试")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_pressure_send_message_to_single_device(self, recover_and_login_mdm, unlock_screen, go_to_and_return_device_page):
         while True:
             # 设置发送消息的次数
@@ -360,7 +360,7 @@ class TestDevicesPage:
     @allure.feature('MDM_device_test--no test -now')
     @allure.title("Devices- 恢复出厂设置压测10次， 计算准备率")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_factory_recovery_pressure_testing(self, recover_and_login_mdm, go_to_and_return_device_page):
         self.page.factory_reset()
         now_time = self.page.get_current_time()
@@ -380,7 +380,7 @@ class TestDevicesPage:
     @allure.story('MDM-Show')
     @allure.title("Devices- AIMDM 切换正式测试服服务api ")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_transfer_api_server(self, recover_and_login_mdm, push_test_api_to_device):
         while True:
             try:
@@ -631,7 +631,7 @@ class TestDevicesPage:
     @allure.feature('LiXiang_Test-case13')
     @allure.title("Devices- 日志的抓取")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_cat_logs(self, recover_and_login_mdm, go_to_and_return_device_page):
         durations = [5, 10, 30]
         # durations = [5]

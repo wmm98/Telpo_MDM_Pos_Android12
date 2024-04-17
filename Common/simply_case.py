@@ -24,7 +24,9 @@ class Optimize_Case:
             self.page.search_device_by_sn(sn)
             devices_list = self.page.get_dev_info_list()
             if self.page.upper_transfer("On") in self.page.upper_transfer(devices_list[0]["Status"]):
+                log.info("平台显示设备在线")
                 break
+            log.info("平台显示设备不在线")
             if self.page.get_current_time() > self.page.return_end_time(now_time, timeout):
                 log.error("@@@@@设备不在线，请检查！！！！")
                 assert False, "@@@@@设备不在线，请检查！！！！"

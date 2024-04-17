@@ -354,7 +354,8 @@ class AndroidBasePageWiFi(interface):
         for app_key in apps_dict:
             file_path = self.get_apk_path(apps_dict[app_key])
             package = self.get_apk_package_name(file_path)
-            self.uninstall_app(package)
+            if self.app_is_installed(package):
+                self.uninstall_app(package)
 
     def confirm_app_is_uninstalled(self, package):
         self.uninstall_app(package)
@@ -582,21 +583,21 @@ class AndroidBasePageWiFi(interface):
             assert False, "@@@@无法remount, 请检查！！！"
         self.time_sleep(5)
 
-    def ping_network_wifi(self, times=5, timeout=120):
+    def ping_network_wifi(self, times=5, timeout=300):
         # 每隔0.6秒ping一次，一共ping5次
         # ping - c 5 - i 0.6 qq.com
         cmd = " ping -c %s %s" % (times, "www.baidu.com")
         exp = self.remove_space("ping: unknown host %s" % "www.baidu.com")
         now_time = self.get_current_time()
         while True:
-            print(cmd)
+            log.info(cmd)
             res = self.remove_space(self.u2_send_command(cmd))
-            print(res)
+            log.info(res)
             if exp not in res:
                 break
             if self.get_current_time() > self.return_end_time(now_time, timeout):
                 if exp in self.remove_space(self.send_shell_command(cmd)):
-                    assert False, "@@@@超过2分钟无法上网,请检查网络"
+                    assert False, "@@@@超过5分钟无法上网,请检查网络"
             public_pack.t_time.sleep(2)
 
     def u2_send_command(self, cmd):

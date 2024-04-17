@@ -457,14 +457,14 @@ class APPSPage(TelpoMDMPage):
         self.click(self.loc_new_btn)
         self.confirm_alert_existed(self.loc_new_btn)
 
-    def input_app_info(self, file):
+    def input_app_info(self, file, timeout=300):
         self.input_text(self.loc_choose_file, file)
         # self.select_by_text(self.loc_choose_category,"file_category")
         self.input_text(self.loc_developer_box, "test_engineer")
         self.input_text(self.loc_des_box, "just for automation test")
         self.time_sleep(1)
         self.click(self.loc_apk_save_btn)
-        self.confirm_tips_alert_show(self.loc_apk_save_btn, timeout=300)
+        self.confirm_tips_alert_show(self.loc_apk_save_btn, timeout=timeout)
         self.time_sleep(2)
         self.refresh_page()
         # self.confirm_alert_existed(self.loc_apk_save_btn)

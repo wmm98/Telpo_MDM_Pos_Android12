@@ -56,7 +56,7 @@ class TestMDM2SpecialPage:
     @allure.feature('Special_Test-case0')
     @allure.title("public case-添加 content 种类--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_add_content_category_MDM2(self, recover_and_login_mdm, go_to_content_page):
         while True:
             try:
@@ -84,7 +84,7 @@ class TestMDM2SpecialPage:
     @allure.feature('Special_Test-case0')
     @allure.title("public case-添加 content 文件--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_add_content_file_MDM2(self, recover_and_login_mdm, go_to_content_page):
         while True:
             try:
@@ -174,7 +174,7 @@ class TestMDM2SpecialPage:
     @allure.feature('Special_Test-case1')
     @allure.title("需要测试时回归测试- 系统/应用日志的抓取")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_cat_logs_regression_MDM2(self, recover_and_login_mdm, go_to_and_return_device_page):
         # durations = [5, 10, 30]
         durations = [5]
@@ -208,7 +208,7 @@ class TestMDM2SpecialPage:
     @allure.story('MDM-Show')
     @allure.title("public case-应用满屏推送--请在附件查看满屏截图效果")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=100, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_release_app_full_screen_MDM2(self, recover_and_login_mdm, del_all_app_release_log,
                                           del_all_app_uninstall_release_log, go_to_app_page,
                                           uninstall_multi_apps):
@@ -336,7 +336,7 @@ class TestMDM2SpecialPage:
                                                        "app_full_screen_after_reboot")
                 self.android_mdm_page.stop_app(release_info["package"])
                 log.info("*******************应用满屏推送用例结束***************************")
-                assert False
+                break
             except Exception as e:
                 if self.app_page.service_is_normal("apps/logs", case_pack.user_info):
                     assert False, e
@@ -354,7 +354,7 @@ class TestMDM2SpecialPage:
     @allure.story('MDM-Show')
     @allure.title("public case-推送壁纸--请在附件查看壁纸截图效果")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_release_wallpaper_MDM2(self, recover_and_login_mdm, unlock_screen, del_all_content_release_logs):
         while True:
             try:
@@ -486,7 +486,7 @@ class TestMDM2SpecialPage:
     @allure.feature('Special_Test-case4')
     @allure.title("public case- 静默ota升级")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=1)
+    @pytest.mark.flaky(reruns=1, reruns_delay=1)
     def test_silent_ota_upgrade_MDM2(self, recover_and_login_mdm, real_ota_package_operation, del_all_ota_release_log, delete_ota_package_relate):
         while True:
             try:
@@ -632,7 +632,7 @@ class TestMDM2SpecialPage:
     @allure.feature('Special_Test-case5')
     @allure.title("Apps-普通应用静默升级")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    # @pytest.mark.flaky(reruns=3, reruns_delay=1)
+    # @pytest.mark.flaky(reruns=1, reruns_delay=1)
     def test_high_version_app_cover_low_version_app_MDM2(self, recover_and_login_mdm, del_app_install_uninstall_release_log, del_download_apk, uninstall_multi_apps,
                                                     go_to_app_page):
         release_info = {"package_name": test_yml['app_info']['high_version_app'], "sn": self.device_sn,
@@ -754,7 +754,7 @@ class TestMDM2SpecialPage:
     @allure.feature('Special_Test-case6')
     @allure.title("public case- 系统应用静默升级/推送安装成功后自动运行app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_upgrade_system_app_MDM2(self, recover_and_login_mdm, del_app_install_uninstall_release_log, del_download_apk, uninstall_system_app):
         while True:
             try:
@@ -924,7 +924,7 @@ class TestMDM2SpecialPage:
     @allure.story('MDM-Show111')
     @allure.title("Apps-限定4G网络推送app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=2)
+    @pytest.mark.flaky(reruns=1, reruns_delay=2)
     def test_release_app_limit_4G_MDM2(self, recover_and_login_mdm, connect_wifi_adb_USB, del_all_app_release_log,
                                   del_all_app_uninstall_release_log, uninstall_multi_apps, go_to_app_page):
         release_info = {"package_name": test_yml['app_info']['other_app_limit_network_A'], "sn": self.device_sn,
@@ -1078,7 +1078,7 @@ class TestMDM2SpecialPage:
     @allure.feature('Special_Test-case8')
     @allure.title("Apps-限定WIFI网络推送app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_release_app_limit_wifi_MDM2(self, recover_and_login_mdm, connect_wifi_adb_USB, del_all_app_release_log,
                                     del_all_app_uninstall_release_log,
                                     go_to_app_page):
@@ -1370,7 +1370,7 @@ class TestMDM2SpecialPage:
     @allure.feature('Special_Test-case10')
     @allure.title("public case-文件推送-网络恢复断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_release_normal_files_MDM2(self, recover_and_login_mdm, del_all_content_release_logs, del_all_content_file):
         # "All Files" "Normal Files" "Boot Animations" "Wallpaper" "LOGO"
         times = 1

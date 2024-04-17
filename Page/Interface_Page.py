@@ -181,16 +181,12 @@ class interface:
     def calculate_sha256_in_windows(self, file, directory="Package"):
         if directory == "Package":
             file_path = self.get_apk_path(file)
+        elif directory == "Public_Package\\APK":
+            file_path = conf.project_path + '\\Public_Package\\APK\\%s' % file
         elif directory == "Public_Package":
             file_path = conf.project_path + '\\Public_Package\\new\\%s' % file
         else:
             file_path = conf.project_path + "\\Param\\%s\\%s" % (directory, file)
-
-        # sha256 = public_pack.hashlib.sha256()
-        # with open(file_path, "rb") as file:
-        #     for chunk in iter(lambda: file.read(4096), b""):
-        #         sha256.update(chunk)
-        # return sha256.hexdigest()
 
         with open(file_path, 'rb') as file:
             md5_hash = public_pack.hashlib.md5()

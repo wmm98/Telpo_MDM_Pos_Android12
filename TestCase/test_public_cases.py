@@ -56,7 +56,7 @@ class TestPublicPage:
     @allure.feature('MDM_public--跟下面得用例一起合并了')
     @allure.title("public case-添加 content 种类--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_add_content_category(self, recover_and_login_mdm, go_to_content_page):
         while True:
             try:
@@ -84,7 +84,7 @@ class TestPublicPage:
     @allure.feature('LiXiang_Test-case0')
     @allure.title("public case-添加 content 文件--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_add_content_file(self, recover_and_login_mdm, go_to_content_page):
         while True:
             try:
@@ -189,7 +189,7 @@ class TestPublicPage:
     @allure.story('MDM-Show')
     @allure.title("public case-推送壁纸--请在附件查看壁纸截图效果")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_release_wallpaper(self, recover_and_login_mdm, unlock_screen, del_all_content_release_logs):
         while True:
             try:
@@ -322,7 +322,7 @@ class TestPublicPage:
     @allure.story('MDM-Show')
     @allure.title("OTA-OTA重启5次断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_upgrade_OTA_package_reboot_5times(self, recover_and_login_mdm, fake_ota_package_operation, del_all_ota_release_log, delete_ota_package_relate):
         download_tips = "Foundanewfirmware,whethertoupgrade?"
         upgrade_tips = "whethertoupgradenow?"
@@ -476,7 +476,7 @@ class TestPublicPage:
     @allure.story('MDM-Show')
     @allure.title("public case-应用满屏推送--请在附件查看满屏截图效果")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_release_app_full_screen(self, recover_and_login_mdm, del_all_app_release_log, del_all_app_uninstall_release_log, go_to_app_page,
                                      uninstall_multi_apps):
         release_info = {"package_name": test_yml['app_info']['other_app'], "sn": self.device_sn,
@@ -618,7 +618,7 @@ class TestPublicPage:
     @allure.feature('LiXiang_Test-case17')
     @allure.title("public case-推送text.zip文件")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_release_normal_files(self, recover_and_login_mdm, del_all_content_release_logs):
         # "All Files" "Normal Files" "Boot Animations" "Wallpaper" "LOGO"
         while True:
@@ -713,7 +713,7 @@ class TestPublicPage:
     @allure.feature('LiXiang_Test-case18')
     @allure.title("public case-多应用推送")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_release_multi_apps(self, recover_and_login_mdm, del_all_app_release_log, del_download_apk, uninstall_multi_apps):
         while True:
             try:
@@ -876,7 +876,7 @@ class TestPublicPage:
     @allure.story('MDM-Show')
     @allure.title("public case-静默卸载正在运行中的app： 静默卸载/卸载正在运行的app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_silent_uninstall_app(self, recover_and_login_mdm, del_all_app_release_log, del_all_app_uninstall_release_log,
                                   uninstall_multi_apps, go_to_app_page):
         release_info = {"package_name": test_yml['app_info']['high_version_app'], "sn": self.device_sn,
@@ -956,7 +956,7 @@ class TestPublicPage:
     @allure.feature('LiXiang_Test-case20')
     @allure.title("public case- 静默ota升级")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=1)
+    @pytest.mark.flaky(reruns=1, reruns_delay=1)
     def test_silent_ota_upgrade(self, recover_and_login_mdm, real_ota_package_operation, del_all_ota_release_log, delete_ota_package_relate):
         while True:
             try:
@@ -1102,7 +1102,7 @@ class TestPublicPage:
     @allure.feature('LiXiang_Test-case21')
     @allure.title("public case- 静默升级系统app/推送安装成功后自动运行app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_upgrade_system_app(self, recover_and_login_mdm, del_app_install_uninstall_release_log, del_download_apk, uninstall_system_app):
         while True:
             try:
@@ -1272,7 +1272,7 @@ class TestPublicPage:
     @allure.title("public case-推送开机logo/动画")
     @allure.story('MDM-Show')
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_release_boot_logo_and_animation(self, recover_and_login_mdm, del_all_content_release_logs, del_all_content_file):
         # "All Files" "Normal Files" "Boot Animations" "Wallpaper" "LOGO"
         while True:
@@ -1423,7 +1423,7 @@ class TestPublicPage:
     @allure.feature('MDM_public--n0')
     @allure.title("public case-无线休眠推送app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_report_device_sleep_status(self, recover_and_login_mdm, del_app_install_uninstall_release_log, go_to_device_page,
                                         uninstall_multi_apps):
         while True:

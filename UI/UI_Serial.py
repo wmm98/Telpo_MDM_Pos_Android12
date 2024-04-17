@@ -65,7 +65,9 @@ class Serial:
         now_time = time.time()
         while True:
             self.confirm_relay_closed()
+            print(11111111111111111111111111111111111111111)
             self.send_ser_connect_cmd(conn=True)
+            print(2222222222222222222222222222222222)
             if self.send_status_cmd():
                 break
             if time.time() > now_time + timeout:
@@ -84,6 +86,7 @@ class Serial:
 
     def check_usb_adb_connect_serial(self, device_name):
         self.confirm_relay_opened()
+        print(self.invoke("adb devices"))
         if self.remove_space('%sdevice' % device_name) in self.remove_space(self.invoke("adb devices")):
             return True
         else:

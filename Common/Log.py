@@ -6,7 +6,7 @@
 import logging
 import os
 import time
-import allure
+import sys
 
 """
 2.8 组件之间的关系
@@ -25,65 +25,18 @@ import allure
 
 log_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# 设置日志级别为 INFO
-logging.basicConfig(level=logging.INFO)
-
-
-# 定义一个自定义过滤器，忽略系统级别 `warning` 和 `error` 信息
-class CustomFilter(logging.Filter):
-    def filter(self, record):
-        return record.levelno != logging.WARNING
-
-
-# 创建一个名为 `allure` 的 Logger 对象
+LEVELS = {
+    'debug': logging.DEBUG,
+    'info': logging.INFO,
+    'warning': logging.WARNING,
+    'error': logging.ERROR,
+    'critical': logging.CRITICAL
+}
+# level = 'error'
+level = 'info'
 logger = logging.getLogger()
 
 
-# 定义一个过滤器
-# class WarningFilter(logging.Filter):
-#     def filter(self, record):
-#         return record.levelno > logging.WARNING
-#
-#
-# # 创建一个新的日志处理器，将过滤器应用到该处理器上
-# # filtered_handler = logging.StreamHandler()
-# # filtered_handler.addFilter(WarningFilter())
-#
-# LEVELS = {
-#     'debug': logging.DEBUG,
-#     'info': logging.INFO,
-#     'warning': logging.WARNING,
-#     'error': logging.ERROR,
-#     'critical': logging.CRITICAL
-# }
-# level = 'error'
-#
-# logger = logging.getLogger()
-# logger.setLevel(LEVELS.get(level, logging.NOTSET))
-#
-# # logger.setLevel(logging.ERROR)
-#
-# # 设置所有日志记录器的最低级别为 DEBUG
-# logging.basicConfig(level=logging.INFO)
-# logger.addFilter(WarningFilter())
-
-# logger = logging.getLogger()
-
-
-# level = 'default'
-# level = 'info'
-
-
-# 获取默认的日志记录器，将新的处理器添加到记录器中
-# root_logger = logging.getLogger()
-# logger.addHandler(filtered_handler)
-
-
-# r ：只读
-# r+ : 读写
-# w ： 新建（会对原有文件进行覆盖）
-# a ： 追加
-# b ： 二进制文件
 def create_file(filename):
     # filename D:\GNP\GNP_StablilityTest/Log/log.log    D:\GNP\GNP_StablilityTest/Log/err.log
     # path D:\GNP\GNP_StablilityTest/Log
@@ -132,7 +85,7 @@ class MyLog:
     # print(log_file)
     err_file = log_path + '/Log/err.log'
     # ?
-    # logger.setLevel(LEVELS.get(level, logging.NOTSET))
+    logger.setLevel(LEVELS.get(level, logging.NOTSET))
 
     # 将自定义的过滤器添加到日志记录器中
 
@@ -148,30 +101,36 @@ class MyLog:
         set_handler('debug')
         logger.debug("[DEBUG " + get_current_time() + "]" + log_meg)
         remove_handler('debug')
+        print("[DEBUG " + get_current_time() + "]" + log_meg, flush=True)
 
     @staticmethod
     def info(log_meg):
+        # 强制刷新标准输出流，确保及时输出
         set_handler('info')
         logger.info("[INFO " + get_current_time() + "]" + log_meg)
         remove_handler('info')
+        print("[INFO " + get_current_time() + "]" + log_meg, flush=True)
 
     @staticmethod
     def warning(log_meg):
         set_handler('warning')
         logger.warning("[WARNING " + get_current_time() + "]" + log_meg)
         remove_handler('warning')
+        print("[WARNING " + get_current_time() + "]" + log_meg, flush=True)
 
     @staticmethod
     def error(log_meg):
         set_handler('error')
         logger.error("[ERROR " + get_current_time() + "]" + log_meg)
         remove_handler('error')
+        print("[ERROR " + get_current_time() + "]" + log_meg, flush=True)
 
     @staticmethod
     def critical(log_meg):
         set_handler('critical')
         logger.error("[CRITICAL " + get_current_time() + "]" + log_meg)
         remove_handler('critical')
+        print("[CRITICAL " + get_current_time() + "]" + log_meg, flush=True)
 
 
 # def create_textFile(filename):

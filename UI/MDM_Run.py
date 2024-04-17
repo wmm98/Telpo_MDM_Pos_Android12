@@ -120,10 +120,12 @@ class AllCertCaseValue:
     ROOT_PERFORMANCE_CCO_RATE_B1 = 113
     ROOT_PERFORMANCE_CCO_RATE_B2 = 114
     ROOT_PERFORMANCE_CCO_MAX = ROOT_PERFORMANCE_CCO_RATE_B2 + 1
-
+    # 压测
     ROOT_OTHER_CHILD = 130
     ROOT_OTHER_RATE = 131
-    ROOT_OTHER_MAX = ROOT_OTHER_RATE + 1
+    ROOT_OTHER_RATE1 = 132
+    ROOT_OTHER_RATE2 = 133
+    ROOT_OTHER_MAX = ROOT_OTHER_RATE2 + 1
 
     # max
     TREE_MAX = ROOT_OTHER_MAX + 1
@@ -218,6 +220,8 @@ DictCommandInfo = {
     # other test case
     "压测": AllCertCaseValue.ROOT_OTHER_CHILD,
     "OTA下载拷贝校验完整性压测": AllCertCaseValue.ROOT_OTHER_RATE,
+    "APK大附件断点续传压测": AllCertCaseValue.ROOT_OTHER_RATE1,
+    "APK大附件压测": AllCertCaseValue.ROOT_OTHER_RATE2
 }
 
 
@@ -485,6 +489,7 @@ class tree(QtWidgets.QMainWindow, Ui_MainWindow):
         self.data["MDMTestData"]["android_device_info"]["device_name"] = self.edit_device_name.text()
         self.data["MDMTestData"]["android_device_info"]["is_serial"] = self.checkbox_serial.isChecked()
         self.data["MDMTestData"]["android_device_info"]["install_aimdm"] = self.checkbox_mdm.isChecked()
+        self.data["MDMTestData"]["android_device_info"]["is_user"] = self.checkbox_user.isChecked()
         self.data["MDMTestData"]["android_device_info"]["is_landscape"] = self.checkbox_screen.isChecked()
         if self.checkbox_serial.isChecked():
             self.data["MDMTestData"]["android_device_info"]["COM"] = self.COM_name.currentText()

@@ -136,6 +136,7 @@ class TelpoMDMPage(MDMPage):
             return False
 
     def check_service_expired(self, user_info):
+        log.info("检查平台token是否过期")
         if len(self.extract_integers(self.get_service_status())) == 0:
             self.refresh_page()
             if "login" in self.remove_space(self.get_current_window_url()):

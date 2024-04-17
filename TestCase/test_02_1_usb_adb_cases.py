@@ -41,7 +41,7 @@ class TestNetworkCases:
     @allure.story('MDM-Show')
     @allure.title("Apps- 断网重连获取aimdm消耗的流量")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_reconnect_get_mobile_data(self, recover_and_login_mdm, connect_wifi_adb_USB):
         while True:
             try:
@@ -146,7 +146,7 @@ class TestNetworkCases:
     @allure.story('MDM-Show111')
     @allure.title("Apps-限定4G网络推送app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=2)
+    @pytest.mark.flaky(reruns=1, reruns_delay=2)
     def test_release_app_limit_4G(self, recover_and_login_mdm, connect_wifi_adb_USB, del_all_app_release_log,
                                   del_all_app_uninstall_release_log, uninstall_multi_apps, go_to_app_page):
         release_info = {"package_name": test_yml['app_info']['other_app_limit_network_A'], "sn": self.device_sn,
@@ -306,7 +306,7 @@ class TestNetworkCases:
     @allure.feature('LiXiang_Test-case3')
     @allure.title("Apps-限定WIFI网络推送app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_release_app_limit_wifi(self, recover_and_login_mdm, connect_wifi_adb_USB, del_all_app_release_log,
                                     del_all_app_uninstall_release_log,
                                     go_to_app_page):
@@ -456,7 +456,7 @@ class TestNetworkCases:
     @allure.feature('LiXiang_Test-case4')
     @allure.title("OTA-OTA断网重连5次断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_upgrade_OTA_package_reconnect_network_5times(self, recover_and_login_mdm, fake_ota_package_operation, connect_wifi_adb_USB, del_all_ota_release_log,
                                                           delete_ota_package_relate):
         while True:
@@ -652,7 +652,7 @@ class TestNetworkCases:
     @allure.feature('MDM_usb-test-no')
     @allure.title("public case- 设备下线无法发送捕捉日志命令")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_fail_to_catch_log_when_offline(self, recover_and_login_mdm, go_to_device_page, connect_wifi_adb_USB):
         while True:
             try:
@@ -704,7 +704,7 @@ class TestNetworkCases:
     @allure.title("Apps-推送低版本的APP/卸载后重新安装")
     @pytest.mark.dependency(name="test_release_app_ok", scope='package')
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_release_low_version_app(self, recover_and_login_mdm, del_all_app_release_log, del_all_app_uninstall_release_log, go_to_app_page):
         release_info = {"package_name": test_yml['app_info']['low_version_app'], "sn": self.device_sn,
                         "silent": "Yes", "download_network": "NO Limit"}

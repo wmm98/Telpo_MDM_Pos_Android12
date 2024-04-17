@@ -457,7 +457,6 @@ class OTAPage(TelpoMDMPage):
         if not self.get_tips_alert(timeout):
             assert False, "@@@@上传OTA文件超过%d s， 请检查！！！！" % timeout
 
-
     def uploading_box_show(self):
         try:
             self.web_driver_wait_until(EC.visibility_of_element_located(self.loc_uploading_show))

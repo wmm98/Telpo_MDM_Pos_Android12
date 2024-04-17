@@ -1,6 +1,7 @@
 import allure
 import pytest
 import TestCase as case_pack
+import sys
 
 conf = case_pack.Config()
 excel = case_pack.ExcelData()
@@ -40,10 +41,10 @@ class TestGeneralRegressionTesting:
     @allure.feature('Pressure_Test-case0')
     @allure.title("OTA - OTA下载拷贝校验完整性压测")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=300, reruns_delay=3)
-    def test_OTA_package_general_regression_01(self, recover_and_login_mdm, real_ota_package_operation,
-                                               connect_wifi_adb_USB, del_all_ota_release_log,
-                                               delete_ota_package_relate):
+    @pytest.mark.flaky(reruns=100, reruns_delay=3)
+    def test_OTA_pressure_testing_01(self, recover_and_login_mdm, fake_ota_package_operation,
+                                     connect_wifi_adb_USB, del_all_ota_release_log,
+                                     delete_ota_package_relate):
 
         while True:
             try:
@@ -56,7 +57,6 @@ class TestGeneralRegressionTesting:
                 self.android_mdm_page.confirm_wifi_btn_open()
 
                 log.info("*******************OTAOTA-OTA 下载拷贝校验完整性开始***************************")
-                print("*******************OTAOTA-OTA 下载拷贝校验完整性开始***************************")
                 download_tips = "Foundanewfirmware,whethertoupgrade?"
                 upgrade_tips = "whethertoupgradenow?"
                 exp_success_text = "success"
@@ -83,8 +83,8 @@ class TestGeneralRegressionTesting:
                 log.info("固件升级的目标版本%s" % release_info["version"])
                 print("固件升级的目标版本%s" % release_info["version"])
                 # check file size and hash value in directory Param/package
-                ota_package_path = self.android_mdm_page.get_apk_path(release_info["package_name"])
-                # ota_package_path = conf.project_path + '\\Public_Package\\new\\%s' % release_info["package_name"]
+                # ota_package_path = self.android_mdm_page.get_apk_path(release_info["package_name"])
+                ota_package_path = conf.project_path + '\\Public_Package\\new\\%s' % release_info["package_name"]
 
                 act_ota_package_size = self.ota_page.get_zip_size(ota_package_path)
                 log.info("原ota升级包的大小: %s" % str(act_ota_package_size))
@@ -230,24 +230,25 @@ class TestGeneralRegressionTesting:
                 # 检测data 分区的update包
                 # 对比 update包
                 # 如果是金融或者user版本， 不检测data分区
-                if self.android_mdm_page.get_device_info()['model'] not in ['P8']:
-                    now_time = self.ota_page.get_current_time()
-                    self.android_mdm_page.open_root_auth_usb()
-                    while True:
-                        if "update.zip" in self.android_mdm_page.send_shell_command("ls data"):
-                            data_updated_hash_value = self.android_mdm_page.calculate_data_updated_sha256_in_device()
-                            log.info("检测到data 分区 有update包")
-                            log.info("update.zip 包的md5值为： %s" % data_updated_hash_value)
-                            if data_updated_hash_value == act_ota_package_hash_value:
-                                log.info("分区拷贝的update 包完整性一致")
-                                break
-                        if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 60):
-                            err_msg = "@@@@ 5分钟内分钟后还没有拷贝完相应update.zip包到data分区， 请检查！！！"
-                            log.error(err_msg)
-                            # assert False, err_msg
-                            raise Exception("stop3")
-                        self.ota_page.time_sleep(3)
-                    log.info("**********data 分区update 包拷贝完成**************************")
+                if not test_yml["MDMTestData"]["android_device_info"]["is_user"]:
+                    if self.android_mdm_page.get_device_info()['model'] not in ['P8']:
+                        now_time = self.ota_page.get_current_time()
+                        self.android_mdm_page.open_root_auth_usb()
+                        while True:
+                            if "update.zip" in self.android_mdm_page.send_shell_command("ls data"):
+                                data_updated_hash_value = self.android_mdm_page.calculate_data_updated_sha256_in_device()
+                                log.info("检测到data 分区 有update包")
+                                log.info("update.zip 包的md5值为： %s" % data_updated_hash_value)
+                                if data_updated_hash_value == act_ota_package_hash_value:
+                                    log.info("分区拷贝的update 包完整性一致")
+                                    break
+                            if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 60):
+                                err_msg = "@@@@ 5分钟内分钟后还没有拷贝完相应update.zip包到data分区， 请检查！！！"
+                                log.error(err_msg)
+                                # assert False, err_msg
+                                raise Exception("stop3")
+                            self.ota_page.time_sleep(3)
+                        log.info("**********data 分区update 包拷贝完成**************************")
 
                 self.pass_flag += 1
                 log.info("************900P: md5值检测通过%d次*****************" % self.pass_flag)
@@ -263,15 +264,20 @@ class TestGeneralRegressionTesting:
                         alert.getAlert("900P 在点击了升级后弹出了弹框，请检查， 请检查！！！！")
                         raise Exception("900P 在点击了升级后弹出了弹框，请检查， 请检查！！！！")
                     if "stop1" in str(e):
-                        print("=====跑来这里了")
-                        alert.getAlert("900P 超过30分钟还没900P下载的包MD5值可能有问题， 检查下包的大小和MD5值， 请检查！！！！")
-                        raise Exception("下载的包MD5值有问题")
+                        alert.getAlert("900P 超过60分钟还没下载的包MD5值可能有问题， 检查下包的大小和MD5值， 请检查！！！！")
+                        log.error("900P 超过60分钟还没下载的包MD5值可能有问题， 检查下包的大小和MD5值， 请检查！！！！")
+                        sys.exit()
+                        # raise Exception("下载的包MD5值有问题")
                     elif "stop2" in str(e):
-                        alert.getAlert("900P根目录update包MD5值有问题，请检查！！！")
-                        raise Exception("根目录update包MD5值有问题")
+                        alert.getAlert("@@@@ 5分钟内分钟后还没有拷贝完相应update.zip包, 根目录update包MD5值有问题，请检查！！！")
+                        log.error("@@@@ 5分钟内分钟后还没有拷贝完相应update.zip包, 根目录update包MD5值有问题，请检查！！！")
+                        sys.exit()
+                        # raise Exception("根目录update包MD5值有问题")
                     elif "stop3" in str(e):
-                        alert.getAlert("900P data分区update包MD5值有问题，请检查！！！")
-                        raise Exception("900P data分区update包MD5值有问题，请检查！！！")
+                        alert.getAlert(" @@@@ 5分钟内分钟后还没有拷贝完相应update.zip包到data分区, data分区update包MD5值有问题，请检查！！！")
+                        log.error("@@@@ 5分钟内分钟后还没有拷贝完相应update.zip包到data分区, data分区update包MD5值有问题，请检查！！！")
+                        sys.exit()
+                        # raise Exception("900P data分区update包MD5值有问题，请检查！！！")
                     else:
                         self.ota_page.delete_all_ota_release_log()
                         self.android_mdm_page.confirm_usb_adb_connect(self.wifi_ip)
@@ -296,7 +302,7 @@ class TestGeneralRegressionTesting:
     @allure.feature('General_Test-case0')
     @allure.title("OTA-断网重连断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_OTA_package_general_regression_04(self, recover_and_login_mdm, fake_ota_package_operation,
                                                connect_wifi_adb_USB, del_all_ota_release_log,
                                                delete_ota_package_relate):
@@ -484,7 +490,7 @@ class TestGeneralRegressionTesting:
     @allure.story('MDM-Show')
     @allure.title("一般性回归测试-OTA重启断点续传")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_OTA_package_general_regression_02(self, recover_and_login_mdm, fake_ota_package_operation,
                                                del_all_ota_release_log, delete_ota_package_relate):
         download_tips = "Foundanewfirmware,whethertoupgrade?"
@@ -639,7 +645,7 @@ class TestGeneralRegressionTesting:
     @allure.story('MDM-Show')
     @allure.title("一般性回归测试-OTA升级")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_OTA_package_general_regression_03(self, recover_and_login_mdm, real_ota_package_operation,
                                                del_all_ota_release_log, delete_ota_package_relate):
         download_tips = "Foundanewfirmware,whethertoupgrade?"
@@ -791,7 +797,7 @@ class TestGeneralRegressionTesting:
     @allure.title("一般性回归测试-推送低版本的APP/卸载后重新安装")
     @pytest.mark.dependency(name="test_release_app_ok", scope='package')
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_release_low_version_app_general_regression(self, recover_and_login_mdm, del_all_app_release_log,
                                                         del_all_app_uninstall_release_log, go_to_app_page,
                                                         uninstall_multi_apps):
@@ -1186,7 +1192,7 @@ class TestGeneralRegressionTesting:
     @allure.feature('General_Test-case5')
     @allure.title("一般性回归测试 - 静默升级系统app/推送安装成功后自动运行app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_upgrade_system_app_general_regression(self, recover_and_login_mdm, del_app_install_uninstall_release_log,
                                                    del_download_apk,
                                                    uninstall_system_app):
@@ -1358,7 +1364,7 @@ class TestGeneralRegressionTesting:
     @allure.story('MDM-Show')
     @allure.title("一般性回归测试-静默卸载正在运行中的app：静默卸载/卸载正在运行的app")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_silent_uninstall_app_general_regression(self, recover_and_login_mdm, del_all_app_release_log,
                                                      del_all_app_uninstall_release_log,
                                                      uninstall_multi_apps, go_to_app_page):
@@ -1440,7 +1446,7 @@ class TestGeneralRegressionTesting:
     @allure.story('MDM-Show')
     @allure.title("一般性回归测试- AIMDM切换正式测试服服务api ")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_transfer_api_server_general_regression(self, recover_and_login_mdm, push_test_api_to_device):
         while True:
             try:
@@ -1693,7 +1699,7 @@ class TestGeneralRegressionTesting:
     @allure.feature('General_Test-case8')
     @allure.title("Devices- 日志的抓取")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
-    @pytest.mark.flaky(reruns=3, reruns_delay=3)
+    @pytest.mark.flaky(reruns=1, reruns_delay=3)
     def test_cat_logs_general_regression(self, recover_and_login_mdm, go_to_and_return_device_page):
         # durations = [5, 10, 30]
         durations = [5]
