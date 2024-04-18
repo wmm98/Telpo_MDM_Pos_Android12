@@ -24,7 +24,7 @@ MDMTestData:
     - 20
     - 30
   android_device_info:
-    COM: COM13
+    COM: COM20
     available_wifi:
       wifi_00:
         name: TP-5G_888
@@ -35,10 +35,11 @@ MDMTestData:
       wifi_02:
         name: Telpo_Guest
         password: 86337898
-    device_name: '?'
+    device_name: A350900P06500025
     install_aimdm: false
     is_landscape: false
-    is_serial: false
+    is_serial: true
+    is_user: false
   app_info:
     high_version_app: Bus_Recharge_System_1.0.1_20220615.apk
     low_version_app: Bus_Recharge_System_1.0.0_20220421.apk
@@ -46,7 +47,7 @@ MDMTestData:
     other_app_limit_network_A: perfmon.apk
     other_app_limit_network_B: wifi_analyze.apk
   ota_packages_info:
-    package_name: P8_alps_sv10_fv1.1.1_pv1.1.1-1.1.2.zip
+    package_name: M1K_mt6761_sv12_fv1.2.6_pv1.2.6-1.2.7.zip
     platform: Android
   settings:
     debug: true
@@ -65,7 +66,7 @@ MDMTestData:
     aidmd_apk: app_aimdm_V2.0.2_osapi_202401291141.apk
     api_txt: mdmApiUrl.txt
     tpui_apk: TPUI_v1.1.9.apk
-Run_Cases: Pressure_Test-case0
+Run_Cases: Pressure_Test-case2
 TestCase:
   General_Test:
     General_Test-case0: 0
@@ -105,7 +106,9 @@ TestCase:
     LiXiang_Test-case8: 0
     LiXiang_Test-case9: 0
   Pressure_Test:
-    Pressure_Test-case0: 2
+    Pressure_Test-case0: 0
+    Pressure_Test-case1: 0
+    Pressure_Test-case2: 2
   Regression_Test:
     Regression_Test-case0: 0
     Regression_Test-case1: 0

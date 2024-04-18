@@ -299,6 +299,7 @@ class TestPressureTesting:
                     self.android_mdm_page.del_updated_zip()
                     self.ota_page.go_to_new_address("ota")
 
+
     @allure.feature('Pressure_Test-case1')
     @allure.title("APP - APP大附件断点压测")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
