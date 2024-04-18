@@ -46,7 +46,6 @@ class TestPressureTesting:
                                      connect_wifi_adb_USB, del_all_ota_release_log,
                                      delete_ota_package_relate):
 
-
         while True:
             try:
                 self.ota_page.delete_all_ota_release_log()
