@@ -299,7 +299,6 @@ class TestPressureTesting:
                     self.android_mdm_page.del_updated_zip()
                     self.ota_page.go_to_new_address("ota")
 
-
     @allure.feature('Pressure_Test-case1')
     @allure.title("APP - APP大附件断点压测")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
@@ -378,19 +377,21 @@ class TestPressureTesting:
 
                     while True:
                         current_size = self.android_mdm_page.get_file_size_in_device_USB(shell_app_apk_name)
-                        log.info("断网%s次之后当前ota package 的size: %s" % (str(times + 1), current_size))
-                        if current_size == app_size:
+                        times += 1
+                        log.info("断网%s次之后当前ota package 的size: %s" % (str(times), current_size))
+                        shell_hash_value = self.android_mdm_page.calculate_sha256_in_device(shell_app_apk_name)
+                        log.info("终端中下载中app 的hash_value: %s" % shell_hash_value)
+                        if original_app_md5_value == shell_hash_value:
+                            flag = True
+                            break
                             # 大小一样的情况下检查MD5值
-                            shell_hash_value = self.android_mdm_page.calculate_sha256_in_device(shell_app_apk_name)
-                            log.info("终端中下载中app 的hash_value: %s" % shell_hash_value)
-                            if original_app_md5_value == shell_hash_value:
-                                flag = True
-                                break
+                            # shell_hash_value = self.android_mdm_page.calculate_sha256_in_device(shell_app_apk_name)
+                            # log.info("终端中下载中app 的hash_value: %s" % shell_hash_value)
                         if current_size > package_size:
                             package_size = current_size
                             break
                         if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 180):
-                            err_msg = "@@@@确认下载提示后， 2分钟内apk升级包没有大小没变， 没在下载， 请检查！！！"
+                            err_msg = "@@@@确认下载提示后， 3分钟内apk升级包没有大小没变， 没在下载， 请检查！！！"
                             print(err_msg)
                             log.error(err_msg)
                             assert False, err_msg
@@ -404,7 +405,7 @@ class TestPressureTesting:
                     if self.ota_page.get_current_time() > self.ota_page.return_end_time(now_time, 3600):
                         log.error("@@@@一个钟还没下载完apk， 请检查！！！")
                         sys.exit()
-                log.info("*******************完成%d次断网操作*********************************" % (times + 1))
+                    log.info("*******************完成%d次断网操作*********************************" % times)
 
                 # check if download completed
                 # now_time = self.app_page.get_current_time()
@@ -420,7 +421,7 @@ class TestPressureTesting:
                 #         log.info("@@@@多应用推送中超过30分钟还没有完成%s的下载" % release_info["package_name"])
                 #         assert False, "@@@@多应用推送中超过30分钟还没有完成%s的下载" % release_info["package_name"]
                 #     self.app_page.time_sleep(10)
-                log.info("**********************检测到终端下载完毕*************************************")
+                # log.info("**********************检测到终端下载完毕*************************************")
 
                 # # check install
 
