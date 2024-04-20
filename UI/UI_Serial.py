@@ -65,9 +65,7 @@ class Serial:
         now_time = time.time()
         while True:
             self.confirm_relay_closed()
-            print(11111111111111111111111111111111111111111)
             self.send_ser_connect_cmd(conn=True)
-            print(2222222222222222222222222222222222)
             if self.send_status_cmd():
                 break
             if time.time() > now_time + timeout:

@@ -771,6 +771,12 @@ class AndroidBasePageWiFi(interface):
         else:
             return ""
 
+    def mdmApiUrl_text_exist(self, txt="mdmApiUrl.txt"):
+        if txt in self.u2_send_command("ls sdcard/"):
+            return True
+        else:
+            return False
+
 
 if __name__ == '__main__':
     from utils.client_connect import ClientConnect

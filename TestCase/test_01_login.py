@@ -114,9 +114,23 @@ class TestLogin:
                 if test_yaml["android_device_info"]["install_aimdm"]:
                     self.android_mdm_page.confirm_app_installed(
                         conf.project_path + "\\Param\\Work_APP\\%s" % test_yaml["work_app"]["aidmd_apk"])
-                if test_yaml["website_info"]["test_api"] not in self.android_mdm_page.get_mdmApiUrl_text():
-                    self.android_mdm_page.push_file_to_device(self.api_path,
-                                                              self.android_mdm_page.get_internal_storage_directory() + "/")
+                # 如果存在， 检查内容是不是跟输入的Api一致
+                if self.android_mdm_page.mdmApiUrl_text_exist():
+                    if test_yaml["website_info"]["test_api"] not in self.android_mdm_page.get_mdmApiUrl_text():
+                        # 截取里面的内容，重新写入
+                        with open(conf.project_path + "\\Param\\Work_APP\\%s" % "mdmApiUrl.txt", 'w') as f:
+                            f.write(test_yaml["website_info"]["test_api"])
+                        self.android_mdm_page.push_file_to_device(self.api_path,
+                                                                  self.android_mdm_page.get_internal_storage_directory() + "/")
+                # 不存在的话，如果是正式服跳过，内核默认正式服API， 否则，推送
+                else:
+                    if "mdm2.telpoai.com" in test_yaml["website_info"]["test_url"]:
+                        pass
+                    else:
+                        with open(conf.project_path + "\\Param\\Work_APP\\%s" % "mdmApiUrl.txt", 'w') as f:
+                            f.write(test_yaml["website_info"]["test_api"])
+                        self.android_mdm_page.push_file_to_device(self.api_path,
+                                                                  self.android_mdm_page.get_internal_storage_directory() + "/")
                 self.android_mdm_page.reboot_device(self.wifi_ip)
                 opt_case.confirm_device_online(device_sn)
                 log.info("************登录测试结束***************")

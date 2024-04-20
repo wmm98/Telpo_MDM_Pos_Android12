@@ -12,6 +12,14 @@ class BasePage(interface):
         self.times = times
 
     loc_tips = (public_pack.By.ID, "swal2-title")
+    loc_add_cate_tips = (public_pack.By.CLASS_NAME, "introjs-skipbutton")
+
+    def close_cate_tips(self):
+        try:
+            self.web_driver_wait_until(public_pack.EC.presence_of_element_located(self.loc_add_cate_tips), wait_times=10)
+            self.click(self.loc_add_cate_tips)
+        except:
+            pass
 
     def get_current_window_url(self):
         return self.driver.current_url
@@ -180,8 +188,11 @@ class BasePage(interface):
         if "telpoai" in url:
             if "devices" in url:
                 self.close_release_version_tips()
+                self.close_cate_tips()
+
         # if "login" not in self.get_current_window_url() or "map" not in self.get_current_window_url():
         #     self.hide_telpo_support_alert()
+
 
     def get_selector(self, loc):
         ele = self.get_element(loc)

@@ -30,7 +30,6 @@ class Ui_MainWindow(object):
     options |= QtWidgets.QFileDialog.ReadOnly
     # project_path = os.getcwd()
     project_path = path_dir = str(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
-    print("当前的测试路劲：%s" % project_path)
     # print(project_path)
 
     yaml_file_path = project_path + "\\Conf\\test_data.yaml"
@@ -47,26 +46,16 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.treeWidget = QtWidgets.QTreeWidget(self.centralwidget)
 
-        # # 创建一个组合框
-        # self.combo_box = QComboBox(self)
-        # self.combo_box.addItem('选项1')
-        # self.combo_box.addItem('选项2')
-        # self.combo_box.addItem('选项3')
-        #
-        # # 创建一个文本框
-        # self.line_edit = QLineEdit(self)
-        # self.line_edit.setPlaceholderText('请选择一个选项')
-        #
-        # # 将信号与槽连接
-        # # self.combo_box.currentIndexChanged.connect(self.update_text)
-        # # layout.addWidget(self.line_edit)
-        # self.verticalLayout.addWidget(self.line_edit)
-
         # 创建水平布局
         # 测试信息
+        layout_test_title = QHBoxLayout()
         layout_url = QHBoxLayout()
         self.test_user_info = QtWidgets.QLabel("当前测试用户信息:")
-        self.verticalLayout.addWidget(self.test_user_info)
+        self.test_user_info_tips = QtWidgets.QLabel("注意：不能使用账号为：ceshibu的号进行测试")
+        self.test_user_info_tips.setStyleSheet("color: red;")
+        layout_test_title.addWidget(self.test_user_info)
+        layout_test_title.addWidget(self.test_user_info_tips)
+        self.verticalLayout.addLayout(layout_test_title)
         self.test_url_tips = QtWidgets.QLabel("地址:")
         self.test_url_edit = QtWidgets.QLineEdit()
         # 默认显示为上次的URL
@@ -97,9 +86,14 @@ class Ui_MainWindow(object):
         self.verticalLayout.addLayout(layout_test)
 
         # 正式服信息
+        layout_release_title = QHBoxLayout()
         layout_release_url = QHBoxLayout()
         self.release_user_info = QtWidgets.QLabel("\n正式版本用户信息:")
-        self.verticalLayout.addWidget(self.release_user_info)
+        self.test_release_info_tips = QtWidgets.QLabel("注意：不能使用账号为：ceshibu的号进行测试")
+        layout_release_title.addWidget(self.release_user_info)
+        layout_release_title.addWidget(self.test_release_info_tips)
+        self.test_release_info_tips.setStyleSheet("color: red;")
+        self.verticalLayout.addLayout(layout_release_title)
         self.release_url_tips = QtWidgets.QLabel("地址:")
         self.release_url_edit = QtWidgets.QLineEdit()
         self.release_url_edit.setText(self.data["MDMTestData"]["website_info"]["release_url"])
