@@ -144,7 +144,7 @@ class TestLogin:
                     log.info("**********************服务器恢复正常*************************")
                     self.ota_page.go_to_new_address("devices")
 
-    @allure.feature('MDM_test02_login1')
+    @allure.feature('MDM_test02_login')
     @allure.title("OTA-添加ota升级包--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=1, reruns_delay=3)
@@ -197,7 +197,7 @@ class TestLogin:
                     log.info("**********************服务器恢复正常*************************")
                     self.ota_page.go_to_new_address("ota")
 
-    @allure.feature('MDM_test02_login1')
+    @allure.feature('MDM_test02_login')
     @allure.title("Apps-添加APK包--辅助测试用例")
     @pytest.mark.dependency(depends=["test_login_ok"], scope='package')
     @pytest.mark.flaky(reruns=1, reruns_delay=3)

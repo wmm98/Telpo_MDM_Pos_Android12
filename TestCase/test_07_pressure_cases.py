@@ -55,6 +55,7 @@ class TestPressureTesting:
                 self.android_mdm_page.del_updated_zip()
                 self.android_mdm_page.del_all_downloaded_zip()
                 self.android_mdm_page.confirm_wifi_btn_open()
+                self.android_mdm_page.close_mobile_data()
 
                 log.info("*******************OTAOTA-OTA 下载拷贝校验完整性开始***************************")
                 download_tips = "Foundanewfirmware,whethertoupgrade?"
