@@ -1,4 +1,5 @@
 import Page as public_pack
+import os
 
 sub_shell = public_pack.Shell.Shell()
 conf = public_pack.Config()
@@ -10,22 +11,20 @@ class interface:
 
     def copy_file(self, origin, des):
         if self.path_is_existed(origin):
-            while True:
-                if not self.path_is_existed(des):
-                    public_pack.shutil.copy(origin, des)
-                else:
-                    break
-                self.time_sleep(1)
-        else:
-            raise Exception("此路径不存在: %s, 请检查！！！" % origin)
+            if os.path.exists(des):
+                self.delete_file(des)
+            public_pack.shutil.copy(origin, des)
 
     def rename_file_name(self, src, dst):
-        while True:
-            if not self.path_is_existed(dst):
-                public_pack.shutil.move(src, dst)
-            else:
-                break
-            self.time_sleep(1)
+        if os.path.exists(dst):
+            self.delete_file(dst)
+        public_pack.shutil.move(src, dst)
+        # while True:
+        #     if not self.path_is_existed(dst):
+        #         public_pack.shutil.move(src, dst)
+        #     else:
+        #         self.delete_file(dst)
+        #     self.time_sleep(1)
 
     def delete_file(self, file_path):
         while True:
